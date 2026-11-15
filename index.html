@@ -40,6 +40,25 @@
 #rcards button[data-d=zor]{background:linear-gradient(180deg,#d32f2f,#7f0000)}
 .wrap.v #rcards{flex-direction:column}.wrap.v #rcards button{font-size:4.2cqw}.wrap.v #rcards button b{font-size:7cqw}
 .rlap{display:flex;align-items:center;gap:2cqw}.rlap .opts{flex-direction:row}#rlaps button{flex-direction:row}#rlaps button.on{background:#1e88e5}
+#menu #mKar{grid-column:1/-1;font-weight:800;background:linear-gradient(180deg,#ffca28,#f57f17);color:#1a1200;box-shadow:0 .6cqh 0 #a35400}
+#kbody{display:flex;gap:2cqw;flex:1;min-height:0;overflow:auto}
+.kcol{flex:1;display:flex;flex-direction:column;gap:1.6cqh;min-width:0}
+.kcard{background:rgba(255,255,255,.07);border-radius:1.6cqh;padding:1.4cqh 1.6cqw;display:flex;flex-direction:column;gap:.8cqh}
+.kcard>b{color:#ffd54f}.kcard small{color:#b0bec5;display:block}
+.kcard input{font:inherit;padding:1cqh 1.2cqw;border-radius:1cqh;border:0;background:#eceff1;color:#111}
+.kme{flex-direction:row;align-items:center;gap:1.5cqw}.kme>i,.koff i{width:3.2cqh;height:3.2cqh;border-radius:50%;flex:none;border:2px solid #fff3}
+.kme b{font-size:1.25em;color:#fff}
+.koff{display:flex;flex-direction:column;gap:1cqh}.koff button{display:flex;align-items:center;gap:1.5cqw;text-align:left}.koff button.on{outline:.5cqh solid #ffd54f}
+.kgo{background:linear-gradient(180deg,#43a047,#2e7d32)!important;font-weight:800}
+.kbtns{display:flex;gap:1cqw;flex-wrap:wrap}.kbtns button{flex:1}
+#kdif button.on,#klaps button.on{background:#1e88e5}
+.kup{display:flex;align-items:center;justify-content:space-between;gap:1cqw}.kup span{color:#ffd54f}.kup span b{color:#fff}.kup em{color:#81c784;font-style:normal}
+.ktab{margin:0;padding:0;list-style:none;font-size:.9em}.ktab li{display:flex;align-items:center;gap:1cqw;padding:.2cqh .6cqw;border-radius:.8cqh}.ktab li i{font-style:normal;width:3cqw}.ktab li em{width:1.8cqh;height:1.8cqh;border-radius:50%}.ktab li b{margin-left:auto}.ktab li.me{background:rgba(255,213,79,.25)}
+.kreset{background:#5d1f1f!important;font-size:.85em}
+.kend .kbig{font-size:1.3em;font-weight:800;color:#fff}
+.kpress{margin-top:1cqh;color:#fff}
+#rres .kmain{background:#2e7d32}
+.wrap.v #kbody{flex-direction:column}.wrap.v .kme>i{width:5cqw;height:5cqw}
 </style></head><body>
 <!DOCTYPE html>
 <html lang="tr">
@@ -217,7 +236,7 @@ canvas{touch-action:none}
 <div class="mm-left">
 <div class="mm-title">🏎️ ARABA OYUNU<small>Diğer arabalara çarpmadan git!</small></div>
 <div class="mm-go"><button id="mPlay">▶ OYUNA BAŞLA</button><button id="mRace">🏁 YARIŞ MODU</button></div>
-<div class="mm-grid"><button id="mShop">🛍️ Mağaza</button><button id="mGar">🔧 Garaj</button><button id="mMis">🏅 Görevler</button><button id="mSet">⚙️ Ayarlar</button><button id="mInfo">ℹ️ Nasıl oynanır</button></div>
+<div class="mm-grid"><button id="mKar">🏆 KARİYER MODU</button><button id="mShop">🛍️ Mağaza</button><button id="mGar">🔧 Garaj</button><button id="mMis">🏅 Görevler</button><button id="mSet">⚙️ Ayarlar</button><button id="mInfo">ℹ️ Nasıl oynanır</button></div>
 <div class="mm-q"><div>🗺️ Harita</div><div class="mm-chips" id="qMap"></div><div>🛣️ Bölüm</div><div class="mm-chips" id="qMode"></div><div>🎥 Kamera</div><div class="mm-chips" id="qCam"></div></div>
 </div>
 <div class="mm-right">
@@ -237,6 +256,7 @@ canvas{touch-action:none}
 <div class="pay" id="rpause"><div>⏸ Yarış duraklatıldı</div><div class="payb"><button id="rRes">▶ Devam et</button><button id="rRst">🔁 Yeniden başla</button><button id="rQuit">🏠 Ana menü</button></div></div>
 <div id="rres"><div id="rresT"></div><ol id="rresL"></ol><div id="rresP"></div><div class="payb"><button id="rAgain">🔁 Tekrar yarış</button><button id="rDif">🎚️ Zorluk seç</button><button id="rHome">🏠 Ana menü</button></div></div>
 </div>
+<div class="shop" id="kar"><div class="shead"><b>🏆 Kariyer</b><span id="kcoins"></span><button id="kX">✕ Kapat</button></div><div id="kbody"></div></div>
 <div class="shop" id="rsel"><div class="shead"><b>🏁 Yarış Modu</b><button id="rselX">✕ Kapat</button></div><div class="rinfo">19 rakiple yarışırsın. Bu modda direksiyonu sen çevirirsin: <b>A D / ◀ ▶</b> sağa sola döner, <b>W / ▲</b> gaz, <b>S / ▼</b> fren ve geri vites. Pistten çıkarsan yavaşlarsın. Zorluğu seç, yarış başlasın:</div><div class="rlap"><span>🔁 Tur sayısı</span><div class="opts" id="rlaps"></div></div><div id="rcards"></div></div>
 <div class="pay" id="pay"><div>⛽ Benzin doldurmak <b>200 💰</b><br>Ödemek ister misin?</div><div class="payb"><button id="payYes">Evet, öde (E)</button><button id="payNo">Hayır (H)</button></div></div></div>
 <p id="hint"></p>
@@ -1692,6 +1712,7 @@ function openInfo(){
   '<h3>💰 Para</h3>'+li(['Oyuna 500 💰 ile başlarsın.','Oyun bitince skorunun 10\'da biri kadar para kazanırsın.','Yoldaki her altın +5 💰, polisten kaçmak +100 💰, her gün ilk giriş +100 💰.'])+
   '<h3>🎁 Yoldaki güçler</h3>'+li(['Altın: +5 💰. Nitro tüpü: +35 nitro. Benzin bidonu: +25 benzin.','🛡️ Kalkan: bir çarpmayı affeder.','🧲 Mıknatıs: 10 saniye boyunca yakındaki altınları kendine çeker.','Yakın geçiş: 110 km/s üstündeyken yan şeritteki bir arabayı geçersen bonus para alırsın, art arda geçişler x5\'e kadar katlanır.'])+
   '<h3>🛣️ Yol</h3>'+li(['Yolda virajlı bölümler, nehir üstünde köprüler ve dağın içinden geçen tüneller var. Tünelde sesler yankılanır.','Trafikte arabaların yanında uzun kamyon ve otobüsler de çıkar.'])+
+  '<h3>🏆 Kariyer modu</h3>'+li(['Ana menüdeki 🏆 KARİYER MODU ile açılır. Adını yazar, küçük bir takımla sözleşme imzalarsın.','Her sezon 6 Grand Prix var. Her yarıştan önce tek başına sıralama turu atarsın, start sıran bu süreye göre belirlenir.','İlk 10 puan alır: 25-18-15-12-10-8-6-4-2-1. Pilotlar ve takımlar şampiyonası tutulur.','Her yarıştan maaş ve prim kazanırsın. Parayla motor, fren ve aerodinamik geliştirmesi alırsın.','Yarıştan sonra basına verdiğin cevaplar popülerliğini değiştirir, popülerlik daha çok sponsor parası getirir.','Sezon sonunda başarına göre büyük takımlardan transfer teklifleri gelir.'])+
   '<h3>🏁 Yarış modu</h3>'+li(['Ana menüdeki 🏁 YARIŞ MODU düğmesiyle açılır. 19 rakiple kapalı bir pistte yarışırsın. Tur sayısını (1, 2, 3, 5, 7 ya da 10) yarıştan önce seçersin.','Bu modda şerit yoktur: A D (◀ ▶) arabayı sağa sola çevirir, W (▲) gaz, S (▼) fren ve geri vitestir.','Kolay, Orta ve Zor seviyeleri var. İlk 3\'e girersen para ödülü alırsın. Zor seviyede ve tur sayısı arttıkça ödül büyür.','Virajlara çok hızlı girersen araba dönemez, dışarı kayar ve bariyere çarparak hız kaybedersin. Virajdan önce fren yap, keskin virajlarda daha çok yavaşla.'])+
   '<h3>🚧 Yol engelleri</h3>'+li(['Yol çalışması: dubalar ve bariyer şeridi kapatır, çarparsan can gider.','Yağ birikintisi: üstünden geçersen araba kayar ve kendi kendine şerit değiştirir.','Hayvanlar: inek ve koyunlar yolun karşısına geçer, çarparsan can gider.','🛫 Rampa: 80 km/s üstünde girersen havalanırsın. Havadayken çarpışma olmaz; inince +15 💰, üstünden aştığın her araba için +25 💰.','Önündeki trafik de engelden kaçmak için şerit değiştirir.'])+
   '<h3>❤️ Hasar</h3>'+li(['Arabanın 3 canı var. Her çarpmada bir can gider, araba duman çıkarır ve kısa bir süre yanıp söner (bu sürede tekrar hasar almazsın).','Üçüncü çarpmada araba patlar ve oyun biter. 🛡️ Kalkan bir çarpmayı tamamen affeder.'])+'<h3>🔧 Garaj</h3>'+li(['Ana menüdeki 🔧 Garaj düğmesi (ya da G tuşu) arabanı büyük gösterir, sürükleyerek çevirebilirsin.','Jant: '+RIMS.map(r=>r.n+(r.p?' '+r.p+' 💰':'')).join(', '),'Cam filmi: '+GLASS.map(r=>r.n+(r.p?' '+r.p+' 💰':'')).join(', '),'Araba rengi ve deseni Mağaza\'dan seçilir.'])+'<h3>⛽ Benzin</h3>'+li(['Dolu depo yaklaşık 1 dakika gider. Benzin %20\'ye düşünce yol kenarında istasyon çıkar.','İstasyona girip pompada durunca doldurmak 200 💰 tutar, önce sana sorulur.','Yoldaki benzin bidonu +25 benzin verir. Benzin biterse oyun biter.'])+
@@ -1918,47 +1939,48 @@ function rSelRender(){
   document.querySelectorAll('#rcards button').forEach(x=>x.onclick=()=>raceStart(x.dataset.d));
 }
 function rFmt(t){const m=Math.floor(t/60),s=t-m*60;return m+':'+(s<10?'0':'')+s.toFixed(1);}
-function raceStart(dif){
-  RLAPS=RLOPT.includes(S.rlaps)?S.rlaps:3;
+function raceStart(dif,opt){
+  RLAPS=opt?opt.laps:RLOPT.includes(S.rlaps)?S.rlaps:3;
   document.getElementById('rsel').style.display='none';
   try{rInit();}catch(e){console.error(e);alert('3D yüklenemedi: '+e.message);state='menu';return;}
   clearKeys();RW.lay.style.display='block';state='race';
   document.getElementById('hint').textContent='A D / ← →: direksiyon  •  W / ↑: gaz  •  S / ↓: fren ve geri  •  Esc: duraklat';
-  const D=RDIF[dif]||RDIF.orta,C=RW.cl;
+  const D=opt?opt.D:RDIF[dif]||RDIF.orta,C=RW.cl;
   RW.cars=[];RW.cm=RW.cm||{};Object.values(RW.cm).forEach(a=>a.forEach(m=>{m.visible=false;m.userData.u=0;}));
   const rMesh=col=>{const a=RW.cm[col]||(RW.cm[col]=[]);let m=a.find(o=>!o.userData.u);if(!m){m=rCarMesh(col);a.push(m);}m.userData.u=1;m.visible=true;return m;};
   const pc=skin().col||'#1e88e5',PI=10,cols=['#e10600','#ff8700','#ffd600','#00d2be','#2e7d32','#9c27b0','#ffffff','#212121','#c2185b','#795548','#0d47a1','#76ff03','#ff4081','#00b0ff','#b0bec5','#ffab40','#6a1b9a','#18ffff','#8d6e63'];
-  for(let i=0;i<RN;i++){
-    const me=i===PI,ord=i,sOff=(RW.sLine-.7-ord*.52+C.L)%C.L,side=ord%2?-.15:.17;
+  const NC=opt?opt.grid.length:RN;
+  for(let i=0;i<NC;i++){
+    const df=opt?opt.grid[i]:null,me=df?!!df.me:i===PI,ord=i,sOff=(RW.sLine-(opt&&opt.q?6:.7)-ord*.52+C.L)%C.L,side=ord%2?-.15:.17;
     let k=0,bd=1e9;for(let j=0;j<C.n;j++){const d=Math.abs(C.s[j]-sOff);if(d<bd){bd=d;k=j;}}
-    const x=C.x[k]+(-C.tz[k])*side,z=C.z[k]+C.tx[k]*side,col=me?pc:cols[i>PI?i-1:i];
-    const c={me,x,z,yaw:ryaw(C.tx[k],C.tz[k]),v:0,st:0,k,lap:-1,s:sOff,fin:0,col,nm:me?'Sen':RNM[i>PI?i-1:i],off:side,skill:me?1:(.93+Math.random()*.09),m:rMesh(col),bump:0};
+    const x=C.x[k]+(-C.tz[k])*side,z=C.z[k]+C.tx[k]*side,col=df?df.col:me?pc:cols[i>PI?i-1:i];
+    const c={me,x,z,yaw:ryaw(C.tx[k],C.tz[k]),v:0,st:0,k,lap:-1,s:sOff,fin:0,col,nm:df?df.nm:me?'Sen':RNM[i>PI?i-1:i],off:side,skill:df?(df.skill||1):me?1:(.93+Math.random()*.09),m:rMesh(col),bump:0};if(df){c.team=df.team;c.gm=df.gm;c.am=df.am;c.pm=df.pm;c.bm=df.bm;}
     rNear(c);c.ps=c.s;RW.cars.push(c);
   }
-  R={dif,D,t:-3.6,ph:'cd',res:null,finT:0,pl:RW.cars[PI],lapT:[],lapS:0,msg:'',msgT:0,paused:false};
+  R={dif,D,opt,t:opt&&opt.q?-1.6:-3.6,ph:'cd',res:null,finT:0,pl:RW.cars.find(c=>c.me),lapT:[],lapS:0,msg:'',msgT:0,paused:false};
   document.getElementById('rres').style.display='none';document.getElementById('rpause').style.display='none';document.getElementById('rPz').style.display='';
   rCam(1);
 }
 function rProg(c){return c.lap*RW.cl.L+((c.s-RW.sLine+RW.cl.L)%RW.cl.L);}
 function rCar(c,dt,inp){
-  const C=RW.cl,vm=(c.me?3.25+.1*((S.up&&S.up.e)||0):R.D.v*c.skill*(c.vb||1))*RK2;
+  const C=RW.cl,vm=(c.me?(c.pm?3.25*c.pm:3.25+.1*((S.up&&S.up.e)||0)):R.D.v*c.skill*(c.vb||1))*RK2;
   let gas=inp.g,brk=inp.b,steer=inp.s;
   const C0=RW.cl,wl=C0.w[c.k],off=wl>.5&&Math.abs(c.lat)>.37;
   if(R.ph==='cd'){gas=brk=0;}
-  if(gas&&c.v>=0)c.v+=3.6*RK2*(c.me?1:(R.D.ac||1))*(1-c.v/vm)*dt;
-  else if(brk){if(c.v>.05)c.v-=2.6*RK2*dt;else c.v=Math.max(-.7*RK2,c.v-1.4*RK2*dt);}
+  if(gas&&c.v>=0)c.v+=3.6*RK2*(c.me?1:(R.D.ac||1))*(c.am||1)*(1-c.v/vm)*dt;
+  else if(brk){if(c.v>.05)c.v-=2.6*RK2*(c.bm||1)*dt;else c.v=Math.max(-.7*RK2,c.v-1.4*RK2*dt);}
   else c.v-=Math.sign(c.v)*Math.min(Math.abs(c.v),.35*RK2*dt);
   if(off&&c.v>1.5*RK2)c.v-=2.5*RK2*dt;if(off&&c.v<-.5*RK2)c.v=-.5*RK2;
   c.st+=(steer-c.st)*Math.min(1,(c.me?11:5)*dt);
-  if(c.me){const a=Math.abs(c.v),om=c.st*Math.min(2.8*Math.min(1,a/(.6*RK2)),RGRIP*1.1/Math.max(.3*RK2,a));c.yaw-=om*Math.sign(c.v||1)*dt;c.sk=Math.abs(c.st)>.5&&a*a*RW.cl.cv[c.k]>RGRIP*1.15;}
-  else c.yaw-=c.st*rWturn(c.v,vm,R.D.gr||1)*Math.sign(c.v||1)*dt;
+  if(c.me){const a=Math.abs(c.v),om=c.st*Math.min(2.8*Math.min(1,a/(.6*RK2)),RGRIP*(c.gm||1)*1.1/Math.max(.3*RK2,a));c.yaw-=om*Math.sign(c.v||1)*dt;c.sk=Math.abs(c.st)>.5&&a*a*RW.cl.cv[c.k]>RGRIP*1.15;}
+  else c.yaw-=c.st*rWturn(c.v,vm,(R.D.gr||1)*(c.gm||1))*Math.sign(c.v||1)*dt;
   c.x+=-Math.sin(c.yaw)*c.v*dt;c.z+=-Math.cos(c.yaw)*c.v*dt;
   rNear(c);
   {const wl2=RW.cl.w[c.k];if(Math.abs(c.lat)>wl2){const k=c.k,e=Math.sign(c.lat)*(Math.abs(c.lat)-wl2);c.x-=-C.tz[k]*e;c.z-=C.tx[k]*e;const fw=Math.sign(-Math.sin(c.yaw)*C.tx[k]-Math.cos(c.yaw)*C.tz[k])||1;let da=ryaw(C.tx[k]*fw,C.tz[k]*fw)-c.yaw;while(da>Math.PI)da-=2*Math.PI;while(da<-Math.PI)da+=2*Math.PI;const sa=Math.abs(Math.sin(da));c.yaw+=da*.4;if(!c.wall){c.v*=.5;if(c.me){shake=8;beep(120,.15,'square',.12);}}c.v*=1-.75*sa;c.v-=Math.sign(c.v)*Math.min(Math.abs(c.v),3*RK2*dt);c.wt=.15;c.lat=Math.sign(c.lat)*wl2;}}
   c.y=RW.cl.h[c.k];c.tun=RW.cl.tn[c.k];c.wt=Math.max(0,(c.wt||0)-dt);c.wall=c.wt>0;
   // lap counting
   const a=(c.ps-RW.sLine+C.L)%C.L,b=(c.s-RW.sLine+C.L)%C.L;
-  if(a>C.L*.7&&b<C.L*.3){c.lap++;if(c.lap>=RLAPS&&!c.fin){c.fin=R.t;c.place=RW.cars.filter(o=>o.fin).length;}
+  if(a>C.L*.7&&b<C.L*.3){c.lap++;if(c.lap===0)c.t0=R.t;if(c.lap>=RLAPS&&!c.fin){c.fin=R.t;c.place=RW.cars.filter(o=>o.fin).length;}
     if(c.me&&c.lap>0){R.lapT.push(R.t-R.lapS);R.lapS=R.t;if(c.lap<RLAPS){R.msg=c.lap===RLAPS-1?'🏁 Son tur!':'Tur '+(c.lap+1)+'/'+RLAPS;R.msgT=2;beep(660,.15,'sine',.1);}}}
   else if(b>C.L*.7&&a<C.L*.3)c.lap--;
   c.ps=c.s;
@@ -1976,11 +1998,11 @@ function rAI(c){
   const steer=Math.max(-1,Math.min(1,-da*3.2));
   // speed target
   let lim=9;for(let j=0,i=c.k;j<14;j++,i=(i+1)%n)lim=Math.min(lim,C.lim[i]);
-  let vt=Math.min(R.D.v*c.skill*RK2,lim*R.D.g);
+  let vt=Math.min(R.D.v*c.skill*RK2,lim*R.D.g*(c.gm||1));
   if(block&&block.d<.48)vt=Math.min(vt,block.o.v*.97);
   if(c.fin)vt=Math.min(vt,1.4*RK2);
   // rubber band (only while player racing)
-  const gap=myP-rProg(R.pl);c.vb=R.pl.fin?1:R.D.rb?(gap<-3?1.08:1):(gap>5?.95:gap<-5?1.05:1);
+  const gap=myP-rProg(R.pl);c.vb=R.pl.fin||R.D.rb===2?1:R.D.rb?(gap<-3?1.08:1):(gap>5?.95:gap<-5?1.05:1);
   return{g:c.v<vt-.03,b:c.v>vt+.1,s:steer};
 }
 function rCollide(){
@@ -2020,7 +2042,7 @@ function raceTick(dt){
     }
     {const pos=rPlaces().indexOf(R.pl);if(R.lp!==undefined&&pos<R.lp&&R.ph==='run')R.cheer=Math.max(R.cheer||0,.8);R.lp=pos;}
     if(R.ph==='run'&&R.t<.1)R.cheer=1;R.cheer=Math.max(0,(R.cheer||0)-dt*.35);
-    if(R.pl.fin&&R.ph==='run'){R.ph='fin';R.cheer=1.6;R.finT=R.t;R.msg='🏁 BİTİŞ! '+R.pl.place+'. oldun';R.msgT=3;coinSound();}
+    if(R.pl.fin&&R.ph==='run'){R.ph='fin';R.cheer=1.6;R.finT=R.t;R.msg=R.opt&&R.opt.q?'⏱️ Tur süren: '+rFmt(R.pl.fin-(R.pl.t0||0)):'🏁 BİTİŞ! '+R.pl.place+'. oldun';R.msgT=3;coinSound();}
     if(R.ph==='fin'&&R.t-R.finT>3)rResults();
     const C=RW.cl,k=R.pl.k,dot=-Math.sin(R.pl.yaw)*C.tx[k]+-Math.cos(R.pl.yaw)*C.tz[k];R.wrong=dot<-.3&&R.pl.v>.2;
   }
@@ -2056,9 +2078,10 @@ function rHud(){
   const cv=RW.hud,g=RW.hc,dp=cv.width/(RW.w||1),W=RW.w,H=RW.h,u=Math.min(W,H)/100;g.setTransform(dp,0,0,dp,0,0);g.clearRect(0,0,W,H);
   const pl=R.pl,pos=rPlaces().indexOf(pl)+1,txt=(s,x,y,sz,c,al)=>{g.font='800 '+sz+'px system-ui,sans-serif';g.textAlign=al||'left';g.lineWidth=sz*.18;g.strokeStyle='rgba(0,0,0,.6)';g.strokeText(s,x,y);g.fillStyle=c||'#fff';g.fillText(s,x,y);};
   g.fillStyle='rgba(0,0,0,.45)';const bw=30*u,bh=19*u;g.beginPath();g.roundRect?g.roundRect(2*u,2*u,bw,bh,2*u):g.rect(2*u,2*u,bw,bh);g.fill();
-  const pt=pos+'/'+RW.cars.length;txt(pt,4*u,10*u,8*u,'#ffd54f');txt('SIRA',4*u+pt.length*4.6*u+1*u,10*u,3.2*u,'#fff');
+  if(R.opt&&R.opt.q){txt('SIRALAMA',4*u,9.5*u,5.5*u,'#ffd54f');txt(pl.t0===undefined?'Hazırlık turu':'Hızlı tur',4*u,15*u,4*u);txt(pl.t0===undefined?'—':rFmt(Math.max(0,(pl.fin||R.t)-pl.t0)),4*u,19.6*u,3.6*u,'#cfd8dc');}
+  else{const pt=pos+'/'+RW.cars.length;txt(pt,4*u,10*u,8*u,'#ffd54f');txt('SIRA',4*u+pt.length*4.6*u+1*u,10*u,3.2*u,'#fff');
   txt('Tur '+Math.min(RLAPS,Math.max(1,pl.lap+1))+'/'+RLAPS,4*u,15.5*u,4*u);
-  txt(rFmt(Math.max(0,pl.fin||R.t)),4*u,19.6*u,3.4*u,'#cfd8dc');
+  txt(rFmt(Math.max(0,pl.fin||R.t)),4*u,19.6*u,3.4*u,'#cfd8dc');}
   // speed
   txt(Math.round(Math.abs(pl.v)*75/RK2)+' km/s',W/2,H-(TOUCH?20:4)*u,6*u,'#fff','center');
   // minimap
@@ -2075,8 +2098,12 @@ function rHud(){
   if(R.wrong)txt('⚠️ Ters yöndesin!',W/2,H*.42,6*u,'#ff5252','center');
   if(Math.abs(pl.lat)>.37&&R.ph==='run'&&!pl.fin)txt('Pistten çıktın, yavaşladın',W/2,H*.5,4*u,'#fff','center');
 }
+function rStdBtns(){const box=document.querySelector('#rres .payb');box.innerHTML='<button id="rAgain">🔁 Tekrar yarış</button><button id="rDif">🎚️ Zorluk seç</button><button id="rHome">🏠 Ana menü</button>';
+  document.getElementById('rAgain').onclick=()=>raceStart(R?R.dif:'orta');document.getElementById('rDif').onclick=()=>{raceExit();raceOpen();};document.getElementById('rHome').onclick=()=>raceExit();}
 function rResults(){
   if(R.ph==='res')return;R.ph='res';document.getElementById('rPz').style.display='none';
+  if(R.opt){document.getElementById('rres').style.display='flex';if(R.opt.q)kQualiDone();else kRaceDone();return;}
+  rStdBtns();
   const pl=rPlaces(),me=pl.indexOf(R.pl)+1,pr=me<=3?rPr(R.D,me-1):0;
   S.coins+=pr;S.rbest=S.rbest||{};const tm=R.pl.fin;const bk=rKey(R.dif);if(tm&&(!S.rbest[bk]||tm<S.rbest[bk])){S.rbest[bk]=tm;R.nb=1;}save();
   const bl=R.lapT.length?Math.min(...R.lapT):0;
@@ -2086,7 +2113,7 @@ function rResults(){
   document.getElementById('rres').style.display='flex';
   if(pr)coinSound();
 }
-function raceExit(){if(RW)RW.lay.style.display='none';document.getElementById('rres').style.display='none';document.getElementById('rpause').style.display='none';R=null;state='menu';clearKeys();}
+function raceExit(){const wk=R&&R.opt;if(RW)RW.lay.style.display='none';document.getElementById('rres').style.display='none';document.getElementById('rpause').style.display='none';R=null;state='menu';clearKeys();if(wk&&S.kar)kOpen();}
 function racePause(on){if(!R||R.ph==='res')return;R.paused=on;document.getElementById('rpause').style.display=on?'flex':'none';clearKeys();}
 addEventListener('keydown',e=>{
   if(state==='race'&&R&&!e.repeat&&(e.code==='Escape'||e.code==='KeyP'))racePause(!R.paused);
@@ -2100,12 +2127,124 @@ document.getElementById('rDif').onclick=()=>{raceExit();raceOpen();};
 document.getElementById('rHome').onclick=()=>raceExit();
 document.getElementById('rPz').onclick=()=>racePause(true);
 document.getElementById('rRes').onclick=()=>racePause(false);
-document.getElementById('rRst').onclick=()=>raceStart(R.dif);
+document.getElementById('rRst').onclick=()=>raceStart(R.dif,R.opt);
 document.getElementById('rQuit').onclick=()=>raceExit();
 document.querySelectorAll('.rpad button').forEach(b=>{
   const k=b.dataset.k,on=e=>{e.preventDefault();keys[k]=true;b.classList.add('on');},off=e=>{e.preventDefault();keys[k]=false;b.classList.remove('on');};
   b.addEventListener('pointerdown',on);['pointerup','pointercancel','pointerleave'].forEach(t=>b.addEventListener(t,off));b.addEventListener('contextmenu',e=>e.preventDefault());
 });
+
+// ===== KARİYER MODU =====
+const KT=[{id:'kz',n:'Kızıl Yıldız',c:'#e10600',p:1.06,sal:600},{id:'gm',n:'Gümüş Ok',c:'#b0bec5',p:1.05,sal:550},{id:'mb',n:'Mavi Boğa',c:'#1e41ff',p:1.04,sal:500},{id:'tr',n:'Turuncu Rüzgâr',c:'#ff8700',p:1.03,sal:420},{id:'ye',n:'Yeşil Ejder',c:'#00a19b',p:1.015,sal:360},{id:'pp',n:'Pembe Panter',c:'#ff4fa0',p:1.0,sal:300},{id:'bk',n:'Beyaz Kartal',c:'#f5f5f5',p:.99,sal:250},{id:'al',n:'Altın Aslan',c:'#d4af37',p:.975,sal:200},{id:'mf',n:'Mor Fırtına',c:'#7b2cbf',p:.96,sal:160},{id:'ks',n:'Kara Şimşek',c:'#263238',p:.945,sal:120}];
+const KGP=['🇧🇭 Bahreyn GP','🇹🇷 İstanbul GP','🇲🇨 Monako GP','🇬🇧 Silverstone GP','🇮🇹 Monza GP','🇦🇪 Abu Dabi GP'];
+const KPTS=[25,18,15,12,10,8,6,4,2,1],KUP=[{k:'m',n:'🏎️ Motor',d:'Daha yüksek son hız'},{k:'f',n:'🛑 Fren',d:'Daha kısa fren mesafesi'},{k:'a',n:'🪽 Aerodinamik',d:'Virajlarda daha hızlı'}],KUC=[300,600,1000,1600,2500];
+const KDF={kolay:{n:'Kolay',v:.93,g:.9},orta:{n:'Orta',v:.98,g:1},zor:{n:'Zor',v:1.03,g:1.08}};
+const kTeam=id=>KT.find(t=>t.id===id)||KT[KT.length-1];
+const kEl=()=>document.getElementById('kar'),kBody=()=>document.getElementById('kbody');
+let kNew=null;
+function kOpen(){state='kar';kEl().style.display='flex';kRender();}
+function kClose(){kEl().style.display='none';state='menu';}
+function kSave(){save();}
+function kDrivers(K){// ensure driver list
+  if(K.drv&&K.drv.length===20)return;
+  const nm=RNM.slice(),d=[];let i=0;
+  for(const t of KT)for(let s=0;s<2;s++){if(t.id===K.team&&s===0){d.push({nm:K.name,team:t.id,me:1,sk:1});continue;}d.push({nm:nm[i++%nm.length],team:t.id,sk:+(0.975+Math.random()*.045).toFixed(3)});}
+  K.drv=d;
+}
+function kStart(name,team,dif){
+  const K={name:name||'Pilot',team,dif,season:1,round:0,pts:{},tpts:{},up:{m:0,f:0,a:0},pop:30,wins:0,pods:0,titles:0,last:null};
+  kDrivers(K);S.kar=K;kSave();kRender();
+}
+function kStand(K){const a=K.drv.map(d=>({nm:d.nm,team:d.team,me:d.me,p:K.pts[d.nm]||0}));a.sort((x,y)=>y.p-x.p||(x.me?-1:1));return a;}
+function kTStand(K){const a=KT.map(t=>({t,p:K.tpts[t.id]||0}));a.sort((x,y)=>y.p-x.p||y.t.p-x.t.p);return a;}
+function kRender(){
+  const K=S.kar,b=kBody();document.getElementById('kcoins').textContent='💰 '+S.coins;
+  if(!K){
+    const ofs=KT.slice(-3);kNew=kNew||{team:ofs[0].id,dif:'orta'};
+    b.innerHTML='<div class="kcol"><div class="kcard"><b>👤 Pilot adın</b><input id="kname" maxlength="16" placeholder="Adını yaz" value="'+(kNew.name||'')+'"></div>'+
+      '<div class="kcard"><b>🎚️ Zorluk</b><div class="opts" id="kdif">'+Object.entries(KDF).map(([k,d])=>'<button data-v="'+k+'" class="'+(kNew.dif===k?'on':'')+'">'+d.n+'</button>').join('')+'</div></div>'+
+      '<div class="kcard"><b>📝 İlk sözleşme teklifleri</b><small>Yeni bir pilot olarak sadece küçük takımlar seni istiyor. Birini seç:</small><div class="koff">'+ofs.map(t=>'<button data-t="'+t.id+'" class="'+(kNew.team===t.id?'on':'')+'"><i style="background:'+t.c+'"></i><span><b>'+t.n+'</b><small>Araba gücü '+kBar(t.p)+' • Maaş '+t.sal+' 💰/yarış</small></span></button>').join('')+'</div></div>'+
+      '<button class="kgo" id="kbeg">🏁 Kariyere başla</button></div>';
+    b.querySelector('#kname').oninput=e=>{kNew.name=e.target.value;};
+    b.querySelectorAll('#kdif button').forEach(x=>x.onclick=()=>{kNew.dif=x.dataset.v;kRender();});
+    b.querySelectorAll('.koff button').forEach(x=>x.onclick=()=>{kNew.team=x.dataset.t;kRender();});
+    b.querySelector('#kbeg').onclick=()=>{const n=(kNew.name||'').trim();if(!n){b.querySelector('#kname').focus();b.querySelector('#kname').placeholder='Önce adını yaz!';return;}kStart(n,kNew.team,kNew.dif);kNew=null;};
+    return;
+  }
+  kDrivers(K);const t=kTeam(K.team),st=kStand(K),ts=kTStand(K),myPos=st.findIndex(x=>x.me)+1;
+  if(K.round>=KGP.length){kSeasonEnd(K,st,ts);return;}
+  const upH=KUP.map(u=>{const lv=K.up[u.k]||0,c=KUC[lv];return '<div class="kup"><span><b>'+u.n+'</b> '+'●'.repeat(lv)+'○'.repeat(5-lv)+'<small>'+u.d+'</small></span>'+(lv>=5?'<em>MAKS</em>':'<button data-u="'+u.k+'"'+(S.coins<c?' disabled':'')+'>'+c+' 💰</button>')+'</div>';}).join('');
+  const last=K.last?'<div class="kcard klast"><b>📰 Son yarış: '+K.last.gp+'</b>'+K.last.pos+'. oldun • +'+K.last.pts+' puan • +'+K.last.money+' 💰</div>':'';
+  b.innerHTML='<div class="kcol"><div class="kcard kme"><i style="background:'+t.c+'"></i><div><b>'+K.name+'</b><small>'+t.n+' • Sezon '+K.season+' • Zorluk: '+KDF[K.dif].n+'</small><small>⭐ Popülerlik '+K.pop+' • 🏆 '+K.wins+' galibiyet • 🍾 '+K.pods+' podyum'+(K.titles?' • 👑 '+K.titles+' şampiyonluk':'')+'</small></div></div>'+
+    '<div class="kcard knext"><b>📅 Sıradaki: '+KGP[K.round]+' ('+(K.round+1)+'/'+KGP.length+')</b><small>Sıralama turunda tek başına bir tur atarsın, start sıran bu süreye göre belirlenir. Yarış '+kLaps()+' tur.</small>'+
+    '<div class="kbtns"><button class="kgo" id="kq">⏱️ Sıralama turu</button><button id="kskip">⏭️ Sıralamayı atla</button></div>'+
+    '<div class="opts" id="klaps">'+[2,3,5].map(n=>'<button data-n="'+n+'" class="'+(kLaps()===n?'on':'')+'">'+n+' tur</button>').join('')+'</div></div>'+last+
+    '<div class="kcard"><b>🔧 Mühendislik geliştirmeleri</b>'+upH+'</div></div>'+
+    '<div class="kcol"><div class="kcard"><b>🏆 Pilotlar şampiyonası</b><ol class="ktab">'+st.map((x,i)=>(i<10||x.me)?'<li class="'+(x.me?'me':'')+'"><i>'+(i+1)+'.</i><em style="background:'+kTeam(x.team).c+'"></em>'+x.nm+'<b>'+x.p+'</b></li>':'').join('')+'</ol></div>'+
+    '<div class="kcard"><b>🏭 Takımlar şampiyonası</b><ol class="ktab">'+ts.map((x,i)=>'<li class="'+(x.t.id===K.team?'me':'')+'"><i>'+(i+1)+'.</i><em style="background:'+x.t.c+'"></em>'+x.t.n+'<b>'+x.p+'</b></li>').join('')+'</ol></div>'+
+    '<button class="kreset" id="kres">🗑️ Kariyeri sıfırla</button></div>';
+  b.querySelectorAll('.kup button').forEach(x=>x.onclick=()=>{const k=x.dataset.u,lv=K.up[k]||0,c=KUC[lv];if(S.coins<c||lv>=5)return;S.coins-=c;K.up[k]=lv+1;coinSound();kSave();kRender();});
+  b.querySelectorAll('#klaps button').forEach(x=>x.onclick=()=>{S.klaps=+x.dataset.n;kSave();kRender();});
+  b.querySelector('#kq').onclick=()=>kWeekend(true);
+  b.querySelector('#kskip').onclick=()=>kWeekend(false);
+  b.querySelector('#kres').onclick=()=>{if(b.querySelector('#kres').dataset.ok){S.kar=null;kSave();kRender();}else{b.querySelector('#kres').dataset.ok=1;b.querySelector('#kres').textContent='⚠️ Emin misin? Tekrar bas';}};
+}
+function kBar(p){const n=Math.round((p-.93)/.13*5);return '▮'.repeat(Math.max(1,n))+'▯'.repeat(5-Math.max(1,n));}
+function kLaps(){return [2,3,5].includes(S.klaps)?S.klaps:3;}
+function kD(K){const f=KDF[K.dif]||KDF.orta;return{n:'Kariyer',e:'🏆',v:3.25*f.v,g:f.g,gr:f.g,ac:1,rb:2,pr:[0,0,0]};}
+function kCarDefs(K){
+  return K.drv.map(d=>{const t=kTeam(d.team);
+    if(d.me)return{me:1,nm:d.nm,col:t.c,team:t.id,pm:t.p*(1+.02*K.up.m),bm:1+.12*K.up.f,gm:t.p*t.p*(1+.03*K.up.a)};
+    return{nm:d.nm,col:t.c,team:t.id,skill:t.p*d.sk,gm:t.p*t.p*d.sk,am:t.p};});
+}
+function kEstLap(c,D){const C=RW.cl;let T=0;const v=D.v*c.skill*RK2;for(let i=0;i<C.n;i++){const j=(i+1)%C.n,ds=(C.s[j]-C.s[i]+C.L)%C.L;T+=ds/Math.min(v,C.lim[i]*D.g*c.gm);}return T*1.06;}
+function kWeekend(q){
+  const K=S.kar;kEl().style.display='none';
+  try{rInit();}catch(e){alert('3D yüklenemedi: '+e.message);kOpen();return;}
+  const D=kD(K),defs=kCarDefs(K);
+  if(q){raceStart('kariyer',{D,laps:1,q:1,grid:defs.filter(d=>d.me),defs});return;}
+  // skip quali: grid by estimated pace, player slotted by own car estimate
+  const me=defs.find(d=>d.me);const est=defs.map(d=>({d,t:d.me?kEstLap({skill:me.pm,gm:me.gm},D)*1.02:kEstLap(d,D)*(1+(Math.random()-.5)*.012)}));
+  est.sort((a,b)=>a.t-b.t);raceStart('kariyer',{D,laps:kLaps(),grid:est.map(e=>e.d),defs});
+}
+function kQualiDone(){
+  const K=S.kar,o=R.opt,D=o.D,pl=R.pl,myT=pl.fin&&pl.t0!==undefined?pl.fin-pl.t0:999;
+  const res=o.defs.map(d=>({d,t:d.me?myT:kEstLap(d,D)*(1+(Math.random()-.5)*.012)}));res.sort((a,b)=>a.t-b.t);
+  const me=res.findIndex(x=>x.d.me)+1;R.kq=res;
+  document.getElementById('rresT').textContent='⏱️ Sıralama: '+me+'. sıradan başlıyorsun';
+  document.getElementById('rresL').innerHTML=res.map((x,i)=>(i<8||x.d.me)?(i>=8?'<li class="dots">…</li>':'')+'<li class="'+(x.d.me?'me':'')+'"><i>'+(i+1)+'.</i><span style="background:'+x.d.col+'"></span>'+x.d.nm+'<b>'+(x.t<900?rFmt(x.t):'—')+'</b></li>':'').join('');
+  document.getElementById('rresP').innerHTML=me===1?'🥇 Pole pozisyonu! Yarışa en önden başlıyorsun.':'Tur süren: '+(myT<900?rFmt(myT):'—');
+  kResBtns([['🏁 Yarışa başla',()=>{document.getElementById('rres').style.display='none';raceStart('kariyer',{D,laps:kLaps(),grid:res.map(x=>x.d),defs:o.defs});},1],['🔁 Turu tekrar at',()=>{document.getElementById('rres').style.display='none';raceStart('kariyer',o);}]]);
+}
+const KPRESS={good:[['Bugünkü sonucun hakkında ne söylersin?',[['Takımıma teşekkür ederim, harika bir araba hazırladılar.',4],['Ben pistteki en iyi pilotum!',7],['Biraz şanslıydım açıkçası.',1]]],['Taraftarlarına bir mesajın var mı?',[['Bu zafer sizin için!',6],['Daha yeni başlıyoruz.',3],['Yorum yok.',-2]]]],
+  bad:[['Bugün neler yanlış gitti?',[['Benim hatamdı, bir sonraki yarışta düzelteceğim.',4],['Araba çok yavaştı.',-2],['Yorum yok.',-3]]],['Takımınla aran nasıl?',[['Çok iyi, birlikte çalışıyoruz.',3],['Daha iyi bir araba istiyorum.',-1],['Yakında göreceksiniz.',2]]]]};
+function kRaceDone(){
+  const K=S.kar,pl=rPlaces(),me=pl.indexOf(R.pl)+1,gp=KGP[K.round],t=kTeam(K.team);
+  let got=0;pl.forEach((c,i)=>{const p=KPTS[i]||0;K.pts[c.nm]=(K.pts[c.nm]||0)+p;K.tpts[c.team]=(K.tpts[c.team]||0)+p;if(c.me)got=p;});
+  const money=t.sal+got*15+(me===1?300:me<=3?150:0)+K.pop*2;S.coins+=money;
+  if(me===1)K.wins++;if(me<=3)K.pods++;K.last={gp,pos:me,pts:got,money};K.round++;kSave();
+  document.getElementById('rresT').textContent=(me===1?'🏆 '+gp+' kazananı!':me<=3?(me===2?'🥈 ':'🥉 ')+'Podyum! '+me+'. oldun':'🏁 '+gp+': '+me+'. oldun');
+  document.getElementById('rresL').innerHTML=pl.map((c,i)=>(i<8||c.me)?(i>=8?'<li class="dots">…</li>':'')+'<li class="'+(c.me?'me':'')+'"><i>'+(i+1)+'.</i><span style="background:'+c.col+'"></span>'+c.nm+'<b>'+(KPTS[i]?'+'+KPTS[i]+' p':'')+'</b></li>':'').join('');
+  const qs=me<=5?KPRESS.good:KPRESS.bad,q=qs[Math.floor(Math.random()*qs.length)];
+  document.getElementById('rresP').innerHTML='+'+got+' puan • +'+money+' 💰 (maaş + prim)<div class="kpress"><b>🎤 Muhabir: '+q[0]+'</b></div>';
+  if(money)coinSound();
+  kResBtns(q[1].map(([a,d])=>[a,()=>{K.pop=Math.max(0,Math.min(100,K.pop+d));kSave();document.getElementById('rresP').innerHTML='+'+got+' puan • +'+money+' 💰<br>⭐ Popülerlik '+(d>=0?'+':'')+d+' → '+K.pop;kResBtns([['➡️ Kariyere dön',()=>raceExit(),1]]);}]));
+}
+function kResBtns(list){const box=document.querySelector('#rres .payb');box.innerHTML='';list.forEach(([t,f,main])=>{const b=document.createElement('button');b.textContent=t;if(main)b.className='kmain';b.onclick=f;box.appendChild(b);});}
+function kSeasonEnd(K,st,ts){
+  const b=kBody(),myPos=st.findIndex(x=>x.me)+1,ch=st[0],t=kTeam(K.team);
+  if(!K.ended){K.ended=1;if(myPos===1)K.titles++;S.coins+=Math.max(0,(11-myPos))*150;kSave();}
+  const ti=KT.findIndex(x=>x.id===K.team),best=myPos<=2?0:myPos<=5?2:myPos<=10?4:6,pool=[];
+  for(let i=Math.max(0,Math.min(best,ti-1));pool.length<3&&i<KT.length;i++)if(KT[i].id!==K.team)pool.push(KT[i]);
+  const offers=[t,...pool.slice(0,2)];
+  b.innerHTML='<div class="kcol"><div class="kcard kend"><b>🏁 Sezon '+K.season+' bitti!</b><div class="kbig">👑 Şampiyon: '+ch.nm+' ('+kTeam(ch.team).n+') — '+ch.p+' puan</div><div>Sen şampiyonayı <b>'+myPos+'.</b> sırada bitirdin. Sezon sonu primi: '+Math.max(0,(11-myPos))*150+' 💰</div></div>'+
+    '<div class="kcard"><b>📝 Gelecek sezon için teklifler</b><small>Sonuçlarına göre bu takımlar seni istiyor:</small><div class="koff">'+offers.map(o=>'<button data-t="'+o.id+'"><i style="background:'+o.c+'"></i><span><b>'+o.n+(o.id===K.team?' (mevcut takımın)':'')+'</b><small>Araba gücü '+kBar(o.p)+' • Maaş '+o.sal+' 💰/yarış</small></span></button>').join('')+'</div></div></div>'+
+    '<div class="kcol"><div class="kcard"><b>🏆 Son puan durumu</b><ol class="ktab">'+st.map((x,i)=>(i<10||x.me)?'<li class="'+(x.me?'me':'')+'"><i>'+(i+1)+'.</i><em style="background:'+kTeam(x.team).c+'"></em>'+x.nm+'<b>'+x.p+'</b></li>':'').join('')+'</ol></div></div>';
+  b.querySelectorAll('.koff button').forEach(x=>x.onclick=()=>{K.team=x.dataset.t;K.season++;K.round=0;K.pts={};K.tpts={};K.ended=0;K.last=null;K.drv=null;kDrivers(K);kSave();kRender();});
+}
+document.getElementById('mKar').onclick=()=>kOpen();
+document.getElementById('kX').onclick=()=>kClose();
+addEventListener('keydown',e=>{if(state==='kar'&&e.code==='Escape'&&document.activeElement.tagName!=='INPUT')kClose();});
 
 </script>
 </body>
