@@ -1,8 +1,8 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}#menu #mPlay{background:linear-gradient(180deg,#43a047,#2e7d32);font-size:5.4cqh;font-weight:800;padding:2cqh 3cqw;border-radius:2cqh}
-.mm-go{display:flex;flex-direction:column;gap:2cqh}
-.wrap.v .mm-go{flex-direction:row;gap:2.5cqw}.wrap.v .mm-go button{flex:1}
-#menu #mRace{font-size:4.4cqh;font-weight:800;padding:1.7cqh 3cqw;background:linear-gradient(180deg,#f4511e,#bf360c);box-shadow:0 .7cqh 0 #7f2408;border-radius:2cqh}
-.wrap.v #menu #mPlay{font-size:6cqw;padding:4cqw 2cqw}.wrap.v #menu #mRace{font-size:6cqw;padding:4cqw 2cqw}
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+
+
+
+
 #race{display:none;position:absolute;inset:0;z-index:3;border-radius:8px;overflow:hidden;background:#9fd3ff;touch-action:none;-webkit-user-select:none;user-select:none}
 #rgl,#rhud{position:absolute;inset:0;width:100%;height:100%;display:block}
 #rhud{pointer-events:none;background:transparent!important}
@@ -40,7 +40,7 @@
 #rcards button[data-d=zor]{background:linear-gradient(180deg,#d32f2f,#7f0000)}
 .wrap.v #rcards{flex-direction:column}.wrap.v #rcards button{font-size:4.2cqw}.wrap.v #rcards button b{font-size:7cqw}
 .rlap{display:flex;align-items:center;gap:2cqw}#rtrk{flex-wrap:wrap;gap:.8cqh .6cqw}#rtrk button{padding:.8cqh 1.2cqw;font-size:.85em}#rtrk button.on{background:#1e88e5}.rlap .opts{flex-direction:row}#rlaps button{flex-direction:row}#rlaps button.on{background:#1e88e5}
-#menu #mKar{grid-column:1/-1;font-weight:800;background:linear-gradient(180deg,#ffca28,#f57f17);color:#1a1200;box-shadow:0 .6cqh 0 #a35400}
+
 #kbody{display:flex;gap:2cqw;flex:1;min-height:0;overflow:auto}
 .kcol{flex:1;display:flex;flex-direction:column;gap:1.6cqh;min-width:0}
 .kcard{background:rgba(255,255,255,.07);border-radius:1.6cqh;padding:1.4cqh 1.6cqw;display:flex;flex-direction:column;gap:.8cqh}
@@ -59,6 +59,42 @@
 .kpress{margin-top:1cqh;color:#fff}
 #rres .kmain{background:#2e7d32}
 .wrap.v #kbody{flex-direction:column}.wrap.v .kme>i{width:5cqw;height:5cqw}
+
+#menu{gap:2.6cqw;padding:4cqh 3.4cqw 6cqh}
+.mm-left{gap:1.8cqh}
+#menu .mm-title{font-size:6.4cqh;font-weight:900;font-style:italic;letter-spacing:.04em}
+#menu .mm-title small{font-size:2.5cqh;font-style:normal;font-weight:500;letter-spacing:0;margin-top:.9cqh;color:#b0bec5}
+#menu .mm-title::after{content:'';display:block;width:24cqh;height:.55cqh;margin-top:1.1cqh;border-radius:1cqh;background:repeating-linear-gradient(90deg,#e10600 0 2.2cqh,#fff 2.2cqh 4.4cqh)}
+.mm-go{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2cqw}
+#menu .mm-go button{position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:.2cqh;height:16cqh;padding:1.3cqh 1.3cqw;border-radius:1.8cqh;text-align:left;overflow:hidden;background:linear-gradient(150deg,var(--c1),var(--c2));box-shadow:0 .7cqh 1.8cqh rgba(0,0,0,.45),inset 0 0 0 .22cqh rgba(255,255,255,.2);transition:transform .12s,box-shadow .12s}
+#menu .mm-go button::before{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 45%,rgba(255,255,255,.16) 46%,transparent 62%)}
+#menu .mm-go button:hover{transform:translateY(-.5cqh);box-shadow:0 1.2cqh 2.4cqh rgba(0,0,0,.5),inset 0 0 0 .22cqh rgba(255,255,255,.35)}
+#menu .mm-go button i{position:absolute;right:-.6cqw;top:-1.2cqh;font-style:normal;font-size:9.5cqh;opacity:.3;transform:rotate(-14deg)}
+#menu .mm-go button em{position:absolute;left:1.3cqw;top:1.2cqh;font-style:normal;font-size:2.2cqh;width:4.2cqh;height:4.2cqh;line-height:4.2cqh;text-align:center;border-radius:50%;background:rgba(0,0,0,.28)}
+#menu .mm-go button b{position:relative;font-size:3.3cqh;font-weight:900;font-style:italic;letter-spacing:.03em;text-shadow:0 .3cqh .8cqh rgba(0,0,0,.4)}
+#menu .mm-go button small{position:relative;font-size:2cqh;opacity:.9;line-height:1.15}
+#mPlay{--c1:#34c76f;--c2:#146b3a}#mRace{--c1:#ff5a36;--c2:#9c1d06}#mKar{--c1:#ffc93c;--c2:#b8620a}
+#menu #mKar{color:#2a1700}#menu #mKar em{background:rgba(255,255,255,.35)}#menu #mKar b{text-shadow:none}
+.mm-dock{display:flex;gap:1cqw}
+#menu .mm-dock button{flex:1;display:flex;flex-direction:column;align-items:center;gap:.5cqh;padding:1cqh .3cqw .9cqh;font-size:2.15cqh;font-weight:600;color:#dfe6ea;background:rgba(255,255,255,.06);border:.2cqh solid rgba(255,255,255,.13);border-radius:1.6cqh;transition:background .12s,transform .12s}
+#menu .mm-dock button i{font-style:normal;font-size:3.6cqh;line-height:1}
+#menu .mm-dock button:hover{background:rgba(255,255,255,.14);transform:translateY(-.3cqh)}
+#menu .mm-q{font-size:.8em;gap:.7cqh 1.2cqw}
+#menu .mm-chips button{font-size:.92em;padding:.6cqh 1.1cqw;border-radius:5cqh;background:rgba(255,255,255,.08)}
+#menu .mm-chips button.on{background:#1e88e5;box-shadow:0 0 0 .2cqh #90caf9 inset}
+#menu .mm-right{font-size:.86em;gap:1.4cqh}
+#menu .mm-card{padding:1.2cqh 1.4cqw;background:rgba(255,255,255,.06);border:.2cqh solid rgba(255,255,255,.08)}
+.mm-keys{font-size:2.1cqh}
+.wrap.v #menu{padding:6cqw 5cqw 5cqw;gap:2.6cqw}
+.wrap.v .mm-left{gap:2.6cqw}
+.wrap.v #menu .mm-title{font-size:8cqw}.wrap.v #menu .mm-title small{font-size:3.4cqw}.wrap.v #menu .mm-title::after{width:30cqw;height:.9cqw}
+.wrap.v .mm-go{gap:2cqw}
+.wrap.v #menu .mm-go button{height:27cqw;padding:2.2cqw 2.2cqw}
+.wrap.v #menu .mm-go button i{font-size:15cqw}.wrap.v #menu .mm-go button em{font-size:3.2cqw;width:6.4cqw;height:6.4cqw;line-height:6.4cqw;left:2.2cqw;top:2cqw}
+.wrap.v #menu .mm-go button b{font-size:4.2cqw}.wrap.v #menu .mm-go button small{font-size:2.8cqw}
+.wrap.v .mm-dock{gap:1.6cqw}.wrap.v #menu .mm-dock button{font-size:3cqw;padding:2cqw .5cqw}.wrap.v #menu .mm-dock button i{font-size:5.6cqw}
+.wrap.v #menu .mm-q{font-size:3.4cqw}.wrap.v #menu .mm-chips button{padding:1.2cqw 2.2cqw}
+.wrap.v #menu .mm-right{font-size:3.5cqw}
 </style></head><body>
 <!DOCTYPE html>
 <html lang="tr">
@@ -153,12 +189,12 @@ canvas{touch-action:none}
 .wrap.v .gview{flex:none;height:56cqw}
 .wrap.v .gopts{flex:1}
 .wrap.v .gopts .opts button{font-size:4cqw}
-#mPlay{font-size:6cqh;font-weight:800;padding:2.2cqh 3cqw;background:linear-gradient(180deg,#43a047,#2e7d32);box-shadow:0 .8cqh 0 #1b5e20;border-radius:2cqh}
+
 .mm-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.6cqh 1.6cqw}
 .mm-grid button:last-child{grid-column:1/-1}
-#mGar{background:#6d4c41}
-#mShop{background:#f9a825;color:#222;font-weight:700}
-#mMis{background:#6a4fb3}
+
+
+
 .mm-q{display:grid;grid-template-columns:auto 1fr;gap:1cqh 1.5cqw;align-items:center;font-size:.88em;margin-top:.4cqh}
 .mm-chips{display:flex;flex-wrap:wrap;gap:.8cqw}
 #menu .mm-chips button{font-size:.88em;padding:.9cqh 1.3cqw;background:#2b3a42}
@@ -180,7 +216,7 @@ canvas{touch-action:none}
 .wrap.v .mm-left{flex:none;gap:3cqw}
 .wrap.v .mm-title{font-size:9.5cqw}
 .wrap.v .mm-title small{font-size:4.2cqw}
-.wrap.v #mPlay{font-size:8cqw;padding:4.5cqw}
+
 .wrap.v #menu button{padding:3cqw 3cqw}
 .wrap.v .mm-grid{gap:2.5cqw}
 .wrap.v .mm-q{font-size:3.8cqw;gap:2cqw 2cqw}
@@ -234,9 +270,9 @@ canvas{touch-action:none}
 <div class="pay" id="pauseBox"><div>⏸ Oyun duraklandı</div><div class="payb"><button id="resumeBtn">▶ Devam et</button><button id="pSetBtn">⚙️ Ayarlar</button><button id="menuBtn">🏠 Ana menü</button></div></div>
 <div id="menu">
 <div class="mm-left">
-<div class="mm-title">🏎️ ARABA OYUNU<small>Diğer arabalara çarpmadan git!</small></div>
-<div class="mm-go"><button id="mPlay">▶ OYUNA BAŞLA</button><button id="mRace">🏁 YARIŞ MODU</button></div>
-<div class="mm-grid"><button id="mKar">🏆 KARİYER MODU</button><button id="mShop">🛍️ Mağaza</button><button id="mGar">🔧 Garaj</button><button id="mMis">🏅 Görevler</button><button id="mSet">⚙️ Ayarlar</button><button id="mInfo">ℹ️ Nasıl oynanır</button></div>
+<div class="mm-title"><span>🏎️ ARABA OYUNU</span><small>Trafikte sür, pistte yarış, şampiyon ol</small></div>
+<div class="mm-go"><button id="mPlay"><i>🚗</i><em>▶</em><b>SERBEST SÜRÜŞ</b><small>Trafikte çarpmadan git</small></button><button id="mRace"><i>🏁</i><em>▶</em><b>YARIŞ</b><small>20 araba, gerçek pistler</small></button><button id="mKar"><i>🏆</i><em>▶</em><b>KARİYER</b><small>Takım, sezon, şampiyonluk</small></button></div>
+<div class="mm-dock"><button id="mShop"><i>🛍️</i>Mağaza</button><button id="mGar"><i>🔧</i>Garaj</button><button id="mMis"><i>🏅</i>Görevler</button><button id="mSet"><i>⚙️</i>Ayarlar</button><button id="mInfo"><i>ℹ️</i>Yardım</button></div>
 <div class="mm-q"><div>🗺️ Harita</div><div class="mm-chips" id="qMap"></div><div>🛣️ Bölüm</div><div class="mm-chips" id="qMode"></div><div>🎥 Kamera</div><div class="mm-chips" id="qCam"></div></div>
 </div>
 <div class="mm-right">
