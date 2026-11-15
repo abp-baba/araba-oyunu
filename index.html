@@ -74,6 +74,49 @@ p{margin:0;font-size:14px;opacity:.8;text-align:center;padding:0 10px}
 .card canvas{width:55%;height:auto;max-height:14cqh;object-fit:contain;background:#3a3d42;border-radius:1cqh}
 #shopBtn{display:none;position:absolute;left:50%;bottom:3cqh;transform:translateX(-50%);z-index:4;font:700 3.6cqh system-ui,sans-serif;border:0;border-radius:1.5cqh;padding:1.2cqh 3cqw;background:#ffd54f;color:#222;cursor:pointer}
 canvas{touch-action:none}
+#menu{display:none;position:absolute;inset:0;z-index:4;flex-direction:row;gap:3cqw;padding:5cqh 4cqw 7cqh;box-sizing:border-box;color:#fff;font-family:system-ui,sans-serif;font-size:3.2cqh;border-radius:8px;background:linear-gradient(90deg,rgba(6,10,16,.9),rgba(6,10,16,.55) 62%,rgba(6,10,16,.78))}
+#menu button,#overBox button{font:inherit;border:0;border-radius:1.4cqh;padding:1.4cqh 2cqw;background:#37474f;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#menu button:active,#overBox button:active{filter:brightness(1.25)}
+.mm-left{flex:1.25;display:flex;flex-direction:column;gap:2.2cqh;min-width:0}
+.mm-title{font-weight:800;font-size:9.5cqh;line-height:1;text-shadow:0 .6cqh 2cqh #000}
+.mm-title small{display:block;font-weight:500;font-size:3.3cqh;color:#cfd8dc;margin-top:1.2cqh}
+#mPlay{font-size:6cqh;font-weight:800;padding:2.2cqh 3cqw;background:linear-gradient(180deg,#43a047,#2e7d32);box-shadow:0 .8cqh 0 #1b5e20;border-radius:2cqh}
+.mm-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.6cqh 1.6cqw}
+#mShop{background:#f9a825;color:#222;font-weight:700}
+#mMis{background:#6a4fb3}
+.mm-q{display:grid;grid-template-columns:auto 1fr;gap:1cqh 1.5cqw;align-items:center;font-size:.88em;margin-top:.4cqh}
+.mm-chips{display:flex;flex-wrap:wrap;gap:.8cqw}
+#menu .mm-chips button{font-size:.88em;padding:.9cqh 1.3cqw;background:#2b3a42}
+#menu .mm-chips button.on{background:#1e88e5}
+.mm-right{flex:1;display:flex;flex-direction:column;gap:1.8cqh;min-width:0}
+.mm-stats{display:flex;justify-content:space-between;gap:1cqw;font-weight:700;font-size:1.08em}
+#mToast{display:none;background:rgba(255,213,79,.16);border:.3cqh solid rgba(255,213,79,.55);color:#ffe082;border-radius:1.4cqh;padding:1cqh 1.4cqw;font-size:.88em;font-weight:600}
+.mm-card{background:rgba(20,28,34,.84);border-radius:1.6cqh;padding:1.6cqh 1.6cqw}
+.mm-card b{display:block;color:#ffd54f;margin-bottom:.8cqh}
+.mm-card ol{margin:0;padding-left:1.5em;font-size:.9em}
+.dm{display:flex;justify-content:space-between;gap:1cqw;font-size:.82em;padding:.35cqh 0}
+.dm span:last-child{white-space:nowrap;color:#b0bec5}
+.mm-car{font-size:.85em;color:#cfd8dc}
+.mm-keys{position:absolute;left:4cqw;right:4cqw;bottom:2cqh;font-size:2.5cqh;opacity:.75}
+#overBox{display:none;position:absolute;left:50%;bottom:4cqh;transform:translateX(-50%);z-index:4;gap:2cqw;white-space:nowrap}
+#overBox button{font-weight:700;font-size:3.6cqh;padding:1.5cqh 2.5cqw}
+#oAgain{background:#2e7d32!important}#oShop{background:#f9a825!important;color:#222!important}
+.wrap.v #menu{flex-direction:column;font-size:4cqw;padding:7cqw 6cqw 6cqw;gap:3cqw}
+.wrap.v .mm-left{flex:none;gap:3cqw}
+.wrap.v .mm-title{font-size:9.5cqw}
+.wrap.v .mm-title small{font-size:4.2cqw}
+.wrap.v #mPlay{font-size:8cqw;padding:4.5cqw}
+.wrap.v #menu button{padding:3cqw 3cqw}
+.wrap.v .mm-grid{gap:2.5cqw}
+.wrap.v .mm-q{font-size:3.8cqw;gap:2cqw 2cqw}
+.wrap.v #menu .mm-chips button{padding:1.6cqw 2.6cqw}
+.wrap.v .mm-chips{gap:1.4cqw}
+.wrap.v .mm-right{flex:1;gap:2.5cqw;overflow:hidden}
+.wrap.v .mm-card{padding:2.6cqw 3cqw}
+.wrap.v .mm-keys{display:none}
+.wrap.v .mm-car{font-size:3.4cqw}
+.wrap.v #overBox{bottom:7cqh;flex-wrap:wrap;justify-content:center;width:92%;gap:3cqw}
+.wrap.v #overBox button{font-size:5cqw;padding:3cqw 4cqw}
 @media (pointer:coarse){.pad{display:flex}p{display:none}.wrap{width:min(100vw,calc((100dvh - 8px)*16/9))}.wrap.v{width:min(100vw,calc((100dvh - 8px)*9/16))}}
 </style>
 </head>
@@ -114,7 +157,24 @@ canvas{touch-action:none}
 </div>
 <button id="pauseBtn">⏸ Duraklat</button>
 <div class="pay" id="pauseBox"><div>⏸ Oyun duraklandı</div><div class="payb"><button id="resumeBtn">▶ Devam et</button><button id="pSetBtn">⚙️ Ayarlar</button><button id="menuBtn">🏠 Ana menü</button></div></div>
-<div class="shop" id="info"><div class="shead"><b>ℹ️ Oyun Bilgisi</b><button id="closeInfo">▶ Oyuna Başla</button></div><div id="infoBody"></div></div>
+<div id="menu">
+<div class="mm-left">
+<div class="mm-title">🏎️ ARABA OYUNU<small>Diğer arabalara çarpmadan git!</small></div>
+<button id="mPlay">▶ OYUNA BAŞLA</button>
+<div class="mm-grid"><button id="mShop">🛍️ Mağaza</button><button id="mMis">🏅 Görevler</button><button id="mSet">⚙️ Ayarlar</button><button id="mInfo">ℹ️ Nasıl oynanır</button></div>
+<div class="mm-q"><div>🗺️ Harita</div><div class="mm-chips" id="qMap"></div><div>🛣️ Bölüm</div><div class="mm-chips" id="qMode"></div><div>🎥 Kamera</div><div class="mm-chips" id="qCam"></div></div>
+</div>
+<div class="mm-right">
+<div class="mm-stats"><span id="mCoins"></span><span id="mBest"></span></div>
+<div id="mToast"></div>
+<div class="mm-card"><b>🏆 En iyi 5 skor</b><ol id="mTop"></ol></div>
+<div class="mm-card"><b>📅 Günlük görevler</b><div id="mDm"></div></div>
+<div class="mm-car" id="mCar"></div>
+</div>
+<div class="mm-keys" id="mKeys"></div>
+</div>
+<div id="overBox"><button id="oAgain">▶ Tekrar oyna</button><button id="oHome">🏠 Ana menü</button><button id="oShop">🛍️ Mağaza</button></div>
+<div class="shop" id="info"><div class="shead"><b>ℹ️ Oyun Bilgisi</b><button id="closeInfo">← Geri</button></div><div id="infoBody"></div></div>
 <div class="pay" id="pay"><div>⛽ Benzin doldurmak <b>200 💰</b><br>Ödemek ister misin?</div><div class="payb"><button id="payYes">Evet, öde (E)</button><button id="payNo">Hayır (H)</button></div></div></div>
 <p id="hint"></p>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -210,9 +270,10 @@ addEventListener('keydown',e=>{
   if(!e.repeat||keys[e.code])keys[e.code]=true;const st0=state,ask0=asking;
   if(!e.repeat){const d=laneKey(e.code);if(d)changeLane(d);}
   if(state!=='shop'&&state!=='set'&&state!=='info'&&['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();
-  if((e.code==='Space'||e.code==='Enter')&&(state==='menu'||state==='over'))start();
+  if((e.code==='Space'||e.code==='Enter')&&(state==='menu'||state==='over')&&!(document.activeElement&&document.activeElement.tagName==='BUTTON'))start();
+  if(st0==='over'&&e.code==='Escape')goHome();
   if(e.code==='KeyM'&&(state==='menu'||state==='over'))openShop();
-  if(e.code==='KeyV'){S.cam=S.cam==='3d'?'2d':'3d';save();}
+  if(e.code==='KeyV'){S.cam=S.cam==='3d'?'2d':'3d';save();if(state==='menu')renderMenu();}
   if(e.code==='Escape'&&state==='shop')closeShop();
   if(e.code==='Escape'&&state==='set')closeSet();
   else if(state==='info'&&(e.code==='Enter'||e.code==='Escape'))closeInfo();
@@ -223,7 +284,7 @@ addEventListener('keydown',e=>{
 addEventListener('keyup',e=>{keys[e.code]=false});
 function clearKeys(){for(const k in keys)keys[k]=false;document.querySelectorAll('.pad button.on').forEach(b=>b.classList.remove('on'));}
 addEventListener('blur',clearKeys);document.addEventListener('visibilitychange',()=>{if(document.hidden)clearKeys();});
-cv.addEventListener('pointerdown',()=>{if(state==='menu'||state==='over')start();});
+cv.addEventListener('pointerdown',()=>{if(state==='over')start();});
 document.querySelectorAll('.pad button').forEach(b=>{
   const k=b.dataset.k;
   const on=e=>{e.preventDefault();keys[k]=true;b.classList.add('on');if(state==='play'){const d=laneKey(k);if(d)changeLane(d);}else if(state==='menu'||state==='over')start();};
@@ -1234,26 +1295,17 @@ function draw(){
   }
   if(state==='menu'||state==='over'){const bh=(SH-H)/2;ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(0,0,SW,bh);ctx.fillRect(0,SH-bh,SW,bh);}
   ctx.save();ctx.translate((SW-W)/2,(SH-H)/2);
-  if(state==='menu'){
-    ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(0,0,W,H);
-    text('ARABA OYUNU',W/2,290,84);
-    text('Diğer arabalara çarpmadan git!',W/2,350,32,'#ddd');
-    text(TOUCH?'Ekrandaki ok düğmeleriyle oyna':(vk()?'W S: gaz/fren  •  A D: şerit':'A D: gaz/fren  •  W S: şerit'),W/2,420,30,'#ffd54f');
-    text(TOUCH?'Başlamak için ekrana dokun':'Başlamak için BOŞLUK',W/2,500,36);
-    if(!TOUCH)text('Mağaza: M tuşu veya 🛍️ düğmesi',W/2,545,26,'#ddd');
-    text(TOUCH?'🔥 Nitro: turuncu düğme':'🔥 Nitro: BOŞLUK',W/2,455,26,'#4fc3f7');
-    text('🏆 '+(S.top.slice(0,3).join('  •  ')||'—'),W/2,590,26,'#ddd');
-  }
+  if(state==='menu'){ctx.fillStyle='rgba(0,0,0,.3)';ctx.fillRect(0,0,W,H);}
   if(state==='over'){
     ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(0,0,W,H);
     text(overMsg,W/2,300,76,'#ff5252');
     text('Skor: '+Math.floor(dist/10)+'   En iyi: '+best,W/2,380,40);
     text('Kazanılan para: 💰 '+earned,W/2,430,36,'#fff');
-    text(TOUCH?'Tekrar için ekrana dokun':'Tekrar: BOŞLUK  •  Mağaza: M',W/2,500,32,'#ffd54f');
+    text(TOUCH?'Tekrar için ekrana dokun':'Tekrar: BOŞLUK  •  Ana menü: Esc',W/2,500,32,'#ffd54f');
     text('🏆 '+S.top.slice(0,3).join('  •  '),W/2,555,26,'#ddd');
   }
   ctx.restore();
-  if(toastT>0){toastT--;banner(toast,vert?270:140);}
+  if(toastT>0){toastT--;if(state!=='menu')banner(toast,vert?270:140);}
 }
 
 let last=performance.now();
@@ -1264,7 +1316,7 @@ function loop(t){
 }
 const shopEl=document.getElementById('shop'),grid=document.getElementById('grid'),shopBtn=document.getElementById('shopBtn');
 let tab='cars',prev='menu',uiVis=null;
-function uiSync(){const v=state==='menu'||state==='over';if(v!==uiVis){uiVis=v;shopBtn.style.display=v?'block':'none';setBtn.style.display=v?'block':'none';}
+function uiSync(){const mv=state==='menu',ov=state==='over';if(mv!==mVis){mVis=mv;menuEl.style.display=mv?'flex':'none';if(mv)renderMenu();}if(mv){const t=toastT>0?toast:'';if(t!==mToastT){mToastT=t;mToast.textContent=t;mToast.style.display=t?'block':'none';}}if(ov!==oVis){oVis=ov;overBox.style.display=ov?'flex':'none';}
   const a=asking&&state==='play';if(a!==payVis){payVis=a;payBox.style.display=a?'flex':'none';}
   const np=state!=='play'&&state!=='crash';if(np!==npVis){npVis=np;document.querySelector('.wrap').classList.toggle('np',np);}
   const pz=state==='play',pb=state==='pause';if(pz!==pzVis){pzVis=pz;pauseBtn.style.display=pz?'block':'none';}if(pb!==pbVis){pbVis=pb;pauseBox.style.display=pb?'flex':'none';}}
@@ -1393,6 +1445,31 @@ function openInfo(){
 }
 function closeInfo(){state=infoPrev;infoEl.style.display='none';cv.focus();}
 document.getElementById('closeInfo').onclick=closeInfo;
+const menuEl=document.getElementById('menu'),overBox=document.getElementById('overBox');let mVis=null,oVis=null,mToastT='';const mToast=document.getElementById('mToast');
+const QMAP=[['cimen','Çimen'],['col','Çöl'],['kar','Kar'],['gece','Gece'],['sonbahar','Sonbahar']],QMODE=[['tek','Aynı yön'],['cift','Gidiş-geliş']],QCAM=[['2d','2D üstten'],['3d','3D arkadan']];
+function chips(id,list,cur,set){const el=document.getElementById(id);el.innerHTML='';list.forEach(([v,n])=>{const b=document.createElement('button');b.textContent=n;b.className=cur===v?'on':'';b.onclick=()=>{set(v);save();renderMenu();};el.append(b);});}
+function renderMenu(){
+  try{dmInit();}catch(e){}
+  document.getElementById('mCoins').textContent='💰 '+S.coins;
+  document.getElementById('mBest').textContent='🏆 En iyi: '+best;
+  document.getElementById('mTop').innerHTML=(S.top&&S.top.length?S.top.slice(0,5).map(x=>'<li>'+x+'</li>').join(''):'<li style="list-style:none;margin-left:-1.5em">Henüz skor yok</li>');
+  document.getElementById('mDm').innerHTML=(S.dm&&S.dm.list?S.dm.list.map(m=>'<div class="dm"><span>'+(m.done?'✅':'⬜')+' '+dmName(m)+'</span><span>'+Math.min(m.p||0,m.g)+'/'+m.g+' • +'+m.r+' 💰</span></div>').join(''):'—');
+  const c=CARS.find(o=>o.id===S.car)||CARS[0],pt=PATS.find(o=>o.id===S.pat)||PATS[0];
+  document.getElementById('mCar').textContent='🚗 '+c.n+' • '+pt.n+' desen (değiştirmek için Mağaza)';
+  chips('qMap',QMAP,S.map||'cimen',v=>{S.map=v;});
+  chips('qMode',QMODE,S.mode||'tek',v=>{S.mode=v;player=null;enemies=[];});
+  chips('qCam',QCAM,S.cam||'2d',v=>{S.cam=v;});
+  document.getElementById('mKeys').textContent=TOUCH?'Telefonda ekrandaki ok düğmeleriyle oynanır  •  🔥 turuncu düğme: nitro':'Başlat: BOŞLUK  •  Mağaza: M  •  Kamera: V  •  '+(vk()?'W S: gaz/fren, A D: şerit':'A D: gaz/fren, W S: şerit')+'  •  Nitro: BOŞLUK';
+}
+function goHome(){if(state!=='over')return;player=null;enemies=[];items=[];station=null;radar=null;police=null;asking=false;refueling=false;state='menu';cv.focus();}
+document.getElementById('mPlay').onclick=()=>start();
+document.getElementById('mShop').onclick=()=>{tab='cars';openShop();};
+document.getElementById('mMis').onclick=()=>{tab='ms';openShop();};
+document.getElementById('mSet').onclick=()=>openSet();
+document.getElementById('mInfo').onclick=()=>openInfo();
+document.getElementById('oAgain').onclick=()=>start();
+document.getElementById('oHome').onclick=goHome;
+document.getElementById('oShop').onclick=()=>{tab='cars';openShop();};
 document.getElementById('infoBtn').onclick=()=>{closeSet();openInfo();};
 const pauseBtn=document.getElementById('pauseBtn'),pauseBox=document.getElementById('pauseBox');let pzVis=null,pbVis=null,npVis=null;
 function pauseGame(){if(state==='play'){state='pause';clearKeys();pauseBtn.blur();}}
