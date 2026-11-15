@@ -1812,7 +1812,7 @@ function rInit(){
   let L=0;for(let i=0;i<n;i++){const a=P[i],b=P[(i+1)%n],dx=b[0]-a[0],dz=b[1]-a[1],d=Math.hypot(dx,dz)||1e-6;cs[i]=L;L+=d;tx[i]=dx/d;tz[i]=dz/d;}
   for(let i=0;i<n;i++){const a=(i-3+n)%n,b=(i+3)%n,c=Math.atan2(tx[a]*tz[b]-tz[a]*tx[b],tx[a]*tx[b]+tz[a]*tz[b]);cv[i]=Math.abs(c)/(cs[b]-cs[a]+(b<a?L:0));}
   const lim=new Float32Array(n);for(let i=0;i<n;i++){const Rr=cv[i]>.05?1/cv[i]:99;lim[i]=Math.min(9,Math.sqrt(RGRIP*.96*Rr));}
-  for(let rep=0;rep<2;rep++)for(let i=n-1;i>=0;i--){const j=(i+1)%n,ds=(cs[j]-cs[i]+L)%L;lim[i]=Math.min(lim[i],Math.sqrt(lim[j]*lim[j]+2*6.5*ds));}
+  for(let rep=0;rep<2;rep++)for(let i=n-1;i>=0;i--){const j=(i+1)%n,ds=(cs[j]-cs[i]+L)%L;lim[i]=Math.min(lim[i],Math.sqrt(lim[j]*lim[j]+2*1.9*ds));}
   RW.cl={x:P.map(p=>p[0]),z:P.map(p=>p[1]),s:cs,tx,tz,lim,cv,n,L};
   // line index
   let li=0,bd=1e9;for(let i=0;i<n;i++){const d=Math.hypot(P[i][0]-tr.sAt.lineXZ[0],P[i][1]-tr.sAt.lineXZ[1]);if(d<bd){bd=d;li=i;}}RW.sLine=cs[li];
@@ -1892,7 +1892,7 @@ function rCar(c,dt,inp){
   const off=Math.abs(c.lat)>.37;
   if(R.ph==='cd'){gas=brk=0;}
   if(gas&&c.v>=0)c.v+=3.6*(1-c.v/vm)*dt;
-  else if(brk){if(c.v>.05)c.v-=9*dt;else c.v=Math.max(-.7,c.v-1.4*dt);}
+  else if(brk){if(c.v>.05)c.v-=2.6*dt;else c.v=Math.max(-.7,c.v-1.4*dt);}
   else c.v-=Math.sign(c.v)*Math.min(Math.abs(c.v),.35*dt);
   if(off&&c.v>1.5)c.v-=2.5*dt;if(off&&c.v<-.5)c.v=-.5;
   c.st+=(steer-c.st)*Math.min(1,(c.me?7:5)*dt);
