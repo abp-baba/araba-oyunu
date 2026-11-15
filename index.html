@@ -34,10 +34,12 @@
 #rcards button{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:2cqh;font:600 3.2cqh system-ui,sans-serif;color:#fff;border:0;border-radius:2cqh;background:#263238;cursor:pointer;padding:2cqh 1cqw;text-align:center}
 #rcards button b{font-size:6cqh}
 #rcards button small{color:#b0bec5}
+#rcards button span{font-size:.88em}
 #rcards button[data-d=kolay]{background:linear-gradient(180deg,#2e7d32,#1b5e20)}
 #rcards button[data-d=orta]{background:linear-gradient(180deg,#f9a825,#e65100)}
 #rcards button[data-d=zor]{background:linear-gradient(180deg,#d32f2f,#7f0000)}
 .wrap.v #rcards{flex-direction:column}.wrap.v #rcards button{font-size:4.2cqw}.wrap.v #rcards button b{font-size:7cqw}
+.rlap{display:flex;align-items:center;gap:2cqw}.rlap .opts{flex-direction:row}#rlaps button{flex-direction:row}#rlaps button.on{background:#1e88e5}
 </style></head><body>
 <!DOCTYPE html>
 <html lang="tr">
@@ -235,7 +237,7 @@ canvas{touch-action:none}
 <div class="pay" id="rpause"><div>⏸ Yarış duraklatıldı</div><div class="payb"><button id="rRes">▶ Devam et</button><button id="rRst">🔁 Yeniden başla</button><button id="rQuit">🏠 Ana menü</button></div></div>
 <div id="rres"><div id="rresT"></div><ol id="rresL"></ol><div id="rresP"></div><div class="payb"><button id="rAgain">🔁 Tekrar yarış</button><button id="rDif">🎚️ Zorluk seç</button><button id="rHome">🏠 Ana menü</button></div></div>
 </div>
-<div class="shop" id="rsel"><div class="shead"><b>🏁 Yarış Modu</b><button id="rselX">✕ Kapat</button></div><div class="rinfo">5 rakiple 3 tur yarışırsın. Bu modda direksiyonu sen çevirirsin: <b>A D / ◀ ▶</b> sağa sola döner, <b>W / ▲</b> gaz, <b>S / ▼</b> fren ve geri vites. Pistten çıkarsan yavaşlarsın. Zorluğu seç, yarış başlasın:</div><div id="rcards"></div></div>
+<div class="shop" id="rsel"><div class="shead"><b>🏁 Yarış Modu</b><button id="rselX">✕ Kapat</button></div><div class="rinfo">5 rakiple yarışırsın. Bu modda direksiyonu sen çevirirsin: <b>A D / ◀ ▶</b> sağa sola döner, <b>W / ▲</b> gaz, <b>S / ▼</b> fren ve geri vites. Pistten çıkarsan yavaşlarsın. Zorluğu seç, yarış başlasın:</div><div class="rlap"><span>🔁 Tur sayısı</span><div class="opts" id="rlaps"></div></div><div id="rcards"></div></div>
 <div class="pay" id="pay"><div>⛽ Benzin doldurmak <b>200 💰</b><br>Ödemek ister misin?</div><div class="payb"><button id="payYes">Evet, öde (E)</button><button id="payNo">Hayır (H)</button></div></div></div>
 <p id="hint"></p>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1689,7 +1691,7 @@ function openInfo(){
   '<h3>💰 Para</h3>'+li(['Oyuna 500 💰 ile başlarsın.','Oyun bitince skorunun 10\'da biri kadar para kazanırsın.','Yoldaki her altın +5 💰, polisten kaçmak +100 💰, her gün ilk giriş +100 💰.'])+
   '<h3>🎁 Yoldaki güçler</h3>'+li(['Altın: +5 💰. Nitro tüpü: +35 nitro. Benzin bidonu: +25 benzin.','🛡️ Kalkan: bir çarpmayı affeder.','🧲 Mıknatıs: 10 saniye boyunca yakındaki altınları kendine çeker.','Yakın geçiş: 110 km/s üstündeyken yan şeritteki bir arabayı geçersen bonus para alırsın, art arda geçişler x5\'e kadar katlanır.'])+
   '<h3>🛣️ Yol</h3>'+li(['Yolda virajlı bölümler, nehir üstünde köprüler ve dağın içinden geçen tüneller var. Tünelde sesler yankılanır.','Trafikte arabaların yanında uzun kamyon ve otobüsler de çıkar.'])+
-  '<h3>🏁 Yarış modu</h3>'+li(['Ana menüdeki 🏁 YARIŞ MODU düğmesiyle açılır. 5 rakiple kapalı bir pistte 3 tur yarışırsın.','Bu modda şerit yoktur: A D (◀ ▶) arabayı sağa sola çevirir, W (▲) gaz, S (▼) fren ve geri vitestir.','Kolay, Orta ve Zor seviyeleri var. İlk 3\'e girersen para ödülü alırsın, zor seviyede ödül daha büyüktür.','Pistten çıkarsan yavaşlarsın, bariyerlere çarparsan hız kaybedersin. Keskin virajlardan önce fren yap.'])+
+  '<h3>🏁 Yarış modu</h3>'+li(['Ana menüdeki 🏁 YARIŞ MODU düğmesiyle açılır. 5 rakiple kapalı bir pistte yarışırsın. Tur sayısını (1, 2, 3, 5, 7 ya da 10) yarıştan önce seçersin.','Bu modda şerit yoktur: A D (◀ ▶) arabayı sağa sola çevirir, W (▲) gaz, S (▼) fren ve geri vitestir.','Kolay, Orta ve Zor seviyeleri var. İlk 3\'e girersen para ödülü alırsın. Zor seviyede ve tur sayısı arttıkça ödül büyür.','Pistten çıkarsan yavaşlarsın, bariyerlere çarparsan hız kaybedersin. Keskin virajlardan önce fren yap.'])+
   '<h3>🚧 Yol engelleri</h3>'+li(['Yol çalışması: dubalar ve bariyer şeridi kapatır, çarparsan can gider.','Yağ birikintisi: üstünden geçersen araba kayar ve kendi kendine şerit değiştirir.','Hayvanlar: inek ve koyunlar yolun karşısına geçer, çarparsan can gider.','🛫 Rampa: 80 km/s üstünde girersen havalanırsın. Havadayken çarpışma olmaz; inince +15 💰, üstünden aştığın her araba için +25 💰.','Önündeki trafik de engelden kaçmak için şerit değiştirir.'])+
   '<h3>❤️ Hasar</h3>'+li(['Arabanın 3 canı var. Her çarpmada bir can gider, araba duman çıkarır ve kısa bir süre yanıp söner (bu sürede tekrar hasar almazsın).','Üçüncü çarpmada araba patlar ve oyun biter. 🛡️ Kalkan bir çarpmayı tamamen affeder.'])+'<h3>🔧 Garaj</h3>'+li(['Ana menüdeki 🔧 Garaj düğmesi (ya da G tuşu) arabanı büyük gösterir, sürükleyerek çevirebilirsin.','Jant: '+RIMS.map(r=>r.n+(r.p?' '+r.p+' 💰':'')).join(', '),'Cam filmi: '+GLASS.map(r=>r.n+(r.p?' '+r.p+' 💰':'')).join(', '),'Araba rengi ve deseni Mağaza\'dan seçilir.'])+'<h3>⛽ Benzin</h3>'+li(['Dolu depo yaklaşık 1 dakika gider. Benzin %20\'ye düşünce yol kenarında istasyon çıkar.','İstasyona girip pompada durunca doldurmak 200 💰 tutar, önce sana sorulur.','Yoldaki benzin bidonu +25 benzin verir. Benzin biterse oyun biter.'])+
   '<h3>📸 Radar ve polis</h3>'+li(['Radar kapısından limitin üstünde geçersen 100 💰 ceza yersin ve polis peşine düşer.','Polis arkandan seni takip eder. Hızın 60 km/s altına düşerse yakalar: oyun biter ve 150 💰 kaybedersin. 30 saniye dayanırsan takibi bırakır ve +100 💰 alırsın.'])+
@@ -1747,7 +1749,7 @@ const RK={"roadStraight":{"p":"ov72/475ov72/3b99P72/4759P72/4759P72/3b99P72/3b99
 // ===== YARIŞ MODU =====
 const RTRACK='S2 P2 F2 S4 R3 S4 R2 L2 S3 R3 S8 R2 R2 S2 L2 L2 S1 R3 S4 R3';
 const RDIF={kolay:{n:'Kolay',e:'🟢',v:2.5,g:.8,pr:[150,90,50]},orta:{n:'Orta',e:'🟡',v:2.95,g:.92,pr:[300,180,90]},zor:{n:'Zor',e:'🔴',v:3.22,g:1,pr:[600,350,150]}};
-const RLAPS=3,RCOL=['#e53935','#fb8c00','#fdd835','#8e24aa','#00acc1'],RNM=['Ali','Ayşe','Mert','Zeynep','Can'];
+let RLAPS=3;const RLOPT=[1,2,3,5,7,10],rPr=(d,i)=>Math.round(d.pr[i]*RLAPS/3/10)*10,rKey=d=>RLAPS===3?d:d+'_'+RLAPS,RCOL=['#e53935','#fb8c00','#fdd835','#8e24aa','#00acc1'],RNM=['Ali','Ayşe','Mert','Zeynep','Can'];
 const RCAR=.22;
 let R=null,RW=null;
 function rkGeo(n){
@@ -1856,12 +1858,15 @@ function rNear(c){// nearest centerline index (local search), returns lateral of
 function rWturn(v,vm){return 1.9*Math.min(1,Math.abs(v)/.9)*(1-.25*Math.min(1,Math.abs(v)/vm));}
 function raceOpen(){state='rsel';document.getElementById('rsel').style.display='flex';rSelRender();}
 function rSelRender(){
-  const b=S.rbest||{};
-  document.getElementById('rcards').innerHTML=Object.entries(RDIF).map(([k,d])=>'<button data-d="'+k+'"><b>'+d.e+' '+d.n+'</b><span>1. '+d.pr[0]+' 💰 • 2. '+d.pr[1]+' 💰 • 3. '+d.pr[2]+' 💰</span><small>'+(b[k]?'En iyi süren: '+rFmt(b[k]):'Henüz yarışmadın')+'</small></button>').join('');
+  const b=S.rbest||{};RLAPS=RLOPT.includes(S.rlaps)?S.rlaps:3;
+  document.getElementById('rlaps').innerHTML=RLOPT.map(n=>'<button class="'+(n===RLAPS?'on':'')+'" data-n="'+n+'">'+n+' tur</button>').join('');
+  document.querySelectorAll('#rlaps button').forEach(x=>x.onclick=()=>{S.rlaps=+x.dataset.n;save();rSelRender();});
+  document.getElementById('rcards').innerHTML=Object.entries(RDIF).map(([k,d])=>'<button data-d="'+k+'"><b>'+d.e+' '+d.n+'</b><span>1. '+rPr(d,0)+' 💰 • 2. '+rPr(d,1)+' 💰 • 3. '+rPr(d,2)+' 💰</span><small>'+(b[rKey(k)]?RLAPS+' turda en iyi süren: '+rFmt(b[rKey(k)]):RLAPS+' turda henüz yarışmadın')+'</small></button>').join('');
   document.querySelectorAll('#rcards button').forEach(x=>x.onclick=()=>raceStart(x.dataset.d));
 }
 function rFmt(t){const m=Math.floor(t/60),s=t-m*60;return m+':'+(s<10?'0':'')+s.toFixed(1);}
 function raceStart(dif){
+  RLAPS=RLOPT.includes(S.rlaps)?S.rlaps:3;
   document.getElementById('rsel').style.display='none';
   try{rInit();}catch(e){console.error(e);alert('3D yüklenemedi: '+e.message);state='menu';return;}
   clearKeys();RW.lay.style.display='block';state='race';
@@ -1989,10 +1994,10 @@ function rHud(){
 }
 function rResults(){
   if(R.ph==='res')return;R.ph='res';document.getElementById('rPz').style.display='none';
-  const pl=rPlaces(),me=pl.indexOf(R.pl)+1,pr=R.D.pr[me-1]||0;
-  S.coins+=pr;S.rbest=S.rbest||{};const tm=R.pl.fin;if(tm&&(!S.rbest[R.dif]||tm<S.rbest[R.dif])){S.rbest[R.dif]=tm;R.nb=1;}save();
+  const pl=rPlaces(),me=pl.indexOf(R.pl)+1,pr=me<=3?rPr(R.D,me-1):0;
+  S.coins+=pr;S.rbest=S.rbest||{};const tm=R.pl.fin;const bk=rKey(R.dif);if(tm&&(!S.rbest[bk]||tm<S.rbest[bk])){S.rbest[bk]=tm;R.nb=1;}save();
   const bl=R.lapT.length?Math.min(...R.lapT):0;
-  document.getElementById('rresT').textContent=(me===1?'🏆 Kazandın!':me<=3?'🥈 '+me+'. oldun!':'🏁 '+me+'. oldun')+' — '+R.D.e+' '+R.D.n;
+  document.getElementById('rresT').textContent=(me===1?'🏆 Kazandın!':me<=3?(me===2?'🥈 ':'🥉 ')+me+'. oldun!':'🏁 '+me+'. oldun')+' — '+R.D.e+' '+R.D.n+', '+RLAPS+' tur';
   document.getElementById('rresL').innerHTML=pl.map((c,i)=>'<li class="'+(c.me?'me':'')+'"><span style="background:'+c.col+'"></span>'+c.nm+'<b>'+(c.fin?rFmt(c.fin):'—')+'</b></li>').join('');
   document.getElementById('rresP').innerHTML=(pr?'+'+pr+' 💰 ödül':'Ödül yok, ilk 3\'e girmen lazım')+(bl?'<br>En hızlı turun: '+rFmt(bl):'')+(R.nb?'<br>⭐ Yeni en iyi süren!':'');
   document.getElementById('rres').style.display='flex';
