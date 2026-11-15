@@ -80,8 +80,22 @@ canvas{touch-action:none}
 .mm-left{flex:1.25;display:flex;flex-direction:column;gap:2.2cqh;min-width:0}
 .mm-title{font-weight:800;font-size:9.5cqh;line-height:1;text-shadow:0 .6cqh 2cqh #000}
 .mm-title small{display:block;font-weight:500;font-size:3.3cqh;color:#cfd8dc;margin-top:1.2cqh}
+.gbody{display:flex;gap:2cqw;flex:1;min-height:0}
+.gview{flex:1.4;position:relative;min-height:0;background:radial-gradient(ellipse at 50% 60%,#4a5463,#14171c 75%);border-radius:1.5cqh;overflow:hidden}
+#gcv{width:100%;height:100%;background:none;border-radius:0;cursor:grab}
+.gname{position:absolute;left:0;right:0;bottom:1.5cqh;text-align:center;font-weight:700;text-shadow:0 1px 4px #000}
+.gopts{flex:1;display:flex;flex-direction:column;gap:1.2cqh;overflow:auto;min-height:0}
+.gopts .opts button{flex-direction:row;font-size:3cqh}
+.gopts .opts button.on{outline:.5cqh solid #ffd54f}
+.sw{display:inline-block;width:2.6cqh;height:2.6cqh;border-radius:50%;border:2px solid #fff;vertical-align:middle}
+.wrap.v .gbody{flex-direction:column}
+.wrap.v .gview{flex:none;height:56cqw}
+.wrap.v .gopts{flex:1}
+.wrap.v .gopts .opts button{font-size:4cqw}
 #mPlay{font-size:6cqh;font-weight:800;padding:2.2cqh 3cqw;background:linear-gradient(180deg,#43a047,#2e7d32);box-shadow:0 .8cqh 0 #1b5e20;border-radius:2cqh}
 .mm-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.6cqh 1.6cqw}
+.mm-grid button:last-child{grid-column:1/-1}
+#mGar{background:#6d4c41}
 #mShop{background:#f9a825;color:#222;font-weight:700}
 #mMis{background:#6a4fb3}
 .mm-q{display:grid;grid-template-columns:auto 1fr;gap:1cqh 1.5cqw;align-items:center;font-size:.88em;margin-top:.4cqh}
@@ -161,7 +175,7 @@ canvas{touch-action:none}
 <div class="mm-left">
 <div class="mm-title">🏎️ ARABA OYUNU<small>Diğer arabalara çarpmadan git!</small></div>
 <button id="mPlay">▶ OYUNA BAŞLA</button>
-<div class="mm-grid"><button id="mShop">🛍️ Mağaza</button><button id="mMis">🏅 Görevler</button><button id="mSet">⚙️ Ayarlar</button><button id="mInfo">ℹ️ Nasıl oynanır</button></div>
+<div class="mm-grid"><button id="mShop">🛍️ Mağaza</button><button id="mGar">🔧 Garaj</button><button id="mMis">🏅 Görevler</button><button id="mSet">⚙️ Ayarlar</button><button id="mInfo">ℹ️ Nasıl oynanır</button></div>
 <div class="mm-q"><div>🗺️ Harita</div><div class="mm-chips" id="qMap"></div><div>🛣️ Bölüm</div><div class="mm-chips" id="qMode"></div><div>🎥 Kamera</div><div class="mm-chips" id="qCam"></div></div>
 </div>
 <div class="mm-right">
@@ -173,6 +187,7 @@ canvas{touch-action:none}
 </div>
 <div class="mm-keys" id="mKeys"></div>
 </div>
+<div class="shop" id="gar"><div class="shead"><b>🔧 Garaj</b><span id="gcoins"></span><button id="closeGar">✕ Kapat</button></div><div class="gbody"><div class="gview"><canvas id="gcv" width="800" height="500"></canvas><div class="gname" id="gname"></div></div><div class="gopts"><div>🛞 Jant rengi</div><div class="opts" id="grims"></div><div>🪟 Cam filmi</div><div class="opts" id="gglass"></div><small style="opacity:.7">Arabayı parmağınla ya da fareyle sürükleyip çevirebilirsin. Renk ve desen için 🛍️ Mağaza.</small></div></div></div>
 <div id="overBox"><button id="oAgain">▶ Tekrar oyna</button><button id="oHome">🏠 Ana menü</button><button id="oShop">🛍️ Mağaza</button></div>
 <div class="shop" id="info"><div class="shead"><b>ℹ️ Oyun Bilgisi</b><button id="closeInfo">← Geri</button></div><div id="infoBody"></div></div>
 <div class="pay" id="pay"><div>⛽ Benzin doldurmak <b>200 💰</b><br>Ödemek ister misin?</div><div class="payb"><button id="payYes">Evet, öde (E)</button><button id="payNo">Hayır (H)</button></div></div></div>
@@ -273,6 +288,8 @@ addEventListener('keydown',e=>{
   if((e.code==='Space'||e.code==='Enter')&&(state==='menu'||state==='over')&&!(document.activeElement&&document.activeElement.tagName==='BUTTON'))start();
   if(st0==='over'&&e.code==='Escape')goHome();
   if(e.code==='KeyM'&&(state==='menu'||state==='over'))openShop();
+  if(e.code==='KeyG'&&state==='menu')openGar();
+  if(st0==='gar'&&e.code==='Escape')closeGar();
   if(e.code==='KeyV'){S.cam=S.cam==='3d'?'2d':'3d';save();if(state==='menu')renderMenu();}
   if(e.code==='Escape'&&state==='shop')closeShop();
   if(e.code==='Escape'&&state==='set')closeSet();
@@ -310,6 +327,8 @@ const PATS=[
  {id:'kareli',n:'Kareli',p:400,pat:'checker'},
  {id:'alev',n:'Alevli',p:700,pat:'flame'}];
 let isNew=true;
+const RIMS=[{id:'orj',n:'Orijinal',c:null,p:0},{id:'gumus',n:'Gümüş',c:'#d5dae1',p:100},{id:'siyah',n:'Siyah',c:'#18191c',p:150},{id:'altin',n:'Altın',c:'#d4a017',p:300},{id:'kirmizi',n:'Kırmızı',c:'#d32f2f',p:200},{id:'mavi',n:'Mavi',c:'#1e88e5',p:200}];
+const GLASS=[{id:'normal',n:'Normal',c:null,p:0},{id:'film',n:'Siyah film',c:'#0c0d10',p:150},{id:'mavi',n:'Mavi',c:'#2a5d8f',p:200},{id:'yesil',n:'Yeşil',c:'#2a6b45',p:200},{id:'ayna',n:'Ayna',c:'#c4ced8',p:250}];
 let S={coins:500,best:0,cars:['mavi'],pats:['duz'],car:'mavi',pat:'duz',traffic:'orta'};
 try{const j=JSON.parse(localStorage.getItem('araba-oyunu-v1'));if(j&&typeof j==='object'){S=Object.assign(S,j);isNew=false;}}catch(e){}
 best=S.best||0;[['elantra',2800],['niva',3200]].forEach(([id,pr])=>{const i=S.cars.indexOf(id);if(i>=0){S.cars.splice(i,1);S.coins+=pr;}if(S.car===id)S.car='mavi';});S.up=S.up||{e:0,t:0};S.top=S.top||[];S.ms=S.ms||{};S.done=S.done||[];
@@ -318,7 +337,7 @@ if(isNew){S.daily=today;toast='🎁 Hoş geldin! 500 💰 ile başlıyorsun';toa
 else if(S.daily!==today){S.daily=today;S.coins+=100;toast='🎁 Günlük ödül: +100 💰';toastT=240;}
 setTimeout(()=>{dmInit();save();},0);
 function save(){try{localStorage.setItem('araba-oyunu-v1',JSON.stringify(S));}catch(e){}}
-function skin(){const c=CARS.find(o=>o.id===S.car)||CARS[0],p=PATS.find(o=>o.id===S.pat)||PATS[0];return{col:c.col,r:c.r,x:c.x,pat:p.pat,model:c.model,shape:c.shape||'sedan',mdl:c.mdl};}
+function skin(){const c=CARS.find(o=>o.id===S.car)||CARS[0],p=PATS.find(o=>o.id===S.pat)||PATS[0];return{col:c.col,r:c.r,x:c.x,pat:p.pat,model:c.model,shape:c.shape||'sedan',mdl:c.mdl,gl:(GLASS.find(o=>o.id===S.glass)||GLASS[0]).c||''};}
 function drawPat(c,p,w,h){
   if(p==='stripe'){c.fillStyle='rgba(255,255,255,.85)';c.fillRect(-w/2,-10,w,6);c.fillRect(-w/2,4,w,6);}
   else if(p==='pol'){c.fillStyle='#ffffff';c.fillRect(-w*.34,-h/2,w*.5,h);}
@@ -438,9 +457,9 @@ function drawWeather(){
 }
 const SPI={},SPC={};
 for(const n in KM){const a=new Image(),k=new Image();a.src=KM[n].a;k.src=KM[n].k;SPI[n]={a,k};}
-function sprite(mdl,col,pat,dead){
+function sprite(mdl,col,pat,dead,gl){
   const im=SPI[mdl],km=KM[mdl];if(!im||!im.a.complete||!im.a.naturalWidth||!im.k.complete||!im.k.naturalWidth)return null;
-  const key=mdl+'|'+col+'|'+(pat||'')+'|'+(dead?1:0);if(SPC[key])return SPC[key];
+  const key=mdl+'|'+col+'|'+(pat||'')+'|'+(dead?1:0)+'|'+(gl||'');if(SPC[key])return SPC[key];
   const W2=im.a.naturalWidth,H2=im.a.naturalHeight,cv2=document.createElement('canvas');cv2.width=W2;cv2.height=H2;const g=cv2.getContext('2d');
   g.drawImage(im.a,0,0);
   if(km.t&&col){
@@ -450,11 +469,13 @@ function sprite(mdl,col,pat,dead){
     q.globalCompositeOperation='destination-in';q.drawImage(im.k,0,0);
     g.globalCompositeOperation='multiply';g.drawImage(pc,0,0);g.globalCompositeOperation='source-over';
   }
+  if(gl){try{const id=g.getImageData(0,0,W2,H2),d=id.data,mc=document.createElement('canvas');mc.width=W2;mc.height=H2;const mq=mc.getContext('2d');mq.drawImage(im.k,0,0);const md=mq.getImageData(0,0,W2,H2).data,tc=[1,3,5].map(k=>parseInt(gl.substr(k,2),16));
+    for(let i=0;i<d.length;i+=4){if(d[i+3]<200||md[i+3]>100)continue;const r=d[i],q=d[i+1],b=d[i+2];if(Math.min(r,q,b)>=150&&b>=r+4){const l=.75+.25*(b-150)/105;d[i]=Math.min(255,tc[0]*l);d[i+1]=Math.min(255,tc[1]*l);d[i+2]=Math.min(255,tc[2]*l);}}g.putImageData(id,0,0);}catch(e){}}
   if(dead){g.globalCompositeOperation='source-atop';g.fillStyle='rgba(12,12,12,.74)';g.fillRect(0,0,W2,H2);g.globalCompositeOperation='source-over';}
   return SPC[key]=cv2;
 }
 function carSprite(x,y,col,player,sk,c){
-  const sp=sprite(sk.mdl,col,sk.pat,sk.dead);if(!sp)return false;
+  const sp=sprite(sk.mdl,col,sk.pat,sk.dead,player?sk.gl:'');if(!sp)return false;
   const g=c||MAIN,w=sp.width/2,h=sp.height/2;
   g.save();g.translate(x,y);
   for(let i=3;i>=1;i--){g.fillStyle='rgba(0,0,0,.07)';g.beginPath();g.roundRect(-w/2+7-i*2,-h/2+10-i*2,w-8+i*4,h-12+i*4,10+i*2);g.fill();}
@@ -1004,7 +1025,7 @@ function render3D(){
       const dead=state==='crash'||(state==='over'&&overMsg==='ÇARPTIN!'),sk2=skin();
       setCarColor(pl,dead?'#1b1b1b':sk2.col);
       pl.position.set(player.y-360,state==='play'?Math.sin(t*22)*Math.min(spd/24,1)*.8:0,0);
-      pl.rotation.y=-(player.rot||0)-ang(px0);
+      pl.rotation.y=-(player.rot||0)-ang(px0);applyTrim(pl);
       if(invT>0&&!dead&&Math.floor(invT/5)%2)pl.visible=false;
       G3.dsm.forEach((m,i)=>{m.visible=hp<3&&!dead&&state!=='over';if(!m.visible)return;const ph=(t*.9+i/8)%1;m.position.set(pl.position.x+Math.sin(i*2.3+t)*6,pl.position.y+30+ph*60,-48+ph*180);m.scale.setScalar(4+ph*17);m.material.opacity=(1-ph)*(hp===1?.5:.28);});
       pl.userData.tails.forEach(m=>{m.material.emissive.setHex(braking?0xff1744:0x330000);if(pl.userData.ca)m.visible=!!braking&&!dead;});
@@ -1312,7 +1333,7 @@ let last=performance.now();
 function loop(t){
   const dt=Math.min(3,(t-last)/16.667);last=t;
   if(state==='play')update(dt);else if(state==='crash')crashStep(dt);
-  draw();render3D();uiSync();audioTick();requestAnimationFrame(loop);
+  draw();render3D();garTick(dt);uiSync();audioTick();requestAnimationFrame(loop);
 }
 const shopEl=document.getElementById('shop'),grid=document.getElementById('grid'),shopBtn=document.getElementById('shopBtn');
 let tab='cars',prev='menu',uiVis=null;
@@ -1376,6 +1397,67 @@ document.querySelectorAll('.opt7').forEach(b=>b.onclick=()=>{S.gfx=b.dataset.v;s
 document.querySelectorAll('.opt8').forEach(b=>b.onclick=()=>{S.wx=b.dataset.v;save();renderSet();});
 document.querySelectorAll('.opt9').forEach(b=>b.onclick=()=>{S.music=b.dataset.v==='on';save();renderSet();});
 document.querySelectorAll('.opt,.opt2,.opt3,.opt4,.opt5').forEach(b=>{b.prepend(thumb(b.className.split(' ')[0],b.dataset.v));});
+S.rims=S.rims||['orj'];S.glasses=S.glasses||['normal'];S.rim=S.rim||'orj';S.glass=S.glass||'normal';
+function trimIdx(kg){
+  if(kg.ti)return kg.ti;
+  const p=kg.pos.array,c=kg.c,m=kg.m,N=m.length,isT=i=>c[i*3]===54&&c[i*3+1]===54&&c[i*3+2]===58;
+  let tyMax=0,txMin=1e9;const zF=[1e9,-1e9],zB=[1e9,-1e9];let yMax=0;
+  for(let i=0;i<N;i++){yMax=Math.max(yMax,p[i*3+1]);if(!isT(i))continue;const z=p[i*3+2],r=z>0?zF:zB;tyMax=Math.max(tyMax,p[i*3+1]);txMin=Math.min(txMin,Math.abs(p[i*3]));r[0]=Math.min(r[0],z);r[1]=Math.max(r[1],z);}
+  let txMax=0;for(let i=0;i<N;i++)if(isT(i))txMax=Math.max(txMax,Math.abs(p[i*3]));
+  const yc=tyMax/2,wh=[zF,zB].filter(r=>r[0]<r[1]).map(r=>({zc:(r[0]+r[1])/2,rad:(r[1]-r[0])/2}));
+  const rim=[],gl=[];
+  for(let i=0;i<N;i++){
+    if(m[i]||isT(i))continue;const x=Math.abs(p[i*3]),y=p[i*3+1],z=p[i*3+2],r=c[i*3],g=c[i*3+1],b=c[i*3+2];
+    if(x>=txMax-3.5&&r+g+b>200&&wh.some(w=>Math.hypot(z-w.zc,y-yc)<=w.rad*.8))rim.push(i);
+    else if(x>=txMax-3.5&&y<tyMax+9&&r+g+b>200&&wh.some(w=>Math.abs(z-w.zc)<=w.rad))rim.push(i);
+    else if(y>tyMax+4&&Math.min(r,g,b)>=170&&b>=r+4)gl.push(i);
+  }
+  return kg.ti={rim,gl};
+}
+function applyTrim(g){
+  const u=g.userData;if(!u.ca||!u.kg)return;const key=(S.rim||'orj')+'|'+(S.glass||'normal');if(u.trim===key)return;u.trim=key;
+  const ti=trimIdx(u.kg),a=u.ca.array,o=u.kg.c,tc=new THREE.Color();
+  const put=(list,col,sh)=>{if(col)tc.set(col);for(const i of list){if(!col){a[i*3]=o[i*3];a[i*3+1]=o[i*3+1];a[i*3+2]=o[i*3+2];continue;}const l=sh?.75+.25*(o[i*3+2]-170)/85:1;a[i*3]=Math.min(255,tc.r*255*l);a[i*3+1]=Math.min(255,tc.g*255*l);a[i*3+2]=Math.min(255,tc.b*255*l);}};
+  put(ti.rim,(RIMS.find(r=>r.id===S.rim)||RIMS[0]).c,0);put(ti.gl,(GLASS.find(r=>r.id===S.glass)||GLASS[0]).c,1);u.ca.needsUpdate=true;
+}
+const garEl=document.getElementById('gar'),gcv=document.getElementById('gcv');let GG=null,gAng=.6,gDrag=null,gPrev='menu';
+function openGar(){gPrev=state;state='gar';garEl.style.display='flex';renderGar();gBuild();}
+function closeGar(){state=gPrev;garEl.style.display='none';cv.focus();}
+function renderGar(){
+  document.getElementById('gcoins').textContent='💰 '+S.coins;
+  const mk=(el,list,own,cur,setCur)=>{el.innerHTML='';list.forEach(it=>{const b=document.createElement('button'),has=own.includes(it.id);b.className=cur===it.id?'on':'';
+    b.innerHTML='<span class="sw" style="background:'+(it.c||'linear-gradient(135deg,#9aa3ad,#3c4148)')+'"></span> '+it.n+(cur===it.id?' ✓':has?'':' — '+it.p+' 💰');
+    b.disabled=!has&&S.coins<it.p;b.onclick=()=>{if(!has){if(S.coins<it.p)return;S.coins-=it.p;own.push(it.id);coinSound();}setCur(it.id);save();renderGar();gBuild();};el.append(b);});};
+  mk(document.getElementById('grims'),RIMS,S.rims,S.rim,v=>S.rim=v);
+  mk(document.getElementById('gglass'),GLASS,S.glasses,S.glass,v=>S.glass=v);
+  const c=CARS.find(o=>o.id===S.car)||CARS[0],pt=PATS.find(o=>o.id===S.pat)||PATS[0];
+  document.getElementById('gname').textContent=c.n+'  •  '+pt.n+' desen';
+}
+function gBuild(){
+  if(typeof THREE==='undefined')return;
+  try{
+    if(!GG){const r=new THREE.WebGLRenderer({canvas:gcv,antialias:true,alpha:true});r.setPixelRatio(Math.min(2,devicePixelRatio||1));r.toneMapping=THREE.ACESFilmicToneMapping;r.toneMappingExposure=1.15;
+      const sc=new THREE.Scene(),cam=new THREE.PerspectiveCamera(36,1.6,5,3000);cam.position.set(0,95,235);cam.lookAt(0,22,0);
+      sc.add(new THREE.HemisphereLight(0xdfeaff,0x3a3a40,.75));const dl=new THREE.DirectionalLight(0xffffff,1.1);dl.position.set(-150,260,200);sc.add(dl);const dl2=new THREE.DirectionalLight(0x9ec5ff,.5);dl2.position.set(200,120,-200);sc.add(dl2);
+      const fl=new THREE.Mesh(new THREE.CircleGeometry(115,48),new THREE.MeshStandardMaterial({color:0x2a2f37,roughness:.6,metalness:.3}));fl.rotation.x=-Math.PI/2;sc.add(fl);
+      const rg=new THREE.Mesh(new THREE.RingGeometry(112,118,64),new THREE.MeshBasicMaterial({color:0xffd54f}));rg.rotation.x=-Math.PI/2;rg.position.y=.5;sc.add(rg);
+      GG={r,sc,cam,car:null,key:''};}
+    const c=CARS.find(o=>o.id===S.car)||CARS[0],key=c.id;
+    if(GG.key!==key){if(GG.car)GG.sc.remove(GG.car);GG.car=mk3Car(c.col,false,c.mdl||c.shape||'sedan','76 AB 076','', 'TR',c.x);GG.car.userData.tails&&GG.car.userData.tails.forEach(m=>m.visible=true);GG.sc.add(GG.car);GG.key=key;}
+    setCarColor(GG.car,skin().col);applyTrim(GG.car);
+  }catch(e){console.error(e);GG=null;}
+}
+function garTick(dt){
+  if(state!=='gar')return;
+  if(!gDrag)gAng+=.012*dt;
+  const w=gcv.clientWidth|0,h=gcv.clientHeight|0;
+  if(GG&&GG.car){if(w&&h&&(GG.w!==w||GG.h!==h)){GG.r.setSize(w,h,false);GG.cam.aspect=w/h;GG.cam.updateProjectionMatrix();GG.w=w;GG.h=h;}GG.car.rotation.y=gAng;GG.car.userData.spin&&GG.car.userData.spin.forEach(c=>{c.rotation.z=0;});GG.r.render(GG.sc,GG.cam);}
+  else{const g=gcv.getContext('2d');if(!g)return;gcv.width=800;gcv.height=500;g.clearRect(0,0,800,500);g.save();g.translate(400,250);g.rotate(gAng);g.scale(2.2,2.2);car(0,0,120,56,skin().col,false,skin(),g);g.restore();}
+}
+gcv.addEventListener('pointerdown',e=>{gDrag={x:e.clientX,a:gAng};gcv.setPointerCapture(e.pointerId);});
+gcv.addEventListener('pointermove',e=>{if(gDrag)gAng=gDrag.a+(e.clientX-gDrag.x)*.012;});
+['pointerup','pointercancel'].forEach(t=>gcv.addEventListener(t,()=>{gDrag=null;}));
+document.getElementById('closeGar').onclick=closeGar;
 let boom=null;
 function burst(x,y,n){
   for(let i=0;i<n;i++){
@@ -1434,7 +1516,7 @@ function openInfo(){
   '<h3>💰 Para</h3>'+li(['Oyuna 500 💰 ile başlarsın.','Oyun bitince skorunun 10\'da biri kadar para kazanırsın.','Yoldaki her altın +5 💰, polisten kaçmak +100 💰, her gün ilk giriş +100 💰.'])+
   '<h3>🎁 Yoldaki güçler</h3>'+li(['Altın: +5 💰. Nitro tüpü: +35 nitro. Benzin bidonu: +25 benzin.','🛡️ Kalkan: bir çarpmayı affeder.','🧲 Mıknatıs: 10 saniye boyunca yakındaki altınları kendine çeker.','Yakın geçiş: 110 km/s üstündeyken yan şeritteki bir arabayı geçersen bonus para alırsın, art arda geçişler x5\'e kadar katlanır.'])+
   '<h3>🛣️ Yol</h3>'+li(['Yolda virajlı bölümler, nehir üstünde köprüler ve dağın içinden geçen tüneller var. Tünelde sesler yankılanır.','Trafikte arabaların yanında uzun kamyon ve otobüsler de çıkar.'])+
-  '<h3>❤️ Hasar</h3>'+li(['Arabanın 3 canı var. Her çarpmada bir can gider, araba duman çıkarır ve kısa bir süre yanıp söner (bu sürede tekrar hasar almazsın).','Üçüncü çarpmada araba patlar ve oyun biter. 🛡️ Kalkan bir çarpmayı tamamen affeder.'])+'<h3>⛽ Benzin</h3>'+li(['Dolu depo yaklaşık 1 dakika gider. Benzin %20\'ye düşünce yol kenarında istasyon çıkar.','İstasyona girip pompada durunca doldurmak 200 💰 tutar, önce sana sorulur.','Yoldaki benzin bidonu +25 benzin verir. Benzin biterse oyun biter.'])+
+  '<h3>❤️ Hasar</h3>'+li(['Arabanın 3 canı var. Her çarpmada bir can gider, araba duman çıkarır ve kısa bir süre yanıp söner (bu sürede tekrar hasar almazsın).','Üçüncü çarpmada araba patlar ve oyun biter. 🛡️ Kalkan bir çarpmayı tamamen affeder.'])+'<h3>🔧 Garaj</h3>'+li(['Ana menüdeki 🔧 Garaj düğmesi (ya da G tuşu) arabanı büyük gösterir, sürükleyerek çevirebilirsin.','Jant: '+RIMS.map(r=>r.n+(r.p?' '+r.p+' 💰':'')).join(', '),'Cam filmi: '+GLASS.map(r=>r.n+(r.p?' '+r.p+' 💰':'')).join(', '),'Araba rengi ve deseni Mağaza\'dan seçilir.'])+'<h3>⛽ Benzin</h3>'+li(['Dolu depo yaklaşık 1 dakika gider. Benzin %20\'ye düşünce yol kenarında istasyon çıkar.','İstasyona girip pompada durunca doldurmak 200 💰 tutar, önce sana sorulur.','Yoldaki benzin bidonu +25 benzin verir. Benzin biterse oyun biter.'])+
   '<h3>📸 Radar ve polis</h3>'+li(['Radar kapısından limitin üstünde geçersen 100 💰 ceza yersin ve polis peşine düşer.','Polis arkandan seni takip eder. Hızın 60 km/s altına düşerse yakalar: oyun biter ve 150 💰 kaybedersin. 30 saniye dayanırsan takibi bırakır ve +100 💰 alırsın.'])+
   '<h3>🛍️ Mağaza: Arabalar</h3>'+li(CARS.map(c=>c.n+': '+(c.p?c.p+' 💰':'ücretsiz')))+
   '<h3>🎨 Mağaza: Desenler</h3>'+li(PATS.map(c=>c.n+': '+(c.p?c.p+' 💰':'ücretsiz')))+
@@ -1459,11 +1541,12 @@ function renderMenu(){
   chips('qMap',QMAP,S.map||'cimen',v=>{S.map=v;});
   chips('qMode',QMODE,S.mode||'tek',v=>{S.mode=v;player=null;enemies=[];});
   chips('qCam',QCAM,S.cam||'2d',v=>{S.cam=v;});
-  document.getElementById('mKeys').textContent=TOUCH?'Telefonda ekrandaki ok düğmeleriyle oynanır  •  🔥 turuncu düğme: nitro':'Başlat: BOŞLUK  •  Mağaza: M  •  Kamera: V  •  '+(vk()?'W S: gaz/fren, A D: şerit':'A D: gaz/fren, W S: şerit')+'  •  Nitro: BOŞLUK';
+  document.getElementById('mKeys').textContent=TOUCH?'Telefonda ekrandaki ok düğmeleriyle oynanır  •  🔥 turuncu düğme: nitro':'Başlat: BOŞLUK  •  Mağaza: M  •  Garaj: G  •  Kamera: V  •  '+(vk()?'W S: gaz/fren, A D: şerit':'A D: gaz/fren, W S: şerit')+'  •  Nitro: BOŞLUK';
 }
 function goHome(){if(state!=='over')return;player=null;enemies=[];items=[];station=null;radar=null;police=null;asking=false;refueling=false;state='menu';cv.focus();}
 document.getElementById('mPlay').onclick=()=>start();
 document.getElementById('mShop').onclick=()=>{tab='cars';openShop();};
+document.getElementById('mGar').onclick=()=>openGar();
 document.getElementById('mMis').onclick=()=>{tab='ms';openShop();};
 document.getElementById('mSet').onclick=()=>openSet();
 document.getElementById('mInfo').onclick=()=>openInfo();
