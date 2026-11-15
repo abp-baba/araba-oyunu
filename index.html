@@ -1895,7 +1895,7 @@ function rCar(c,dt,inp){
   c.yaw-=c.st*rWturn(c.v,vm)*Math.sign(c.v||1)*dt;
   c.x+=-Math.sin(c.yaw)*c.v*dt;c.z+=-Math.cos(c.yaw)*c.v*dt;
   rNear(c);
-  if(Math.abs(c.lat)>.95){const k=c.k,e=Math.sign(c.lat)*(Math.abs(c.lat)-.95);c.x-=-C.tz[k]*e;c.z-=C.tx[k]*e;c.v*=.55;if(c.me){shake=6;beep(120,.15,'square',.12);}c.lat=Math.sign(c.lat)*.95;}
+  if(Math.abs(c.lat)>.95){const k=c.k,e=Math.sign(c.lat)*(Math.abs(c.lat)-.95);c.x-=-C.tz[k]*e;c.z-=C.tx[k]*e;const fw=Math.sign(-Math.sin(c.yaw)*C.tx[k]-Math.cos(c.yaw)*C.tz[k])||1;let da=ryaw(C.tx[k]*fw,C.tz[k]*fw)-c.yaw;while(da>Math.PI)da-=2*Math.PI;while(da<-Math.PI)da+=2*Math.PI;const sa=Math.abs(Math.sin(da));c.yaw+=da*.4;c.v*=1-.5*sa;if(c.me&&sa>.2&&R.t-(R.wh||0)>.3){R.wh=R.t;shake=6;beep(120,.15,'square',.12);}c.lat=Math.sign(c.lat)*.95;}
   // lap counting
   const a=(c.ps-RW.sLine+C.L)%C.L,b=(c.s-RW.sLine+C.L)%C.L;
   if(a>C.L*.7&&b<C.L*.3){c.lap++;if(c.lap>=RLAPS&&!c.fin){c.fin=R.t;c.place=RW.cars.filter(o=>o.fin).length;}
