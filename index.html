@@ -649,7 +649,7 @@ function audioTick(){
   eng.lp.frequency.setTargetAtTime(500+gr*80+fr*700,t,.05);
   eng.wet.gain.setTargetAtTime(S.sound!==false&&(state==='play'||state==='crash')&&inTun()?.9:0,t,.1);
   eng.g.gain.setTargetAtTime(on?(sh?.05:(!rc&&fuel<=0&&Math.random()<.5?.02:.14)):0,t,.04);
-  eng.sg.gain.setTargetAtTime(rc?(R.pl.sk||R.pl.spin>0||Math.abs(R.pl.lat)>.37&&Math.abs(R.pl.v)>.8?.07:0):on&&speed>8&&(braking||Math.abs(player.rot||0)>.2)?.08:(on&&nitroOn?.07:0),t,.05);
+  eng.sg.gain.setTargetAtTime(rc?(R.pl.sk||Math.abs(R.pl.lat)>.37&&Math.abs(R.pl.v)>.8?.07:0):on&&speed>8&&(braking||Math.abs(player.rot||0)>.2)?.08:(on&&nitroOn?.07:0),t,.05);
   if(on&&!rc&&refueling&&t>nextBlip){beep(500+fuel*6,.07,'square',.1);nextBlip=t+.22;}
   if(on&&!rc&&police&&t>nextSiren){beep(Math.floor(t*2.5)%2?720:960,.2,'square',.05);nextSiren=t+.25;}
 }
@@ -1691,7 +1691,7 @@ function openInfo(){
   '<h3>💰 Para</h3>'+li(['Oyuna 500 💰 ile başlarsın.','Oyun bitince skorunun 10\'da biri kadar para kazanırsın.','Yoldaki her altın +5 💰, polisten kaçmak +100 💰, her gün ilk giriş +100 💰.'])+
   '<h3>🎁 Yoldaki güçler</h3>'+li(['Altın: +5 💰. Nitro tüpü: +35 nitro. Benzin bidonu: +25 benzin.','🛡️ Kalkan: bir çarpmayı affeder.','🧲 Mıknatıs: 10 saniye boyunca yakındaki altınları kendine çeker.','Yakın geçiş: 110 km/s üstündeyken yan şeritteki bir arabayı geçersen bonus para alırsın, art arda geçişler x5\'e kadar katlanır.'])+
   '<h3>🛣️ Yol</h3>'+li(['Yolda virajlı bölümler, nehir üstünde köprüler ve dağın içinden geçen tüneller var. Tünelde sesler yankılanır.','Trafikte arabaların yanında uzun kamyon ve otobüsler de çıkar.'])+
-  '<h3>🏁 Yarış modu</h3>'+li(['Ana menüdeki 🏁 YARIŞ MODU düğmesiyle açılır. 5 rakiple kapalı bir pistte yarışırsın. Tur sayısını (1, 2, 3, 5, 7 ya da 10) yarıştan önce seçersin.','Bu modda şerit yoktur: A D (◀ ▶) arabayı sağa sola çevirir, W (▲) gaz, S (▼) fren ve geri vitestir.','Kolay, Orta ve Zor seviyeleri var. İlk 3\'e girersen para ödülü alırsın. Zor seviyede ve tur sayısı arttıkça ödül büyür.','Tam gazla hiçbir viraj dönülmez: her virajdan önce fren yapman gerekir, yoksa araba dışarı savrulur ve bariyere çarparak çok hız kaybedersin. Keskin virajlarda daha çok yavaşla.'])+
+  '<h3>🏁 Yarış modu</h3>'+li(['Ana menüdeki 🏁 YARIŞ MODU düğmesiyle açılır. 5 rakiple kapalı bir pistte yarışırsın. Tur sayısını (1, 2, 3, 5, 7 ya da 10) yarıştan önce seçersin.','Bu modda şerit yoktur: A D (◀ ▶) arabayı sağa sola çevirir, W (▲) gaz, S (▼) fren ve geri vitestir.','Kolay, Orta ve Zor seviyeleri var. İlk 3\'e girersen para ödülü alırsın. Zor seviyede ve tur sayısı arttıkça ödül büyür.','Virajlara çok hızlı girersen araba dönemez, dışarı kayar ve bariyere çarparak hız kaybedersin. Virajdan önce fren yap, keskin virajlarda daha çok yavaşla.'])+
   '<h3>🚧 Yol engelleri</h3>'+li(['Yol çalışması: dubalar ve bariyer şeridi kapatır, çarparsan can gider.','Yağ birikintisi: üstünden geçersen araba kayar ve kendi kendine şerit değiştirir.','Hayvanlar: inek ve koyunlar yolun karşısına geçer, çarparsan can gider.','🛫 Rampa: 80 km/s üstünde girersen havalanırsın. Havadayken çarpışma olmaz; inince +15 💰, üstünden aştığın her araba için +25 💰.','Önündeki trafik de engelden kaçmak için şerit değiştirir.'])+
   '<h3>❤️ Hasar</h3>'+li(['Arabanın 3 canı var. Her çarpmada bir can gider, araba duman çıkarır ve kısa bir süre yanıp söner (bu sürede tekrar hasar almazsın).','Üçüncü çarpmada araba patlar ve oyun biter. 🛡️ Kalkan bir çarpmayı tamamen affeder.'])+'<h3>🔧 Garaj</h3>'+li(['Ana menüdeki 🔧 Garaj düğmesi (ya da G tuşu) arabanı büyük gösterir, sürükleyerek çevirebilirsin.','Jant: '+RIMS.map(r=>r.n+(r.p?' '+r.p+' 💰':'')).join(', '),'Cam filmi: '+GLASS.map(r=>r.n+(r.p?' '+r.p+' 💰':'')).join(', '),'Araba rengi ve deseni Mağaza\'dan seçilir.'])+'<h3>⛽ Benzin</h3>'+li(['Dolu depo yaklaşık 1 dakika gider. Benzin %20\'ye düşünce yol kenarında istasyon çıkar.','İstasyona girip pompada durunca doldurmak 200 💰 tutar, önce sana sorulur.','Yoldaki benzin bidonu +25 benzin verir. Benzin biterse oyun biter.'])+
   '<h3>📸 Radar ve polis</h3>'+li(['Radar kapısından limitin üstünde geçersen 100 💰 ceza yersin ve polis peşine düşer.','Polis arkandan seni takip eder. Hızın 60 km/s altına düşerse yakalar: oyun biter ve 150 💰 kaybedersin. 30 saniye dayanırsan takibi bırakır ve +100 💰 alırsın.'])+
@@ -1812,7 +1812,7 @@ function rInit(){
   let L=0;for(let i=0;i<n;i++){const a=P[i],b=P[(i+1)%n],dx=b[0]-a[0],dz=b[1]-a[1],d=Math.hypot(dx,dz)||1e-6;cs[i]=L;L+=d;tx[i]=dx/d;tz[i]=dz/d;}
   for(let i=0;i<n;i++){const a=(i-3+n)%n,b=(i+3)%n,c=Math.atan2(tx[a]*tz[b]-tz[a]*tx[b],tx[a]*tx[b]+tz[a]*tz[b]);cv[i]=Math.abs(c)/(cs[b]-cs[a]+(b<a?L:0));}
   const lim=new Float32Array(n);for(let i=0;i<n;i++){const Rr=cv[i]>.05?1/cv[i]:99;lim[i]=Math.min(9,Math.sqrt(RGRIP*.96*Rr));}
-  for(let rep=0;rep<2;rep++)for(let i=n-1;i>=0;i--){const j=(i+1)%n,ds=(cs[j]-cs[i]+L)%L;lim[i]=Math.min(lim[i],Math.sqrt(lim[j]*lim[j]+2*4.8*ds));}
+  for(let rep=0;rep<2;rep++)for(let i=n-1;i>=0;i--){const j=(i+1)%n,ds=(cs[j]-cs[i]+L)%L;lim[i]=Math.min(lim[i],Math.sqrt(lim[j]*lim[j]+2*6.5*ds));}
   RW.cl={x:P.map(p=>p[0]),z:P.map(p=>p[1]),s:cs,tx,tz,lim,cv,n,L};
   // line index
   let li=0,bd=1e9;for(let i=0;i<n;i++){const d=Math.hypot(P[i][0]-tr.sAt.lineXZ[0],P[i][1]-tr.sAt.lineXZ[1]);if(d<bd){bd=d;li=i;}}RW.sLine=cs[li];
@@ -1889,21 +1889,16 @@ function rProg(c){return c.lap*RW.cl.L+((c.s-RW.sLine+RW.cl.L)%RW.cl.L);}
 function rCar(c,dt,inp){
   const C=RW.cl,vm=c.me?3.25+.1*((S.up&&S.up.e)||0):R.D.v*c.skill*(c.vb||1);
   let gas=inp.g,brk=inp.b,steer=inp.s;
-  const off=Math.abs(c.lat)>.37;if(c.spin>0){gas=brk=0;steer=0;}
+  const off=Math.abs(c.lat)>.37;
   if(R.ph==='cd'){gas=brk=0;}
   if(gas&&c.v>=0)c.v+=3.6*(1-c.v/vm)*dt;
-  else if(brk){if(c.v>.05)c.v-=6.5*dt;else c.v=Math.max(-.7,c.v-1.4*dt);}
+  else if(brk){if(c.v>.05)c.v-=9*dt;else c.v=Math.max(-.7,c.v-1.4*dt);}
   else c.v-=Math.sign(c.v)*Math.min(Math.abs(c.v),.35*dt);
   if(off&&c.v>1.5)c.v-=2.5*dt;if(off&&c.v<-.5)c.v=-.5;
   c.st+=(steer-c.st)*Math.min(1,(c.me?7:5)*dt);
-  if(c.me){
-    if(c.spin>0){c.spin-=dt;c.yaw+=c.sd*6.3*dt;c.v*=Math.pow(.15,dt);if(c.spin<=0){c.spin=0;const C2=RW.cl,k2=c.k;c.yaw=ryaw(C2.tx[k2],C2.tz[k2]);}}
-    else{const a=Math.abs(c.v),om=c.st*Math.min(2.3*Math.min(1,a/.8),RGRIP*1.15/Math.max(.3,a)),ex=a*a*RW.cl.cv[c.k]/RGRIP;
-      c.yaw-=om*Math.sign(c.v||1)*dt;c.sk=Math.abs(om)*a>RGRIP*1.05||ex>1.15&&Math.abs(c.st)>.3;
-      if(ex>1.45&&Math.abs(c.st)>.3){c.slip=(c.slip||0)+(ex-1.35)*2*dt;}else c.slip=Math.max(0,(c.slip||0)-.5*dt);
-      if(c.slip>.2){c.nsp=(c.nsp||0)+1;c.slip=0;c.spin=1;c.my=c.yaw;c.sd=Math.sign(c.st)||1;R.msg='💫 Savruldun! Fren yap';R.msgT=2.2;shake=8;beep(90,.4,'sawtooth',.12);}}
-  }else c.yaw-=c.st*rWturn(c.v,vm)*Math.sign(c.v||1)*dt;
-  const my=c.spin>0?c.my:c.yaw;c.x+=-Math.sin(my)*c.v*dt;c.z+=-Math.cos(my)*c.v*dt;
+  if(c.me){const a=Math.abs(c.v),om=c.st*Math.min(2.3*Math.min(1,a/.8),RGRIP*1.1/Math.max(.3,a));c.yaw-=om*Math.sign(c.v||1)*dt;c.sk=Math.abs(c.st)>.5&&a*a*RW.cl.cv[c.k]>RGRIP*1.15;}
+  else c.yaw-=c.st*rWturn(c.v,vm)*Math.sign(c.v||1)*dt;
+  c.x+=-Math.sin(c.yaw)*c.v*dt;c.z+=-Math.cos(c.yaw)*c.v*dt;
   rNear(c);
   if(Math.abs(c.lat)>.95){const k=c.k,e=Math.sign(c.lat)*(Math.abs(c.lat)-.95);c.x-=-C.tz[k]*e;c.z-=C.tx[k]*e;const fw=Math.sign(-Math.sin(c.yaw)*C.tx[k]-Math.cos(c.yaw)*C.tz[k])||1;let da=ryaw(C.tx[k]*fw,C.tz[k]*fw)-c.yaw;while(da>Math.PI)da-=2*Math.PI;while(da<-Math.PI)da+=2*Math.PI;const sa=Math.abs(Math.sin(da));c.yaw+=da*.4;if(!c.wall){c.v*=.5;if(c.me){shake=8;beep(120,.15,'square',.12);}}c.v*=1-.75*sa;c.v-=Math.sign(c.v)*Math.min(Math.abs(c.v),3*dt);c.wt=.15;c.lat=Math.sign(c.lat)*.95;}
   c.wt=Math.max(0,(c.wt||0)-dt);c.wall=c.wt>0;
