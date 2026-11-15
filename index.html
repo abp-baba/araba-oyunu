@@ -1812,7 +1812,7 @@ function rInit(){
   let L=0;for(let i=0;i<n;i++){const a=P[i],b=P[(i+1)%n],dx=b[0]-a[0],dz=b[1]-a[1],d=Math.hypot(dx,dz)||1e-6;cs[i]=L;L+=d;tx[i]=dx/d;tz[i]=dz/d;}
   for(let i=0;i<n;i++){const a=(i-3+n)%n,b=(i+3)%n,c=Math.atan2(tx[a]*tz[b]-tz[a]*tx[b],tx[a]*tx[b]+tz[a]*tz[b]);cv[i]=Math.abs(c)/(cs[b]-cs[a]+(b<a?L:0));}
   const lim=new Float32Array(n);for(let i=0;i<n;i++){const Rr=cv[i]>.05?1/cv[i]:99;lim[i]=Math.min(9,Math.sqrt(RGRIP*.96*Rr));}
-  for(let rep=0;rep<2;rep++)for(let i=n-1;i>=0;i--){const j=(i+1)%n,ds=(cs[j]-cs[i]+L)%L;lim[i]=Math.min(lim[i],Math.sqrt(lim[j]*lim[j]+2*3.2*ds));}
+  for(let rep=0;rep<2;rep++)for(let i=n-1;i>=0;i--){const j=(i+1)%n,ds=(cs[j]-cs[i]+L)%L;lim[i]=Math.min(lim[i],Math.sqrt(lim[j]*lim[j]+2*4.8*ds));}
   RW.cl={x:P.map(p=>p[0]),z:P.map(p=>p[1]),s:cs,tx,tz,lim,cv,n,L};
   // line index
   let li=0,bd=1e9;for(let i=0;i<n;i++){const d=Math.hypot(P[i][0]-tr.sAt.lineXZ[0],P[i][1]-tr.sAt.lineXZ[1]);if(d<bd){bd=d;li=i;}}RW.sLine=cs[li];
@@ -1853,7 +1853,7 @@ function rNear(c){// nearest centerline index (local search), returns lateral of
   c.k=bi;const dx=c.x-C.x[bi],dz=c.z-C.z[bi];c.lat=dx*(-C.tz[bi])+dz*C.tx[bi];// + = right side
   const along=dx*C.tx[bi]+dz*C.tz[bi];c.s=(C.s[bi]+along+C.L)%C.L;
 }
-const RGRIP=1.6;// yanal tutuş: virajda en fazla v²/R = RGRIP
+const RGRIP=1.8;// yanal tutuş: virajda en fazla v²/R = RGRIP
 function rWturn(v,vm){const a=Math.abs(v);return Math.min(2.3*Math.min(1,a/.8),RGRIP/Math.max(.3,a));}
 function raceOpen(){state='rsel';document.getElementById('rsel').style.display='flex';rSelRender();}
 function rSelRender(){
@@ -1891,17 +1891,17 @@ function rCar(c,dt,inp){
   let gas=inp.g,brk=inp.b,steer=inp.s;
   const off=Math.abs(c.lat)>.37;if(c.spin>0){gas=brk=0;steer=0;}
   if(R.ph==='cd'){gas=brk=0;}
-  if(gas&&c.v>=0)c.v+=2.4*(1-c.v/vm)*dt;
-  else if(brk){if(c.v>.05)c.v-=4.2*dt;else c.v=Math.max(-.7,c.v-1.4*dt);}
+  if(gas&&c.v>=0)c.v+=3.6*(1-c.v/vm)*dt;
+  else if(brk){if(c.v>.05)c.v-=6.5*dt;else c.v=Math.max(-.7,c.v-1.4*dt);}
   else c.v-=Math.sign(c.v)*Math.min(Math.abs(c.v),.35*dt);
   if(off&&c.v>1.5)c.v-=2.5*dt;if(off&&c.v<-.5)c.v=-.5;
   c.st+=(steer-c.st)*Math.min(1,(c.me?7:5)*dt);
   if(c.me){
-    if(c.spin>0){c.spin-=dt;c.yaw+=c.sd*4.6*dt;c.v*=Math.pow(.06,dt);if(c.spin<=0){c.spin=0;const C2=RW.cl,k2=c.k;c.yaw=ryaw(C2.tx[k2],C2.tz[k2]);}}
+    if(c.spin>0){c.spin-=dt;c.yaw+=c.sd*6.3*dt;c.v*=Math.pow(.15,dt);if(c.spin<=0){c.spin=0;const C2=RW.cl,k2=c.k;c.yaw=ryaw(C2.tx[k2],C2.tz[k2]);}}
     else{const a=Math.abs(c.v),om=c.st*Math.min(2.3*Math.min(1,a/.8),RGRIP*1.15/Math.max(.3,a)),ex=a*a*RW.cl.cv[c.k]/RGRIP;
       c.yaw-=om*Math.sign(c.v||1)*dt;c.sk=Math.abs(om)*a>RGRIP*1.05||ex>1.15&&Math.abs(c.st)>.3;
-      if(ex>1.2&&Math.abs(c.st)>.3){c.slip=(c.slip||0)+(ex-1.1)*3*dt;}else c.slip=Math.max(0,(c.slip||0)-.5*dt);
-      if(c.slip>.12){c.nsp=(c.nsp||0)+1;c.slip=0;c.spin=1.37;c.my=c.yaw;c.sd=Math.sign(c.st)||1;R.msg='💫 Savruldun! Fren yap';R.msgT=2.2;shake=8;beep(90,.4,'sawtooth',.12);}}
+      if(ex>1.45&&Math.abs(c.st)>.3){c.slip=(c.slip||0)+(ex-1.35)*2*dt;}else c.slip=Math.max(0,(c.slip||0)-.5*dt);
+      if(c.slip>.2){c.nsp=(c.nsp||0)+1;c.slip=0;c.spin=1;c.my=c.yaw;c.sd=Math.sign(c.st)||1;R.msg='💫 Savruldun! Fren yap';R.msgT=2.2;shake=8;beep(90,.4,'sawtooth',.12);}}
   }else c.yaw-=c.st*rWturn(c.v,vm)*Math.sign(c.v||1)*dt;
   const my=c.spin>0?c.my:c.yaw;c.x+=-Math.sin(my)*c.v*dt;c.z+=-Math.cos(my)*c.v*dt;
   rNear(c);
