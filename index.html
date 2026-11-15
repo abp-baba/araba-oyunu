@@ -1831,13 +1831,16 @@ function rBuildPoly(tid){
 function rRoad(P,tx,tz,cv,sg,cs,n,sLine,L){
   const pos=[],col=[],C=new THREE.Color();
   const quad=(a,b,c,d,y,hex)=>{C.set(hex);for(const p of[a,b,c,a,c,d]){pos.push(p[0],y,p[1]);col.push(C.r,C.g,C.b);}};
-  const off=(k,o)=>{let oo=o;if(cv[k]>1e-3&&Math.sign(o)===sg[k]){const R=1/cv[k];if(Math.abs(o)>R*.85)oo=Math.sign(o)*R*.85;}return[P[k][0]-tz[k]*oo,P[k][1]+tx[k]*oo];};
-  const band=(o0,o1,y,f)=>{for(let i=0;i<n;i++){const h=f(i);if(!h)continue;const j=(i+1)%n;quad(off(i,o0),off(i,o1),off(j,o1),off(j,o0),y,h);}};
+  const cvs=new Float32Array(n),sgs=new Float32Array(n);for(let i=0;i<n;i++){let a=0,b=0;for(let j=-8;j<=8;j++){const k=(i+j+n)%n;a+=cv[k];b+=cv[k]*sg[k];}cvs[i]=a/17;sgs[i]=Math.sign(b);}
+  const OC={};const offL=o=>{if(OC[o])return OC[o];const Q=[];for(let i=0;i<n;i++)Q.push([P[i][0]-tz[i]*o,P[i][1]+tx[i]*o]);
+    for(let pass=0;pass<3;pass++)for(let i=1;i<=n;i++){const k=i%n,pk=(i-1+n)%n,dx=Q[k][0]-Q[pk][0],dz=Q[k][1]-Q[pk][1];if(dx*tx[k]+dz*tz[k]<.004){Q[k]=[Q[pk][0]+tx[k]*.004,Q[pk][1]+tz[k]*.004];}}
+    return OC[o]=Q;};
+  const band=(o0,o1,y,f)=>{const A=offL(o0),B=offL(o1);for(let i=0;i<n;i++){const h=f(i);if(!h)continue;const j=(i+1)%n;quad(A[i],B[i],B[j],A[j],y,h);}};
   band(-.64,-.35,.001,()=>'#7f8c86');band(.35,.64,.001,()=>'#7f8c86');
   band(-.35,.35,.003,()=>'#4a4f56');
   band(.3,.33,.005,()=>'#f5f5f5');band(-.33,-.3,.005,()=>'#f5f5f5');
-  const kc=i=>{if(cv[i]<.2)return 0;return Math.floor(cs[i]/.12)%2?'#e53935':'#fafafa';};
-  band(.35,.47,.005,i=>sg[i]>0||cv[i]>.45?kc(i):0);band(-.47,-.35,.005,i=>sg[i]<0||cv[i]>.45?kc(i):0);
+  const kc=i=>{if(cvs[i]<.22)return 0;return Math.floor(cs[i]/.12)%2?'#e53935':'#fafafa';};
+  band(.35,.47,.0045,kc);band(-.47,-.35,.0045,kc);
   // start line (checker) + grid slots
   let li=0;for(let i=0;i<n;i++)if(Math.abs(cs[i]-sLine)<Math.abs(cs[li]-sLine))li=i;
   const at=(s0,o)=>{let k=0,bd=1e9;for(let i=0;i<n;i++){const d=Math.abs(((cs[i]-s0)%L+L+L/2)%L-L/2);if(d<bd){bd=d;k=i;}}return[P[k][0]-tz[k]*o+tx[k]*0,P[k][1]+tx[k]*o,k];};
@@ -1892,7 +1895,7 @@ function rInit(tid){
   else{const sL=RW.sLine;let best=null;for(const sd of[1,-1]){const sp=[];for(let i=0;i<n;i++){const ds=((cs[i]-sL)%L+L)%L;if(ds<1||ds>7.5)continue;const x=P[i][0]-tz[i]*sd*1.6,z=P[i][1]+tx[i]*sd*1.6;if(sp.length&&Math.hypot(x-sp[sp.length-1][0],z-sp[sp.length-1][1])<.98)continue;if(near(x,z,1.45))continue;sp.push([x,z,Math.atan2(tz[i]*sd,-tx[i]*sd)]);}if(!best||sp.length>best.length)best=sp;}
     best.forEach((p,i)=>{dec.push([i>=best.length-2?'pitsOfficeRoof':'pitsGarage',p[0],p[1],p[2]]);pits.push(p);});}
   const nearO=(x,z,i0,r)=>{for(let i=0;i<n;i+=2){const d=Math.abs(cs[i]-cs[i0]);if(Math.min(d,L-d)<3)continue;if(Math.hypot(P[i][0]-x,P[i][1]-z)<r)return true;}return false;};
-  {let b=0;for(let i=0;i<n;i+=2){const s=cs[i];if(s<b)continue;b=s+.25;if(tr.cw[i]<.5||tr.tn[i])continue;const k=Math.floor(s/.25)%4<2;for(const sd of[-1,1]){const bx=P[i][0]+(-tz[i])*sd*1.1,bz=P[i][1]+tx[i]*sd*1.1;if(nearO(bx,bz,i,1.25))continue;dec.push([k?'barrierRed':'barrierWhite',bx,bz,Math.atan2(-tz[i],tx[i]),1,1]);}}}
+  {let b=0;for(let i=0;i<n;i+=2){const s=cs[i];if(s<b)continue;b=s+.25;if(tr.cw[i]<.5||tr.tn[i])continue;const k=Math.floor(s/.25)%4<2;for(const sd of[-1,1]){const bx=P[i][0]+(-tz[i])*sd*1.1,bz=P[i][1]+tx[i]*sd*1.1;if(near(bx,bz,1.0)||nearO(bx,bz,i,1.25))continue;dec.push([k?'barrierRed':'barrierWhite',bx,bz,Math.atan2(-tz[i],tx[i]),1,1]);}}}
   const nearT=(x,z)=>{for(let i=0;i<n;i+=3)if(tr.tn[i]&&Math.hypot(P[i][0]-x,P[i][1]-z)<2.4)return true;return false;};
   {const zone=K0?(x,z)=>(x>.2&&x<3.4&&z<-10.3&&z>-19.2)||(x>.3&&x<2.8&&z<-1&&z>-7)||nearT(x,z):(x,z)=>pits.some(p=>Math.hypot(p[0]-x,p[1]-z)<1.05);
    const last={},cnt={'-1':0,'1':0};for(let i=0;i<n;i++){if(tr.cw[i]<.5)continue;
