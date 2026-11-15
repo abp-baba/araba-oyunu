@@ -1751,7 +1751,7 @@ const RK={"roadStraight":{"p":"ov72/475ov72/3b99P72/4759P72/4759P72/3b99P72/3b99
 const RTRACK='S11 P2 F2 S5 R3 S2 R2 L2 S4 R3 S5 R3 S8 U2 B1 M1 b1 D2 S3 L3 S7 L3 S4 L3';
 const RDIF={kolay:{n:'Kolay',e:'🟢',v:2.75,g:.85,pr:[150,90,50]},orta:{n:'Orta',e:'🟡',v:3.05,g:.95,pr:[300,180,90]},zor:{n:'Zor',e:'🔴',v:3.3,g:1,pr:[600,350,150]}};
 let RLAPS=3;const RLOPT=[1,2,3,5,7,10],rPr=(d,i)=>Math.round(d.pr[i]*RLAPS/3/10)*10,rKey=d=>RLAPS===3?d:d+'_'+RLAPS,RCOL=['#e53935','#fb8c00','#fdd835','#8e24aa','#00acc1'],RNM=['Ali','Ayşe','Mert','Zeynep','Can','Elif','Emre','Deniz','Burak','Selin','Kerem','Ece','Onur','Defne','Arda','İrem','Yusuf','Ceren','Kaan'];
-const RCAR=.13,RK2=.65,RN=20;
+const RCAR=.18,RK2=.65,RN=20;
 let R=null,RW=null;
 function rkGeo(n){
   RW.geo=RW.geo||{};if(RW.geo[n])return RW.geo[n];
@@ -1870,7 +1870,7 @@ function rNear(c){// nearest centerline index (local search), returns lateral of
   c.k=bi;const dx=c.x-C.x[bi],dz=c.z-C.z[bi];c.lat=dx*(-C.tz[bi])+dz*C.tx[bi];// + = right side
   const along=dx*C.tx[bi]+dz*C.tz[bi];c.s=(C.s[bi]+along+C.L)%C.L;
 }
-const RGRIP=1.8*RK2*RK2;// yanal tutuş: virajda en fazla v²/R = RGRIP
+const RGRIP=1.98*RK2*RK2;// yanal tutuş: virajda en fazla v²/R = RGRIP
 function rWturn(v,vm){const a=Math.abs(v);return Math.min(2.3*Math.min(1,a/(.8*RK2)),RGRIP/Math.max(.3*RK2,a));}
 function raceOpen(){state='rsel';document.getElementById('rsel').style.display='flex';rSelRender();}
 function rSelRender(){
@@ -1892,7 +1892,7 @@ function raceStart(dif){
   const rMesh=col=>{const a=RW.cm[col]||(RW.cm[col]=[]);let m=a.find(o=>!o.userData.u);if(!m){m=rCarMesh(col);a.push(m);}m.userData.u=1;m.visible=true;return m;};
   const pc=skin().col||'#1e88e5',PI=10,cols=['#e10600','#ff8700','#ffd600','#00d2be','#2e7d32','#9c27b0','#ffffff','#212121','#c2185b','#795548','#0d47a1','#76ff03','#ff4081','#00b0ff','#b0bec5','#ffab40','#6a1b9a','#18ffff','#8d6e63'];
   for(let i=0;i<RN;i++){
-    const me=i===PI,ord=i,sOff=(RW.sLine-.55-ord*.3+C.L)%C.L,side=ord%2?-.14:.16;
+    const me=i===PI,ord=i,sOff=(RW.sLine-.6-ord*.4+C.L)%C.L,side=ord%2?-.14:.16;
     let k=0,bd=1e9;for(let j=0;j<C.n;j++){const d=Math.abs(C.s[j]-sOff);if(d<bd){bd=d;k=j;}}
     const x=C.x[k]+(-C.tz[k])*side,z=C.z[k]+C.tx[k]*side,col=me?pc:cols[i>PI?i-1:i];
     const c={me,x,z,yaw:ryaw(C.tx[k],C.tz[k]),v:0,st:0,k,lap:-1,s:sOff,fin:0,col,nm:me?'Sen':RNM[i>PI?i-1:i],off:side,skill:me?1:(.93+Math.random()*.09),m:rMesh(col),bump:0};
@@ -1930,8 +1930,8 @@ function rAI(c){
   const C=RW.cl,n=C.n,la=.3+.3*Math.abs(c.v);let k=c.k,acc=0;while(acc<la){const j=(k+1)%n;acc+=(C.s[j]-C.s[k]+C.L)%C.L;k=j;}
   // overtaking: look for car ahead
   const myP=rProg(c);let block=null;
-  for(const o of RW.cars){if(o===c)continue;const d=rProg(o)-myP;if(d>0&&d<.5&&Math.abs(o.lat-c.lat)<.13&&Math.abs((o.y||0)-(c.y||0))<.15){if(!block||d<block.d)block={o,d};}}
-  if(block){const fr=[-.24,-.12,0,.12,.24].filter(l=>!RW.cars.some(o=>o!==c&&o!==block.o&&Math.abs(o.lat-l)<.1&&Math.abs(rProg(o)-myP)<.35)).sort((p,q)=>Math.abs(q-block.o.lat)-Math.abs(p-block.o.lat))[0];if(fr!==undefined)c.off=Math.max(-RW.cl.w[c.k]+.08,Math.min(RW.cl.w[c.k]-.08,fr));}
+  for(const o of RW.cars){if(o===c)continue;const d=rProg(o)-myP;if(d>0&&d<.6&&Math.abs(o.lat-c.lat)<.17&&Math.abs((o.y||0)-(c.y||0))<.15){if(!block||d<block.d)block={o,d};}}
+  if(block){const fr=[-.24,-.12,0,.12,.24].filter(l=>!RW.cars.some(o=>o!==c&&o!==block.o&&Math.abs(o.lat-l)<.13&&Math.abs(rProg(o)-myP)<.45)).sort((p,q)=>Math.abs(q-block.o.lat)-Math.abs(p-block.o.lat))[0];if(fr!==undefined)c.off=Math.max(-RW.cl.w[c.k]+.08,Math.min(RW.cl.w[c.k]-.08,fr));}
   else if(Math.random()<.002)c.off=[-.2,-.1,0,.1,.2][Math.floor(Math.random()*5)];
   if(Math.abs(c.off)>RW.cl.w[k]-.06)c.off=Math.sign(c.off)*(RW.cl.w[k]-.06);
   const tx=C.x[k]+(-C.tz[k])*c.off,tz=C.z[k]+C.tx[k]*c.off,want=ryaw(tx-c.x,tz-c.z);
@@ -1940,7 +1940,7 @@ function rAI(c){
   // speed target
   let lim=9;for(let j=0,i=c.k;j<14;j++,i=(i+1)%n)lim=Math.min(lim,C.lim[i]);
   let vt=Math.min(R.D.v*c.skill*RK2,lim*R.D.g);
-  if(block&&block.d<.28)vt=Math.min(vt,block.o.v*.97);
+  if(block&&block.d<.36)vt=Math.min(vt,block.o.v*.97);
   if(c.fin)vt=Math.min(vt,1.4*RK2);
   // rubber band (only while player racing)
   const gap=myP-rProg(R.pl);c.vb=R.pl.fin?1:(gap>5?.95:gap<-5?1.05:1);
@@ -1948,20 +1948,20 @@ function rAI(c){
 }
 function rCollide(){
   const cs=RW.cars;for(let i=0;i<cs.length;i++)for(let j=i+1;j<cs.length;j++){const a=cs[i],b=cs[j];if(Math.abs((a.y||0)-(b.y||0))>.15)continue;
-    for(const sa of[-.045,.045])for(const sb of[-.045,.045]){
+    for(const sa of[-.062,.062])for(const sb of[-.062,.062]){
       const ax=a.x-Math.sin(a.yaw)*sa,az=a.z-Math.cos(a.yaw)*sa,bx=b.x-Math.sin(b.yaw)*sb,bz=b.z-Math.cos(b.yaw)*sb,dx=bx-ax,dz=bz-az,d=Math.hypot(dx,dz);
-      if(d<.092&&d>1e-5){const p=(.092-d)/2,nx=dx/d,nz=dz/d;a.x-=nx*p;a.z-=nz*p;b.x+=nx*p;b.z+=nz*p;
+      if(d<.125&&d>1e-5){const p=(.125-d)/2,nx=dx/d,nz=dz/d;a.x-=nx*p;a.z-=nz*p;b.x+=nx*p;b.z+=nz*p;
         const fa=rProg(a),fb=rProg(b),bh=fa<fb?a:b,fr=bh===a?b:a;if(bh.v>fr.v)bh.v=fr.v*.92;
         if((a.me||b.me)&&R.t-(R.bmp||0)>.35){R.bmp=R.t;beep(140,.12,'square',.13);shake=4;}}}}
 }
 function rCam(snap){
   const p=R.pl,cam=RW.cam,f=[-Math.sin(p.yaw),-Math.cos(p.yaw)];
   RW.cy=snap||RW.cy===undefined?p.yaw:RW.cy;let da=p.yaw-RW.cy;while(da>Math.PI)da-=2*Math.PI;while(da<-Math.PI)da+=2*Math.PI;RW.cy+=da*(snap?1:.12);
-  const g=[-Math.sin(RW.cy),-Math.cos(RW.cy)],back=.56+.07*Math.abs(p.v)/(3.3*RK2);
-  const cx=p.x-g[0]*back,cz=p.z-g[1]*back,py=p.y||0;let ty=py+.25+.03*Math.abs(p.v)/(3.3*RK2);
+  const g=[-Math.sin(RW.cy),-Math.cos(RW.cy)],back=.74+.09*Math.abs(p.v)/(3.3*RK2);
+  const cx=p.x-g[0]*back,cz=p.z-g[1]*back,py=p.y||0;let ty=py+.32+.04*Math.abs(p.v)/(3.3*RK2);
   if(py<.2)for(const q of RW.el){if(Math.hypot(cx-q[0],cz-q[1])<.9||Math.hypot(p.x-q[0],p.z-q[1])<.8){ty=.22;break;}}
   RW.camY=snap||RW.camY===undefined?ty:RW.camY+(ty-RW.camY)*.15;
-  cam.position.set(cx,RW.camY,cz);cam.lookAt(p.x+g[0]*.45,py+.03,p.z+g[1]*.45);
+  cam.position.set(cx,RW.camY,cz);cam.lookAt(p.x+g[0]*.6,py+.04,p.z+g[1]*.6);
   if(shake>0){cam.position.x+=(Math.random()-.5)*shake*.004;cam.position.y+=(Math.random()-.5)*shake*.004;}
   RW.sun.position.set(p.x+5,9,p.z+3);RW.sun.target.position.set(p.x,0,p.z);
 }
