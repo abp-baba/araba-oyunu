@@ -1848,6 +1848,31 @@ function rInit(){
      add(1.48,.01,len,0,-.003,0,new THREE.MeshStandardMaterial({color:0x5f6469,roughness:1}),0);
      for(let q=-len/2+.35;q<len/2;q+=.55)add(.5,.02,.06,0,.715,q,lm,0);
      for(const e of[-1,1]){add(1.9,.22,.16,0,.86,e*len/2,cm);for(const sd of[-1,1])add(.22,.98,.16,sd*.86,.49,e*len/2,cm);for(let k=0;k<5;k++)add(.16,.06,.17,-.6+k*.3,.86,e*len/2,ym,0);}
+     {const W=2.7,Lb=Math.min(len-.4,5.2),wh=new THREE.MeshStandardMaterial({color:0xf2f4f7,roughness:.5}),gl=new THREE.MeshStandardMaterial({color:0x7fc4ff,roughness:.05,metalness:.4,transparent:true,opacity:.32,depthWrite:false}),dk=new THREE.MeshStandardMaterial({color:0x2b2f36,roughness:.6}),wm=new THREE.MeshBasicMaterial({color:0xffe6b0});
+      const y0=.8;add(W+.1,.08,Lb+.1,0,y0+.04,0,wh);
+      add(W-.1,.05,Lb-.1,0,y0+.6,0,wh);add(W-.5,.05,Lb-.6,0,y0+1.13,0,dk);
+      add(W-.3,.012,Lb-.3,0,y0+.575,0,wm,0);add(W-.7,.012,Lb-.8,0,y0+1.1,0,wm,0);
+      const glass=(w,h,d,x,y,z)=>{const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),gl);o.position.set(x,y,z);o.renderOrder=2;g.add(o);};
+      glass(W-.12,.5,Lb-.12,0,y0+.33,0);glass(W-.52,.48,Lb-.62,0,y0+.86,0);
+      for(const sx of[-1,1])for(const sz of[-1,1]){add(.07,.52,.07,sx*(W/2-.06),y0+.33,sz*(Lb/2-.06),wh);add(.06,.5,.06,sx*(W/2-.26),y0+.86,sz*(Lb/2-.31),wh);}
+      for(const sx of[-1,1]){add(.02,.1,Lb,sx*(W/2-.04),y0+.68,0,gl);add(.025,.025,Lb,sx*(W/2-.04),y0+.73,0,wh);}
+      for(const sz of[-1,1]){add(W,.1,.02,0,y0+.68,sz*(Lb/2-.04),gl);add(W,.025,.025,0,y0+.73,sz*(Lb/2-.04),wh);}
+      const sc2=document.createElement('canvas');sc2.width=512;sc2.height=96;{const q=sc2.getContext('2d');q.fillStyle='#111';q.fillRect(0,0,512,96);q.fillStyle='#ffd54f';q.font='900 50px system-ui,sans-serif';q.textAlign='center';q.textBaseline='middle';q.fillText('★ VIP PADDOCK ★',256,50);q.fillStyle='#e10600';q.fillRect(0,0,512,8);q.fillRect(0,88,512,8);}
+      const st=new THREE.CanvasTexture(sc2),sm=new THREE.MeshBasicMaterial({map:st});
+      for(const sz of[-1,1]){const pl=new THREE.Mesh(new THREE.PlaneGeometry(1.9,.36),sm);pl.position.set(0,y0+1.4,sz*(Lb/2-.29));pl.rotation.y=sz>0?0:Math.PI;g.add(pl);add(1.95,.4,.04,0,y0+1.4,sz*(Lb/2-.31),dk,0);}
+      for(const sx of[-1,1]){const pl=new THREE.Mesh(new THREE.PlaneGeometry(2.2,.36),sm);pl.position.set(sx*(W/2-.235),y0+1.4,0);pl.rotation.y=sx*Math.PI/2;g.add(pl);}
+      // suits
+      const SU=['#1b1f2a','#20232a','#2c3e50','#3a3a3a','#14213d','#4a4e57'],SK=['#f1c27d','#e0ac69','#c68642','#8d5524','#ffdbac'];let sd2=11;const r2=()=>{sd2=(sd2*1664525+1013904223)>>>0;return sd2/4294967296;};
+      const spots=[];for(let i=0;i<34;i++)spots.push([(r2()-.5)*(W-.4),y0+.08,(r2()-.5)*(Lb-.4)]);for(let i=0;i<26;i++)spots.push([(r2()-.5)*(W-.8),y0+.625,(r2()-.5)*(Lb-.9)]);
+      for(let i=0;i<14;i++){const e=i%2?1:-1;spots.push([(r2()-.5)*(W-.4),y0+.625,e*(Lb/2-.14)]);}
+      const bg=new THREE.BoxGeometry(.05,.085,.035),lg=new THREE.BoxGeometry(.045,.05,.03),hg=new THREE.BoxGeometry(.03,.032,.03),tg=new THREE.BoxGeometry(.012,.05,.004);
+      const mI=(geo,n)=>{const m=new THREE.InstancedMesh(geo,new THREE.MeshLambertMaterial(),n);g.add(m);return m;},Bm=mI(bg,spots.length),Lm=mI(lg,spots.length),Hm=mI(hg,spots.length),Tm=mI(tg,spots.length),M4=new THREE.Matrix4(),cc=new THREE.Color();
+      spots.forEach(([x,y,z],i)=>{const a=r2()*6.28,su=SU[Math.floor(r2()*SU.length)];M4.makeRotationY(a);
+        M4.setPosition(x,y+.025,z);Lm.setMatrixAt(i,M4);Lm.setColorAt(i,cc.set('#15171c'));
+        M4.setPosition(x,y+.092,z);Bm.setMatrixAt(i,M4);Bm.setColorAt(i,cc.set(su));
+        M4.setPosition(x,y+.153,z);Hm.setMatrixAt(i,M4);Hm.setColorAt(i,cc.set(SK[Math.floor(r2()*SK.length)]));
+        const fx=Math.sin(a)*.018,fz=Math.cos(a)*.018;M4.setPosition(x+fx,y+.1,z+fz);Tm.setMatrixAt(i,M4);Tm.setColorAt(i,cc.set(r2()<.5?'#e10600':'#ffffff'));});
+     }
      sc.add(g);}}
   dec.forEach(d=>{d[4]=d[4]||1;d[5]=1;});RW.dec=dec;const dm=rkMerge(dec);dm.castShadow=true;sc.add(dm);
   {const rows=[[.273,.36],[.331,.297],[.39,.232],[.448,.168],[.506,.104],[.564,.04]],per=8,N=RW.st.length*rows.length*per;
