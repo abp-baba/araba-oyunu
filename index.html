@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
 
 
 
@@ -100,7 +100,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>Araba Oyunu</title>
 <style>
 :root{color-scheme:light dark;--bg:#e9ecef;--fg:#222;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -170,7 +170,7 @@ p{margin:0;font-size:14px;opacity:.8;text-align:center;padding:0 10px}
 #setBtn{display:none;position:absolute;left:calc(50% + 12cqw);bottom:3cqh;z-index:4;font:700 3.6cqh system-ui,sans-serif;border:0;border-radius:1.5cqh;padding:1.2cqh 2cqw;background:#37474f;color:#fff;cursor:pointer}
 .card canvas{width:55%;height:auto;max-height:14cqh;object-fit:contain;background:#3a3d42;border-radius:1cqh}
 #shopBtn{display:none;position:absolute;left:50%;bottom:3cqh;transform:translateX(-50%);z-index:4;font:700 3.6cqh system-ui,sans-serif;border:0;border-radius:1.5cqh;padding:1.2cqh 3cqw;background:#ffd54f;color:#222;cursor:pointer}
-canvas{touch-action:none}
+canvas{touch-action:none}html,body{touch-action:manipulation}button{touch-action:manipulation}
 #menu{display:none;position:absolute;inset:0;z-index:4;flex-direction:row;gap:3cqw;padding:5cqh 4cqw 7cqh;box-sizing:border-box;color:#fff;font-family:system-ui,sans-serif;font-size:3.2cqh;border-radius:8px;background:linear-gradient(90deg,rgba(6,10,16,.9),rgba(6,10,16,.55) 62%,rgba(6,10,16,.78))}
 #menu button,#overBox button{font:inherit;border:0;border-radius:1.4cqh;padding:1.4cqh 2cqw;background:#37474f;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent}
 #menu button:active,#overBox button:active{filter:brightness(1.25)}
@@ -640,6 +640,7 @@ function audioInit(){
     eng={o1,o2,o3,lp,g,sg,nb,mg,bus,wet};
   }catch(e){AC=null;eng=null;}
 }
+{let lastTE=0;document.addEventListener('touchend',e=>{const n=Date.now(),t=e.target;if(n-lastTE<400&&t.closest&&t.closest('.pad,.rpad,canvas'))e.preventDefault();lastTE=n;},{passive:false});['gesturestart','gesturechange','dblclick'].forEach(ev=>document.addEventListener(ev,e=>e.preventDefault(),{passive:false}));}
 addEventListener('pointerdown',audioInit);addEventListener('keydown',audioInit);addEventListener('touchend',audioInit);addEventListener('click',audioInit);document.addEventListener('visibilitychange',()=>{if(AC&&!document.hidden&&AC.state!=='running')AC.resume();});
 function OUT(){return (eng&&eng.bus)||AC.destination;}
 function beep(f,d,type,v){
