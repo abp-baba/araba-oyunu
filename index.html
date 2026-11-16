@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><script>try{window.__hadSave=!!localStorage.getItem('araba-oyunu-v1')}catch(e){}</script><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><script>try{window.__hadSave=!!localStorage.getItem('araba-oyunu-v1')}catch(e){}</script><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:var(--sl,0px);padding-right:var(--sr,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
 
 
 
@@ -1733,6 +1733,8 @@ function drawBoom(){
 }
 function fit(){
   const de=document.documentElement,b=document.body;
+  {const o=typeof window.orientation==='number'?window.orientation:null;// Dinamik Ada / çentik: sadece adanın olduğu kenardan boşluk bırak
+   de.style.setProperty('--sl',o===90?'env(safe-area-inset-left,0px)':'0px');de.style.setProperty('--sr',o===-90||o===270?'env(safe-area-inset-right,0px)':'0px');}
   de.style.height=innerHeight+'px';
   if((S.view||'oto')==='oto'&&wantVert()!==vert&&state!=='play'&&state!=='crash'){setMode(wantVert());player=null;enemies=[];return;}
   const vw=innerWidth,vh=innerHeight,sh=Math.min(vw,vh),cls=sh<600?'phone':(sh<1000?'tablet':'desktop');
@@ -2527,7 +2529,7 @@ addEventListener('keydown',e=>{if(state==='kar'&&e.code==='Escape'&&document.act
 </html>
 
 <div id="upd"><div class="ub"><h3 id="updT"></h3><div class="us" id="updS"></div><ul id="updL"></ul><div class="ubt"><button class="u2" id="updNo">Sonra</button><button class="u1" id="updOk">Tamam</button></div></div></div><script>
-const BUILD='2026-11-16e';
+const BUILD='2026-11-16f';
 (function(){
   const el=document.getElementById('upd');let pend=null,lastShown='',checked=0;
   const busy=()=>{try{if(['play','crash','pause'].includes(state))return true;if(R&&R.ph!=='res')return true;}catch(e){}return false;};
