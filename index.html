@@ -1725,9 +1725,9 @@ function fit(){
   const vw=innerWidth,vh=innerHeight,sh=Math.min(vw,vh),cls=sh<600?'phone':(sh<1000?'tablet':'desktop');
   b.dataset.dev=cls;
   const p=document.getElementById('hint'),ph=getComputedStyle(p).display==='none'?0:p.offsetHeight+10;
-  const m=cls==='phone'?0:cls==='tablet'?10:18,ar=vert?9/16:16/9;
+  const m=cls==='phone'?0:6,ar=vert?9/16:16/9;
   const aw=b.clientWidth-2*m,ah=b.clientHeight-ph-2*m;
-  const cap=cls==='desktop'?(vert?560:1280):cls==='tablet'?(vert?720:1100):1e5;
+  const cap=1e5;
   const w=Math.floor(Math.max(100,Math.min(aw,ah*ar,cap)));
   const wr=document.querySelector('.wrap');
   wr.style.width=w+'px';wr.style.height=Math.floor(w/ar)+'px';
