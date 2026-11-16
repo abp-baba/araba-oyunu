@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><script>try{window.__hadSave=!!localStorage.getItem('araba-oyunu-v1')}catch(e){}</script><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
 
 
 
@@ -2494,24 +2494,26 @@ addEventListener('keydown',e=>{if(state==='kar'&&e.code==='Escape'&&document.act
 </html>
 
 <div id="upd"><div class="ub"><h3 id="updT"></h3><div class="us" id="updS"></div><ul id="updL"></ul><div class="ubt"><button class="u2" id="updNo">Sonra</button><button class="u1" id="updOk">Tamam</button></div></div></div><script>
-const BUILD='2026-11-16b';
+const BUILD='2026-11-16c';
 (function(){
-  const el=document.getElementById('upd');let pend=null,lastShown='';
+  const el=document.getElementById('upd');let pend=null,lastShown='',checked=0;
   const busy=()=>{try{if(['play','crash','pause'].includes(state))return true;if(R&&R.ph!=='res')return true;}catch(e){}return false;};
   function show(){if(!pend||el.classList.contains('on')||busy())return;
     const k=pend.key;if(k===lastShown)return;
-    document.getElementById('updT').textContent=pend.ready?'🆕 Yeni güncelleme hazır!':'🔧 Oyuna güncelleme ekleniyor';
-    document.getElementById('updS').textContent=pend.ready?'Yenilemek için Yenile\'ye bas.':'Şu an hazırlanıyor, bitince haber vereceğiz. Eklenecekler:';
+    document.getElementById('updT').textContent=pend.ready?'🆕 Yeni güncelleme hazır!':pend.news?'✨ Yeni eklenenler':'🔧 Oyuna güncelleme ekleniyor';
+    document.getElementById('updS').textContent=pend.ready?'Yenilemek için Yenile\'ye bas.':pend.news?'Son güncellemeyle oyuna gelenler:':'Şu an hazırlanıyor, bitince haber vereceğiz. Eklenecekler:';
     const L=document.getElementById('updL');L.innerHTML='';(pend.items||[]).forEach(t=>{const li=document.createElement('li');li.textContent=t;L.appendChild(li);});
     document.getElementById('updOk').textContent=pend.ready?'🔄 Yenile':'Tamam';
     document.getElementById('updNo').style.display=pend.ready?'':'none';
     el.classList.add('on');lastShown=k;}
-  document.getElementById('updOk').onclick=()=>{el.classList.remove('on');if(pend&&pend.ready)location.reload();else if(pend){try{localStorage.setItem('updWip',pend.key)}catch(e){}pend=null;}};
+  document.getElementById('updOk').onclick=()=>{el.classList.remove('on');if(pend&&pend.ready)location.reload();else if(pend){try{localStorage.setItem(pend.news?'seenBuild':'updWip',pend.news?BUILD:pend.key)}catch(e){}pend=null;}};
   document.getElementById('updNo').onclick=()=>{el.classList.remove('on');};
   addEventListener('keydown',e=>{if(!el.classList.contains('on'))return;e.stopImmediatePropagation();e.preventDefault();if(e.key==='Enter'||e.key===' ')document.getElementById('updOk').click();else if(e.key==='Escape')document.getElementById('updNo').style.display==='none'?document.getElementById('updOk').click():document.getElementById('updNo').click();},true);
   async function check(){try{
     const r=await fetch('version.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const j=await r.json();
     if(j.v&&j.v!==BUILD){pend={ready:1,key:'v:'+j.v,items:j.notes||[]};}
+    else if(j.v===BUILD&&!checked){checked=1;let sb=null,old=null;try{sb=localStorage.getItem('seenBuild');old=window.__hadSave;if(!sb&&!old)localStorage.setItem('seenBuild',BUILD);}catch(e){}
+      if(sb!==BUILD&&(sb||old)&&(j.notes||[]).length)pend={ready:0,news:1,key:'n:'+BUILD,items:j.notes};}
     else if(j.wip&&j.wip.length){const k='w:'+JSON.stringify(j.wip);let seen='';try{seen=localStorage.getItem('updWip')||''}catch(e){}if(seen!==k)pend={ready:0,key:k,items:j.wip};}
     show();}catch(e){}}
   setTimeout(check,1500);setInterval(check,60000);setInterval(show,1000);
