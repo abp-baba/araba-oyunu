@@ -95,6 +95,16 @@
 .wrap.v .mm-dock{gap:1.6cqw}.wrap.v #menu .mm-dock button{font-size:3cqw;padding:2cqw .5cqw}.wrap.v #menu .mm-dock button i{font-size:5.6cqw}
 .wrap.v #menu .mm-q{font-size:3.4cqw}.wrap.v #menu .mm-chips button{padding:1.2cqw 2.2cqw}
 .wrap.v #menu .mm-right{font-size:3.5cqw}
+#upd{display:none;position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.55);align-items:center;justify-content:center;padding:16px;box-sizing:border-box}
+#upd.on{display:flex}
+#upd .ub{max-width:420px;width:100%;background:linear-gradient(160deg,#1f2a33,#11181e);color:#eef3f6;border-radius:16px;padding:18px 20px;box-shadow:0 12px 40px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.12);font-family:system-ui,sans-serif;animation:updIn .25s ease-out}
+#upd h3{margin:0 0 4px;font-size:19px;font-style:italic;font-weight:900}
+#upd .us{font-size:12.5px;color:#9fb0bb;margin-bottom:10px}
+#upd ul{margin:0 0 14px;padding-left:20px;font-size:14.5px;line-height:1.45}
+#upd .ubt{display:flex;gap:8px;justify-content:flex-end}
+#upd button{border:0;border-radius:10px;padding:9px 16px;font:700 14px system-ui,sans-serif;cursor:pointer;touch-action:manipulation}
+#upd .u1{background:#e10600;color:#fff}#upd .u2{background:rgba(255,255,255,.1);color:#dfe6ea}
+@keyframes updIn{from{transform:scale(.92);opacity:0}to{transform:none;opacity:1}}
 </style></head><body>
 <!DOCTYPE html>
 <html lang="tr">
@@ -2483,4 +2493,28 @@ addEventListener('keydown',e=>{if(state==='kar'&&e.code==='Escape'&&document.act
 </body>
 </html>
 
-</body></html>
+<div id="upd"><div class="ub"><h3 id="updT"></h3><div class="us" id="updS"></div><ul id="updL"></ul><div class="ubt"><button class="u2" id="updNo">Sonra</button><button class="u1" id="updOk">Tamam</button></div></div></div><script>
+const BUILD='2026-11-16b';
+(function(){
+  const el=document.getElementById('upd');let pend=null,lastShown='';
+  const busy=()=>{try{if(['play','crash','pause'].includes(state))return true;if(R&&R.ph!=='res')return true;}catch(e){}return false;};
+  function show(){if(!pend||el.classList.contains('on')||busy())return;
+    const k=pend.key;if(k===lastShown)return;
+    document.getElementById('updT').textContent=pend.ready?'🆕 Yeni güncelleme hazır!':'🔧 Oyuna güncelleme ekleniyor';
+    document.getElementById('updS').textContent=pend.ready?'Yenilemek için Yenile\'ye bas.':'Şu an hazırlanıyor, bitince haber vereceğiz. Eklenecekler:';
+    const L=document.getElementById('updL');L.innerHTML='';(pend.items||[]).forEach(t=>{const li=document.createElement('li');li.textContent=t;L.appendChild(li);});
+    document.getElementById('updOk').textContent=pend.ready?'🔄 Yenile':'Tamam';
+    document.getElementById('updNo').style.display=pend.ready?'':'none';
+    el.classList.add('on');lastShown=k;}
+  document.getElementById('updOk').onclick=()=>{el.classList.remove('on');if(pend&&pend.ready)location.reload();else if(pend){try{localStorage.setItem('updWip',pend.key)}catch(e){}pend=null;}};
+  document.getElementById('updNo').onclick=()=>{el.classList.remove('on');};
+  addEventListener('keydown',e=>{if(!el.classList.contains('on'))return;e.stopImmediatePropagation();e.preventDefault();if(e.key==='Enter'||e.key===' ')document.getElementById('updOk').click();else if(e.key==='Escape')document.getElementById('updNo').style.display==='none'?document.getElementById('updOk').click():document.getElementById('updNo').click();},true);
+  async function check(){try{
+    const r=await fetch('version.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const j=await r.json();
+    if(j.v&&j.v!==BUILD){pend={ready:1,key:'v:'+j.v,items:j.notes||[]};}
+    else if(j.wip&&j.wip.length){const k='w:'+JSON.stringify(j.wip);let seen='';try{seen=localStorage.getItem('updWip')||''}catch(e){}if(seen!==k)pend={ready:0,key:k,items:j.wip};}
+    show();}catch(e){}}
+  setTimeout(check,1500);setInterval(check,60000);setInterval(show,1000);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)check();});
+})();
+</script></body></html>
