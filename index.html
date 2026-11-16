@@ -1734,7 +1734,7 @@ function drawBoom(){
 function fit(){
   const de=document.documentElement,b=document.body;
   {const o=typeof window.orientation==='number'?window.orientation:null;// Dinamik Ada / çentik: sadece adanın olduğu kenardan boşluk bırak
-   de.style.setProperty('--sl',o===90?'env(safe-area-inset-left,0px)':'0px');de.style.setProperty('--sr',o===-90||o===270?'env(safe-area-inset-right,0px)':'0px');}
+   const ls=o===90||o===-90||o===270,v=o===90?'env(safe-area-inset-left,0px)':'env(safe-area-inset-right,0px)';de.style.setProperty('--sl',ls?v:'0px');de.style.setProperty('--sr',ls?v:'0px');}
   de.style.height=innerHeight+'px';
   if((S.view||'oto')==='oto'&&wantVert()!==vert&&state!=='play'&&state!=='crash'){setMode(wantVert());player=null;enemies=[];return;}
   const vw=innerWidth,vh=innerHeight,sh=Math.min(vw,vh),cls=sh<600?'phone':(sh<1000?'tablet':'desktop');
@@ -2529,7 +2529,7 @@ addEventListener('keydown',e=>{if(state==='kar'&&e.code==='Escape'&&document.act
 </html>
 
 <div id="upd"><div class="ub"><h3 id="updT"></h3><div class="us" id="updS"></div><ul id="updL"></ul><div class="ubt"><button class="u2" id="updNo">Sonra</button><button class="u1" id="updOk">Tamam</button></div></div></div><script>
-const BUILD='2026-11-16f';
+const BUILD='2026-11-16g';
 (function(){
   const el=document.getElementById('upd');let pend=null,lastShown='',checked=0;
   const busy=()=>{try{if(['play','crash','pause'].includes(state))return true;if(R&&R.ph!=='res')return true;}catch(e){}return false;};
