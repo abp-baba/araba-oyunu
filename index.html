@@ -105,6 +105,12 @@
 #upd button{border:0;border-radius:10px;padding:9px 16px;font:700 14px system-ui,sans-serif;cursor:pointer;touch-action:manipulation}
 #upd .u1{background:#e10600;color:#fff}#upd .u2{background:rgba(255,255,255,.1);color:#dfe6ea}
 @keyframes updIn{from{transform:scale(.92);opacity:0}to{transform:none;opacity:1}}
+#rPitW{position:absolute;right:2cqw;top:33cqh;display:none;flex-direction:column;gap:1cqh;align-items:flex-end}
+#rPitW button{font:800 2.8cqh system-ui,sans-serif;border:0;border-radius:1.3cqh;padding:.9cqh 1.6cqw;background:rgba(0,0,0,.55);color:#fff;touch-action:manipulation;cursor:pointer}
+#rPit.on{background:#e10600;animation:pitBl .8s infinite alternate}@keyframes pitBl{to{background:#ff5a4f}}
+#rTyr i{display:inline-block;width:1.9cqh;height:1.9cqh;border-radius:50%;border:.5cqh solid;vertical-align:-.3cqh;margin-right:.6cqw;box-sizing:border-box}
+.wrap.v #rPitW{top:auto;bottom:30cqw}.wrap.v #rPitW button{font-size:3.4cqw;padding:1.4cqw 2.4cqw}
+#rtyre button{flex-direction:row}#rtyre button.on{background:#1e88e5}
 </style></head><body>
 <!DOCTYPE html>
 <html lang="tr">
@@ -297,13 +303,13 @@ canvas{touch-action:none}html,body{touch-action:manipulation}button{touch-action
 <div class="shop" id="gar"><div class="shead"><b>🔧 Garaj</b><span id="gcoins"></span><button id="closeGar">✕ Kapat</button></div><div class="gbody"><div class="gview"><canvas id="gcv" width="800" height="500"></canvas><div class="gname" id="gname"></div></div><div class="gopts"><div>🛞 Jant rengi</div><div class="opts" id="grims"></div><div>🪟 Cam filmi</div><div class="opts" id="gglass"></div><small style="opacity:.7">Arabayı parmağınla ya da fareyle sürükleyip çevirebilirsin. Renk ve desen için 🛍️ Mağaza.</small></div></div></div>
 <div id="overBox"><button id="oAgain">▶ Tekrar oyna</button><button id="oHome">🏠 Ana menü</button><button id="oShop">🛍️ Mağaza</button></div>
 <div class="shop" id="info"><div class="shead"><b>ℹ️ Oyun Bilgisi</b><button id="closeInfo">← Geri</button></div><div id="infoBody"></div></div>
-<div id="race"><canvas id="rgl"></canvas><canvas id="rhud"></canvas><button id="rPz">⏸ Duraklat</button>
+<div id="race"><canvas id="rgl"></canvas><canvas id="rhud"></canvas><button id="rPz">⏸ Duraklat</button><div id="rPitW"><button id="rTyr"></button><button id="rPit">🔧 PİT</button></div>
 <div class="rpad"><div><button data-k="ArrowLeft">◀</button><button data-k="ArrowRight">▶</button></div><div><button data-k="ArrowDown" class="br">▼</button><button data-k="ArrowUp" class="gs">▲</button></div></div>
 <div class="pay" id="rpause"><div>⏸ Yarış duraklatıldı</div><div class="payb"><button id="rRes">▶ Devam et</button><button id="rRst">🔁 Yeniden başla</button><button id="rQuit">🏠 Ana menü</button></div></div>
 <div id="rres"><div id="rresT"></div><ol id="rresL"></ol><div id="rresP"></div><div class="payb"><button id="rAgain">🔁 Tekrar yarış</button><button id="rDif">🎚️ Zorluk seç</button><button id="rHome">🏠 Ana menü</button></div></div>
 </div>
 <div class="shop" id="kar"><div class="shead"><b>🏆 Kariyer</b><span id="kcoins"></span><button id="kX">✕ Kapat</button></div><div id="kbody"></div></div>
-<div class="shop" id="rsel"><div class="shead"><b>🏁 Yarış Modu</b><button id="rselX">✕ Kapat</button></div><div class="rinfo">19 rakiple yarışırsın. Bu modda direksiyonu sen çevirirsin: <b>A D / ◀ ▶</b> sağa sola döner, <b>W / ▲</b> gaz, <b>S / ▼</b> fren ve geri vites. Pistten çıkarsan yavaşlarsın. Zorluğu seç, yarış başlasın:</div><div class="rlap"><span>🗺️ Pist</span><div class="opts" id="rtrk"></div></div><div class="rlap"><span>🔁 Tur sayısı</span><div class="opts" id="rlaps"></div></div><div id="rcards"></div></div>
+<div class="shop" id="rsel"><div class="shead"><b>🏁 Yarış Modu</b><button id="rselX">✕ Kapat</button></div><div class="rinfo">22 gerçek F1 pilotuyla yarışırsın. Lastikler aşınır: <b>B</b> tuşu ya da <b>🔧 PİT</b> düğmesiyle pite gir, <b>T</b> ile takılacak lastiği seç. Bu modda direksiyonu sen çevirirsin: <b>A D / ◀ ▶</b> sağa sola döner, <b>W / ▲</b> gaz, <b>S / ▼</b> fren ve geri vites. Pistten çıkarsan yavaşlarsın. Zorluğu seç, yarış başlasın:</div><div class="rlap"><span>🗺️ Pist</span><div class="opts" id="rtrk"></div></div><div class="rlap"><span>🔁 Tur sayısı</span><div class="opts" id="rlaps"></div></div><div class="rlap"><span>🛞 Başlangıç lastiği</span><div class="opts" id="rtyre"></div></div><div id="rcards"></div></div>
 <div class="pay" id="pay"><div>⛽ Benzin doldurmak <b>200 💰</b><br>Ödemek ister misin?</div><div class="payb"><button id="payYes">Evet, öde (E)</button><button id="payNo">Hayır (H)</button></div></div></div>
 <p id="hint"></p>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1829,6 +1835,10 @@ const RCAR=.24,RK2=.65,RN=20;
 const F1T=[{id:'mer',n:'Mercedes',c:'#27f4d2',b:'#b9bec3',a:'#141414',p:1.06,sal:600},{id:'fer',n:'Ferrari',c:'#e8002d',b:'#d6001c',a:'#f4f4f4',p:1.05,sal:580},{id:'mcl',n:'McLaren',c:'#ff8000',b:'#ff8000',a:'#1c1c1c',p:1.04,sal:550},{id:'rbr',n:'Red Bull Racing',c:'#3671c6',b:'#1d2a5c',a:'#e2231a',p:1.03,sal:520},{id:'alp',n:'Alpine',c:'#0093cc',b:'#0a63c9',a:'#ff87bc',p:1.0,sal:360},{id:'rb',n:'Racing Bulls',c:'#6692ff',b:'#f1f1f1',a:'#2b4fd6',p:.995,sal:320},{id:'haa',n:'Haas',c:'#b6babd',b:'#eeeeee',a:'#d0021b',p:.99,sal:280},{id:'wil',n:'Williams',c:'#64c4ff',b:'#14307a',a:'#64c4ff',p:.98,sal:250},{id:'aud',n:'Audi',c:'#f50537',b:'#a3a6aa',a:'#e4002b',p:.975,sal:220},{id:'ast',n:'Aston Martin',c:'#229971',b:'#00594f',a:'#cedc00',p:.965,sal:200},{id:'cad',n:'Cadillac',c:'#d9d9d9',b:'#161616',a:'#f2f2f2',p:.955,sal:180}];
 const F1D=[['mer','George Russell','RUS',63,1],['mer','Kimi Antonelli','ANT',12,1.01],['fer','Charles Leclerc','LEC',16,1],['fer','Lewis Hamilton','HAM',44,1],['mcl','Lando Norris','NOR',1,1.005],['mcl','Oscar Piastri','PIA',81,1],['rbr','Max Verstappen','VER',3,1.015],['rbr','Isack Hadjar','HAD',6,.99],['alp','Pierre Gasly','GAS',10,1],['alp','Franco Colapinto','COL',43,.985],['rb','Liam Lawson','LAW',30,.99],['rb','Arvid Lindblad','LIN',41,.985],['haa','Esteban Ocon','OCO',31,.985],['haa','Oliver Bearman','BEA',87,.995],['wil','Alexander Albon','ALB',23,.995],['wil','Carlos Sainz','SAI',55,1],['aud','Nico Hülkenberg','HUL',27,.99],['aud','Gabriel Bortoleto','BOR',5,.99],['ast','Fernando Alonso','ALO',14,1.005],['ast','Lance Stroll','STR',18,.975],['cad','Sergio Pérez','PER',11,.99],['cad','Valtteri Bottas','BOT',77,.985]].map(([t,n,c,no,sk])=>({t,n,c,no,sk}));
 const f1T=id=>F1T.find(t=>t.id===id),f1D=n=>F1D.find(d=>d.n===n);
+// lastikler: v=hız, g=tutuş, r=aşınma hızı (yarış mesafesine göre; en az 3 turluk mesafe baz alınır)
+const TYR={S:{n:'Yumuşak',k:'Y',c:'#e53935',v:1.012,g:1.06,r:1.8},M:{n:'Orta',k:'O',c:'#fdd835',v:1,g:1,r:1.1},H:{n:'Sert',k:'S',c:'#f5f5f5',v:.988,g:.95,r:.7}};
+const tDeg=w=>w<=.75?w*.04:.03+(w-.75)*.6,tF=c=>{const t=TYR[c.tc||'M'],d=tDeg(c.tw||0);return{v:t.v*(1-d*.4),g:t.g*(1-d)};};
+const PIT_V=1.25,PIT_T=2.6;
 
 let R=null,RW=null;
 function rkGeo(n){
@@ -2121,6 +2131,12 @@ function rInit(tid){
   dec.push(['tentRoofDouble',1.6,-2.4,Math.PI/2],['tent',1.6,-4.2,Math.PI/2],['tentRoofDouble',1.6,-6.0,Math.PI/2]);}
   else{const sL=RW.sLine;let best=null;for(const sd of[1,-1]){const sp=[];for(let i=0;i<n;i++){const ds=((cs[i]-sL)%L+L)%L;if(ds<1||ds>7.5)continue;const x=P[i][0]-tz[i]*sd*1.6,z=P[i][1]+tx[i]*sd*1.6;if(sp.length&&Math.hypot(x-sp[sp.length-1][0],z-sp[sp.length-1][1])<.98)continue;if(near(x,z,1.45))continue;sp.push([x,z,Math.atan2(tz[i]*sd,-tx[i]*sd),tr.ch[i]]);}if(!best||sp.length>best.length)best=sp;}
     best.forEach((p,i)=>{dec.push([i>=best.length-2?'pitsOfficeRoof':'pitsGarage',p[0],p[1],p[2],1,1,p[3]]);pits.push(p);});}
+  {// pit yolu: garajların pist üzerindeki yeri ve tarafı
+    const pg=dec.filter(d=>/^pits/.test(d[0]));RW.pit=null;
+    if(pg.length){let sd=0,s0=1e9,s1=-1e9;const sL=RW.sLine;for(const d of pg){let bi=0,bb=1e9;for(let i=0;i<n;i+=2){const q=Math.hypot(P[i][0]-d[1],P[i][1]-d[2]);if(q<bb){bb=q;bi=i;}}
+      sd+=(d[1]-P[bi][0])*-tz[bi]+(d[2]-P[bi][1])*tx[bi];let ds=((cs[bi]-sL)%L+L)%L;if(ds>L/2)ds-=L;s0=Math.min(s0,ds);s1=Math.max(s1,ds);}
+      RW.pit={sd:sd>=0?1:-1,s0:Math.max(-6,s0-.3),s1:Math.min(9,s1+.3)};}
+  }
   const nearO=(x,z,i0,r)=>{for(let i=0;i<n;i+=2){const d=Math.abs(cs[i]-cs[i0]);if(Math.min(d,L-d)<3)continue;if(Math.hypot(P[i][0]-x,P[i][1]-z)<r)return true;}return false;};
   {let b=0;for(let i=0;i<n;i+=2){const s=cs[i];if(s<b)continue;b=s+.25;if(tr.cw[i]<.5||tr.tn[i])continue;const k=Math.floor(s/.25)%4<2;for(const sd of[-1,1]){const bx=P[i][0]+(-tz[i])*sd*1.1,bz=P[i][1]+tx[i]*sd*1.1;if(near(bx,bz,1.0)||nearO(bx,bz,i,1.25))continue;dec.push([k?'barrierRed':'barrierWhite',bx,bz,Math.atan2(-tz[i],tx[i]),1,1,tr.ch[i]]);}}}
   const nearT=(x,z)=>{for(let i=0;i<n;i+=3)if(tr.tn[i]&&Math.hypot(P[i][0]-x,P[i][1]-z)<2.4)return true;return false;};
@@ -2210,6 +2226,8 @@ function rSelRender(){
   const b=S.rbest||{};RLAPS=RLOPT.includes(S.rlaps)?S.rlaps:3;
   document.getElementById('rlaps').innerHTML=RLOPT.map(n=>'<button class="'+(n===RLAPS?'on':'')+'" data-n="'+n+'">'+n+' tur</button>').join('');
   document.querySelectorAll('#rlaps button').forEach(x=>x.onclick=()=>{S.rlaps=+x.dataset.n;save();rSelRender();});
+  {const ct=TYR[S.rtyre]?S.rtyre:'M';document.getElementById('rtyre').innerHTML=Object.keys(TYR).map(k=>'<button class="'+(k===ct?'on':'')+'" data-k="'+k+'"><span style="color:'+TYR[k].c+'">●</span> '+TYR[k].n+'</button>').join('');
+   document.querySelectorAll('#rtyre button').forEach(x=>x.onclick=()=>{S.rtyre=x.dataset.k;save();rSelRender();});}
   {const cur=S.rtrack&&(S.rtrack==='kenney'||RTRK[S.rtrack])?S.rtrack:'kenney';document.getElementById('rtrk').innerHTML=[['kenney','🏟️ Kenney']].concat(KTRK.map(k=>[k,RTRK[k].n])).map(([k,nm])=>'<button class="'+(k===cur?'on':'')+'" data-t="'+k+'">'+nm+'</button>').join('');
    document.querySelectorAll('#rtrk button').forEach(x=>x.onclick=()=>{S.rtrack=x.dataset.t;save();rSelRender();});}
   document.getElementById('rcards').innerHTML=Object.entries(RDIF).map(([k,d])=>'<button data-d="'+k+'"><b>'+d.e+' '+d.n+'</b><span>1. '+rPr(d,0)+' 💰 • 2. '+rPr(d,1)+' 💰 • 3. '+rPr(d,2)+' 💰</span><small>'+(b[rKey(k)]?RLAPS+' turda en iyi süren: '+rFmt(b[rKey(k)]):RLAPS+' turda henüz yarışmadın')+'</small></button>').join('');
@@ -2240,13 +2258,18 @@ function raceStart(dif,opt){
     const c={me,x,z,yaw:ryaw(C.tx[k],C.tz[k]),v:0,st:0,k,lap:-1,s:sOff,fin:0,col,col2:df&&df.col2,ui:(df&&df.ui)||col,code:(df&&df.code)||(me?'SEN':''),nm:df?df.nm:me?'Sen':RNM[i>PI?i-1:i],off:side,skill:df?(df.skill||1):me?1:(.93+Math.random()*.09),m:rMesh(col,df&&df.col2),bump:0};if(df){c.team=df.team;c.gm=df.gm;c.am=df.am;c.pm=df.pm;c.bm=df.bm;}
     rNear(c);c.ps=c.s;RW.cars.push(c);
   }
+  {const pl=['H','H','H','MH','MH','MH','SH','SH','SM','SM'];
+   for(const c of RW.cars){c.tw=0;c.pit=0;c.stops=0;if(c.me){c.tc=TYR[S.rtyre]?S.rtyre:'M';c.ntc=c.tc==='S'?'H':c.tc==='H'?'M':'H';}
+     else{const p=RLAPS<2?(Math.random()<.5?'S':'M'):pl[Math.floor(Math.random()*pl.length)];c.plan=p.split('');c.tc=c.plan[0];c.pw=.6+Math.random()*.14;}
+     const ti=F1T.findIndex(t=>t.id===c.team);c.box=ti>=0?ti:5;}}
   R={dif,D,opt,t:opt&&opt.q?-1.6:-3.6,ph:'cd',res:null,finT:0,pl:RW.cars.find(c=>c.me),lapT:[],lapS:0,msg:'',msgT:0,paused:false};
   document.getElementById('rres').style.display='none';document.getElementById('rpause').style.display='none';document.getElementById('rPz').style.display='';
   rCam(1);
 }
 function rProg(c){return c.lap*RW.cl.L+((c.s-RW.sLine+RW.cl.L)%RW.cl.L);}
 function rCar(c,dt,inp){
-  const C=RW.cl,vm=(c.me?(c.pm?3.25*c.pm:3.25+.1*((S.up&&S.up.e)||0)):R.D.v*c.skill*(c.vb||1))*RK2;
+  const tf=tF(c);c.tf=tf;
+  const C=RW.cl,vm0=(c.me?(c.pm?3.25*c.pm:3.25+.1*((S.up&&S.up.e)||0)):R.D.v*c.skill*(c.vb||1))*RK2*tf.v,vm=c.pit?Math.min(vm0,PIT_V*RK2):vm0;
   let gas=inp.g,brk=inp.b,steer=inp.s;
   const C0=RW.cl,wl=C0.w[c.k],off=wl>.5&&Math.abs(c.lat)>.37;
   if(R.ph==='cd'){gas=brk=0;}
@@ -2255,12 +2278,15 @@ function rCar(c,dt,inp){
   else c.v-=Math.sign(c.v)*Math.min(Math.abs(c.v),.35*RK2*dt);
   if(off&&c.v>1.5*RK2)c.v-=2.5*RK2*dt;if(off&&c.v<-.5*RK2)c.v=-.5*RK2;
   c.st+=(steer-c.st)*Math.min(1,(c.me?11:5)*dt);
-  if(c.me){const a=Math.abs(c.v),om=c.st*Math.min(2.8*Math.min(1,a/(.6*RK2)),RGRIP*(c.gm||1)*1.1/Math.max(.3*RK2,a));c.yaw-=om*Math.sign(c.v||1)*dt;c.sk=Math.abs(c.st)>.5&&a*a*RW.cl.cv[c.k]>RGRIP*1.15;}
-  else c.yaw-=c.st*rWturn(c.v,vm,(R.D.gr||1)*(c.gm||1))*Math.sign(c.v||1)*dt;
+  if(c.me){const a=Math.abs(c.v),om=c.st*Math.min(2.8*Math.min(1,a/(.6*RK2)),RGRIP*(c.gm||1)*tf.g*1.1/Math.max(.3*RK2,a));c.yaw-=om*Math.sign(c.v||1)*dt;c.sk=Math.abs(c.st)>.5&&a*a*RW.cl.cv[c.k]>RGRIP*tf.g*1.15;}
+  else c.yaw-=c.st*rWturn(c.v,vm,(R.D.gr||1)*(c.gm||1)*tf.g)*Math.sign(c.v||1)*dt;
   c.x+=-Math.sin(c.yaw)*c.v*dt;c.z+=-Math.cos(c.yaw)*c.v*dt;
   rNear(c);
   {const wl2=RW.cl.w[c.k];if(Math.abs(c.lat)>wl2){const k=c.k,e=Math.sign(c.lat)*(Math.abs(c.lat)-wl2);c.x-=-C.tz[k]*e;c.z-=C.tx[k]*e;const fw=Math.sign(-Math.sin(c.yaw)*C.tx[k]-Math.cos(c.yaw)*C.tz[k])||1;let da=ryaw(C.tx[k]*fw,C.tz[k]*fw)-c.yaw;while(da>Math.PI)da-=2*Math.PI;while(da<-Math.PI)da+=2*Math.PI;const sa=Math.abs(Math.sin(da));c.yaw+=da*.4;if(!c.wall){c.v*=.5;if(c.me){shake=8;beep(120,.15,'square',.12);}}c.v*=1-.75*sa;c.v-=Math.sign(c.v)*Math.min(Math.abs(c.v),3*RK2*dt);c.wt=.15;c.lat=Math.sign(c.lat)*wl2;}}
   c.y=RW.cl.h[c.k];c.tun=RW.cl.tn[c.k];{const C1=RW.cl,a1=(c.k+3)%C1.n,b1=(c.k-3+C1.n)%C1.n,sl=(C1.h[a1]-C1.h[b1])/.6;if(sl&&R.ph!=='cd')c.v-=sl*1.6*RK2*dt;}c.wt=Math.max(0,(c.wt||0)-dt);c.wall=c.wt>0;
+  // lastik aşınması
+  if(R.ph!=='cd'&&!c.fin&&!(R.opt&&R.opt.q))c.tw=Math.min(1.2,(c.tw||0)+Math.abs(c.v)*dt/(C.L*Math.max(3,RLAPS))*TYR[c.tc].r*(1+.15*Math.abs(c.st)));
+  rPitStep(c,dt);
   // lap counting
   const a=(c.ps-RW.sLine+C.L)%C.L,b=(c.s-RW.sLine+C.L)%C.L;
   if(a>C.L*.7&&b<C.L*.3){c.lap++;if(c.lap===0)c.t0=R.t;if(c.lap>=RLAPS&&!c.fin){c.fin=R.t;c.place=RW.cars.filter(o=>o.fin).length;}
@@ -2268,20 +2294,34 @@ function rCar(c,dt,inp){
   else if(b>C.L*.7&&a<C.L*.3)c.lap--;
   c.ps=c.s;
 }
+function rPds(c){const L=RW.cl.L;let d=((c.s-RW.sLine)%L+L)%L;if(d>L/2)d-=L;return d;}
+function rPitStep(c,dt){
+  const P=RW.pit;if(!P||c.fin)return;const ds=rPds(c);
+  if(!c.pit){
+    if(!c.me&&c.plan&&c.stops<c.plan.length-1&&c.tw>=c.pw&&c.lap>=0&&c.lap<RLAPS-1&&(RLAPS-1-c.lap)*RW.cl.L+RW.cl.L-((c.s-RW.sLine+RW.cl.L)%RW.cl.L)>RW.cl.L*Math.max(3,RLAPS)*.12)c.pitReq=1;
+    if(c.pitReq&&c.lap>=0&&c.lap<RLAPS-1&&ds>P.s0-2.6&&ds<P.s0-1.6){c.pit=1;c.pitReq=0;c.off=P.sd*Math.min(RW.cl.w[c.k]-.1,.62);
+      const bx=P.s0+.5+((c.box*.93)%Math.max(.6,P.s1-P.s0-1));c.pbx=Math.min(P.s1-.5,bx);if(c.me){R.msg='🔧 Pite giriyorsun';R.msgT=1.5;}}
+    return;}
+  c.off=P.sd*Math.min(RW.cl.w[c.k]-.1,.62);
+  if(c.pit===1&&ds>=c.pbx-.05){c.pit=2;c.pt=PIT_T*(c.me?1:.9+Math.random()*.35);c.v=0;}
+  if(c.pit===2){c.v=0;c.pt-=dt;if(c.pt<=0){c.stops++;if(c.me){c.tc=c.ntc;R.msg='✅ '+TYR[c.tc].n+' lastik takıldı!';R.msgT=2;beep(880,.2,'sine',.12);}else{c.tc=c.plan[Math.min(c.stops,c.plan.length-1)];}c.tw=0;c.pit=3;}}
+  if(c.pit===3&&ds>P.s1+.6){c.pit=0;c.off=0;}
+}
 function rAI(c){
   const C=RW.cl,n=C.n,la=.3+.3*Math.abs(c.v);let k=c.k,acc=0;while(acc<la){const j=(k+1)%n;acc+=(C.s[j]-C.s[k]+C.L)%C.L;k=j;}
   // overtaking: look for car ahead
   const myP=rProg(c);let block=null;
-  for(const o of RW.cars){if(o===c)continue;const d=rProg(o)-myP;if(d>0&&d<.8&&Math.abs(o.lat-c.lat)<.21&&Math.abs((o.y||0)-(c.y||0))<.15){if(!block||d<block.d)block={o,d};}}
+  for(const o of RW.cars){if(o===c||o.pit||c.pit)continue;const d=rProg(o)-myP;if(d>0&&d<.8&&Math.abs(o.lat-c.lat)<.21&&Math.abs((o.y||0)-(c.y||0))<.15){if(!block||d<block.d)block={o,d};}}
   if(block){const fr=[-.22,0,.22].filter(l=>!RW.cars.some(o=>o!==c&&o!==block.o&&Math.abs(o.lat-l)<.17&&Math.abs(rProg(o)-myP)<.55)).sort((p,q)=>Math.abs(q-block.o.lat)-Math.abs(p-block.o.lat))[0];if(fr!==undefined)c.off=Math.max(-RW.cl.w[c.k]+.08,Math.min(RW.cl.w[c.k]-.08,fr));}
   else if(Math.random()<.002)c.off=[-.18,0,.18][Math.floor(Math.random()*3)];
-  if(Math.abs(c.off)>RW.cl.w[k]-.06)c.off=Math.sign(c.off)*(RW.cl.w[k]-.06);
+  if(Math.abs(c.off)>RW.cl.w[k]-.06)c.off=Math.sign(c.off)*(RW.cl.w[k]-.06);if(c.pit&&RW.pit)c.off=RW.pit.sd*Math.min(RW.cl.w[k]-.1,.62);
   const tx=C.x[k]+(-C.tz[k])*c.off,tz=C.z[k]+C.tx[k]*c.off,want=ryaw(tx-c.x,tz-c.z);
   let da=want-c.yaw;while(da>Math.PI)da-=2*Math.PI;while(da<-Math.PI)da+=2*Math.PI;
   const steer=Math.max(-1,Math.min(1,-da*3.2));
   // speed target
   let lim=9;for(let j=0,i=c.k;j<14;j++,i=(i+1)%n)lim=Math.min(lim,C.lim[i]);
-  let vt=Math.min(R.D.v*c.skill*RK2,lim*R.D.g*(c.gm||1));
+  const tf=c.tf||tF(c);let vt=Math.min(R.D.v*c.skill*RK2*tf.v,lim*R.D.g*(c.gm||1)*tf.g);
+  if(c.pit){vt=Math.min(vt,PIT_V*RK2*.97);if(c.pit===1){const dl=c.pbx-rPds(c);vt=Math.min(vt,Math.max(.08,Math.sqrt(2*2.2*RK2*Math.max(0,dl-.05))));}if(c.pit===2)vt=0;}
   if(block&&block.d<.48)vt=Math.min(vt,block.o.v*.97);
   if(c.fin)vt=Math.min(vt,1.4*RK2);
   // rubber band (only while player racing)
@@ -2289,7 +2329,7 @@ function rAI(c){
   return{g:c.v<vt-.03,b:c.v>vt+.1,s:steer};
 }
 function rCollide(){
-  const cs=RW.cars;for(let i=0;i<cs.length;i++)for(let j=i+1;j<cs.length;j++){const a=cs[i],b=cs[j];if(Math.abs((a.y||0)-(b.y||0))>.15)continue;
+  const cs=RW.cars;for(let i=0;i<cs.length;i++)for(let j=i+1;j<cs.length;j++){const a=cs[i],b=cs[j];if(a.pit||b.pit||Math.abs((a.y||0)-(b.y||0))>.15)continue;
     for(const sa of[-.083,.083])for(const sb of[-.083,.083]){
       const ax=a.x-Math.sin(a.yaw)*sa,az=a.z-Math.cos(a.yaw)*sa,bx=b.x-Math.sin(b.yaw)*sb,bz=b.z-Math.cos(b.yaw)*sb,dx=bx-ax,dz=bz-az,d=Math.hypot(dx,dz);
       if(d<.165&&d>1e-5){const p=(.165-d)/2,nx=dx/d,nz=dz/d;a.x-=nx*p;a.z-=nz*p;b.x+=nx*p;b.z+=nz*p;
@@ -2317,7 +2357,8 @@ function raceTick(dt){
     const st=4,h2=dt/st;
     for(let q=0;q<st;q++){
       for(const c of RW.cars){let inp;
-        if(c.me&&!c.fin){const l=keys.KeyA||keys.ArrowLeft,r=keys.KeyD||keys.ArrowRight;inp={g:!!(keys.KeyW||keys.ArrowUp),b:!!(keys.KeyS||keys.ArrowDown),s:(r?1:0)-(l?1:0)};}
+        if(c.me&&c.pit)inp=rAI(c);
+        else if(c.me&&!c.fin){const l=keys.KeyA||keys.ArrowLeft,r=keys.KeyD||keys.ArrowRight;inp={g:!!(keys.KeyW||keys.ArrowUp),b:!!(keys.KeyS||keys.ArrowDown),s:(r?1:0)-(l?1:0)};}
         else if(c.me){inp=rAI(c);}
         else inp=rAI(c);
         rCar(c,h2,inp);}
@@ -2331,7 +2372,7 @@ function raceTick(dt){
   }
   for(const c of RW.cars){c.m.position.set(c.x,(c.y||0)+.012,c.z);c.m.rotation.y=c.yaw+Math.PI;c.m.rotation.z=-c.st*.04*Math.min(1,Math.abs(c.v)/2);}
   if(RW.cT)RW.cT.value=performance.now()/1000;if(RW.yas)RW.yas.material.color.setHSL((performance.now()/9000)%1,.85,.62);
-  rCam(0);RW.ren.render(RW.sc,RW.cam);rHud();
+  rCam(0);RW.ren.render(RW.sc,RW.cam);rHud();rPitUI();
 }
 let RA=null;
 function rAudio(){
@@ -2364,7 +2405,12 @@ function rHud(){
   if(R.opt&&R.opt.q){txt('SIRALAMA',4*u,9.5*u,5.5*u,'#ffd54f');txt(pl.t0===undefined?'Hazırlık turu':'Hızlı tur',4*u,15*u,4*u);txt(pl.t0===undefined?'—':rFmt(Math.max(0,(pl.fin||R.t)-pl.t0)),4*u,19.6*u,3.6*u,'#cfd8dc');}
   else{const pt=pos+'/'+RW.cars.length;txt(pt,4*u,10*u,8*u,'#ffd54f');txt('SIRA',4*u+pt.length*4.6*u+1*u,10*u,3.2*u,'#fff');
   txt('Tur '+Math.min(RLAPS,Math.max(1,pl.lap+1))+'/'+RLAPS,4*u,15.5*u,4*u);
-  txt(rFmt(Math.max(0,pl.fin||R.t)),4*u,19.6*u,3.4*u,'#cfd8dc');}
+  txt(rFmt(Math.max(0,pl.fin||R.t)),4*u,19.6*u,3.4*u,'#cfd8dc');
+  {const t=TYR[pl.tc],cx=2*u+bw-5.2*u,cy=15.2*u,r=3.1*u,life=Math.max(0,1-(pl.tw||0));g.lineWidth=1.1*u;g.strokeStyle='rgba(255,255,255,.18)';g.beginPath();g.arc(cx,cy,r,0,7);g.stroke();
+   g.strokeStyle=pl.tw>.75?'#ff5252':t.c;g.beginPath();g.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+life*Math.PI*2);g.stroke();
+   g.font='900 '+(3*u)+'px system-ui,sans-serif';g.textAlign='center';g.fillStyle=t.c;g.fillText(t.k,cx,cy+1.05*u);txt('%'+Math.round(life*100),cx,19.9*u,2.4*u,pl.tw>.75?'#ff8a80':'#cfd8dc','center');
+   if(pl.tw>.75&&!pl.pit&&(R.t*2|0)%2)txt('⚠️ Lastikler bitti!',W/2,H*.3,4.2*u,'#ff8a80','center');
+   if(pl.pit===2)txt('🔧 Lastik değişiyor… '+Math.max(0,pl.pt).toFixed(1)+' sn',W/2,H*.3,5*u,'#fff','center');}}
   // speed
   txt(Math.round(Math.abs(pl.v)*75/RK2)+' km/s',W/2,H-(TOUCH?20:4)*u,6*u,'#fff','center');
   // minimap
@@ -2374,7 +2420,7 @@ function rHud(){
   for(const c of RW.cars.slice().sort((a,b)=>a.me-b.me)){g.beginPath();g.arc(ox+(c.x-M.x0)*s,oy+(c.z-M.z0)*s,c.me?1.6*u:1.2*u,0,7);g.fillStyle=c.ui||c.col;g.fill();if(c.me){g.lineWidth=.6*u;g.strokeStyle='#fff';g.stroke();}}
   // canlı sıralama kulesi
   if(!(R.opt&&R.opt.q)&&RW.cars.length>1){
-    const P=rPlaces(),N=P.length,top=23*u,bot=TOUCH?(W<H?30*u:21*u):4*u,rh=Math.max(12,Math.min(3.4*u,22,(H-top-bot)/(N+1.3))),tw=Math.max(118,rh*7.6),fit=Math.max(4,Math.floor((H-top-bot)/rh)-1);
+    const P=rPlaces(),N=P.length,top=23*u,bot=TOUCH?(W<H?30*u:21*u):4*u,rh=Math.max(12,Math.min(3.4*u,22,(H-top-bot)/(N+1.3))),tw=Math.max(124,rh*8),fit=Math.max(4,Math.floor((H-top-bot)/rh)-1);
     let rows=P.map((c,i)=>i);if(N>fit){const mi=P.indexOf(pl),k=Math.max(3,fit-5),set=new Set();for(let i=0;i<k;i++)set.add(i);for(let i=mi-2;i<=mi+2;i++)if(i>=0&&i<N)set.add(i);let j=k;while(set.size<fit&&j<N)set.add(j++);rows=[...set].sort((a,b)=>a-b).slice(0,fit);}
     const ref=Math.max(.3,(R.D.v||3)*RK2*.82),ld=P[0],x0=2*u;let y=top;
     g.fillStyle='rgba(10,12,16,.62)';const th=rows.length*rh+rh*1.1;g.beginPath();g.roundRect?g.roundRect(x0,y,tw,th,rh*.35):g.rect(x0,y,tw,th);g.fill();
@@ -2387,7 +2433,9 @@ function rHud(){
       g.fillStyle=c.ui||c.col;g.fillRect(x0+rh*1.6,y+rh*.18,rh*.2,rh*.64);
       g.textAlign='left';g.fillStyle=c.me?'#ffd54f':'#fff';g.fillText(c.code||(c.nm||'').slice(0,3).toUpperCase(),x0+rh*2.05,y+rh*.74);
       let gp='';if(R.ph==='cd')gp='';else if(i===0)gp=c.fin?'🏁':'Lider';else if(c.fin&&ld.fin)gp='+'+(c.fin-ld.fin).toFixed(1);else if(ld.fin)gp='+'+(R.t-ld.fin+Math.max(0,RLAPS*RW.cl.L-rProg(c))/ref).toFixed(1);else{const d=rProg(ld)-rProg(c);gp=d>RW.cl.L*.98?'+'+Math.floor(d/RW.cl.L)+' tur':'+'+(d/ref).toFixed(1);}
-      g.font='600 '+(rh*.52)+'px system-ui,sans-serif';g.textAlign='right';g.fillStyle=c.me?'#ffd54f':'#b0bec5';g.fillText(gp,x0+tw-rh*.35,y+rh*.72);
+      if(c.pit&&!c.fin)gp='PİT';
+      {const t=TYR[c.tc||'M'];g.beginPath();g.arc(x0+rh*4.55,y+rh*.5,rh*.2,0,7);g.lineWidth=rh*.11;g.strokeStyle=t.c;g.stroke();}
+      g.font='600 '+(rh*.52)+'px system-ui,sans-serif';g.textAlign='right';g.fillStyle=gp==='PİT'?'#ff8a80':c.me?'#ffd54f':'#b0bec5';g.fillText(gp,x0+tw-rh*.35,y+rh*.72);
       y+=rh;}
   }
   // countdown
@@ -2395,9 +2443,9 @@ function rHud(){
     for(let i=0;i<3;i++){g.beginPath();g.arc(cx-11*u+i*11*u,cy,4.5*u,0,7);g.fillStyle=(3-n)>i?'#ff1744':'#3a1414';g.fill();}
     if(n<=3&&n>0)txt(String(n),cx,cy+22*u,12*u,'#fff','center');}
   else if(R.t<1.2)txt('BAŞLA!',W/2,H*.32,12*u,'#69f0ae','center');
-  if(R.msgT>0)txt(R.msg,W/2,H*.22,6.5*u,'#ffd54f','center');
+  if(R.msgT>0)txt(R.msg,W/2,H*.22,Math.min(6.5*u,W*.94/(R.msg.length*.56)),'#ffd54f','center');
   if(R.wrong)txt('⚠️ Ters yöndesin!',W/2,H*.42,6*u,'#ff5252','center');
-  if(Math.abs(pl.lat)>.37&&R.ph==='run'&&!pl.fin)txt('Pistten çıktın, yavaşladın',W/2,H*.5,4*u,'#fff','center');
+  if(Math.abs(pl.lat)>.37&&R.ph==='run'&&!pl.fin&&!pl.pit)txt('Pistten çıktın, yavaşladın',W/2,H*.5,4*u,'#fff','center');
 }
 function rStdBtns(){const box=document.querySelector('#rres .payb');box.innerHTML='<button id="rAgain">🔁 Tekrar yarış</button><button id="rDif">🎚️ Zorluk seç</button><button id="rHome">🏠 Ana menü</button>';
   document.getElementById('rAgain').onclick=()=>raceStart(R?R.dif:'orta');document.getElementById('rDif').onclick=()=>{raceExit();raceOpen();};document.getElementById('rHome').onclick=()=>raceExit();}
@@ -2414,10 +2462,20 @@ function rResults(){
   document.getElementById('rres').style.display='flex';
   if(pr)coinSound();
 }
-function raceExit(){const wk=R&&R.opt;if(RW)RW.lay.style.display='none';document.getElementById('rres').style.display='none';document.getElementById('rpause').style.display='none';R=null;state='menu';clearKeys();if(wk&&S.kar)kOpen();}
+function raceExit(){const wk=R&&R.opt;document.getElementById('rPitW').style.display='none';if(RW)RW.lay.style.display='none';document.getElementById('rres').style.display='none';document.getElementById('rpause').style.display='none';R=null;state='menu';clearKeys();if(wk&&S.kar)kOpen();}
+function rPitUI(){const w=document.getElementById('rPitW');if(!R||!RW||!RW.pit||(R.opt&&R.opt.q)||R.ph==='res'||R.pl.fin){w.style.display='none';return;}w.style.display='flex';
+  const p=R.pl,t=TYR[p.ntc],b=document.getElementById('rPit'),ty=document.getElementById('rTyr');
+  const h='<i style="border-color:'+t.c+'"></i>'+t.n;if(ty.innerHTML!==h)ty.innerHTML=h;
+  const lbl=p.pit?'🔧 Pitte…':p.pitReq?'🔧 PİT: bu tur':'🔧 PİT';if(b.textContent!==lbl)b.textContent=lbl;b.classList.toggle('on',!!(p.pitReq||p.pit));b.disabled=p.lap>=RLAPS-1&&!p.pit;b.style.opacity=b.disabled?.45:1;}
+function rPitToggle(){if(!R||!R.pl||R.pl.pit||R.pl.fin||!RW.pit||(R.opt&&R.opt.q))return;if(R.pl.lap>=RLAPS-1){R.msg='Son turda pite girilemez';R.msgT=1.5;return;}R.pl.pitReq=!R.pl.pitReq;R.msg=R.pl.pitReq?'🔧 Pit isteği: bu tur sonunda pite gir':'Pit isteği iptal';R.msgT=1.6;beep(R.pl.pitReq?700:400,.12,'sine',.1);rPitUI();}
+function rTyreCycle(){if(!R||!R.pl||R.pl.pit===2)return;const o=['S','M','H'];R.pl.ntc=o[(o.indexOf(R.pl.ntc)+1)%3];rPitUI();}
+document.getElementById('rPit').onclick=e=>{e.preventDefault();rPitToggle();};
+document.getElementById('rTyr').onclick=e=>{e.preventDefault();rTyreCycle();};
 function racePause(on){if(!R||R.ph==='res')return;R.paused=on;document.getElementById('rpause').style.display=on?'flex':'none';clearKeys();}
 addEventListener('keydown',e=>{
   if(state==='race'&&R&&!e.repeat&&(e.code==='Escape'||e.code==='KeyP'))racePause(!R.paused);
+  else if(state==='race'&&R&&!R.paused&&!e.repeat&&e.code==='KeyB')rPitToggle();
+  else if(state==='race'&&R&&!R.paused&&!e.repeat&&e.code==='KeyT')rTyreCycle();
   else if(state==='rsel'&&e.code==='Escape'){document.getElementById('rsel').style.display='none';state='menu';}
   if(state==='race'&&['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();
 });
@@ -2557,7 +2615,7 @@ addEventListener('keydown',e=>{if(state==='kar'&&e.code==='Escape'&&document.act
 </html>
 
 <div id="upd"><div class="ub"><h3 id="updT"></h3><div class="us" id="updS"></div><ul id="updL"></ul><div class="ubt"><button class="u2" id="updNo">Sonra</button><button class="u1" id="updOk">Tamam</button></div></div></div><script>
-const BUILD='2026-11-17a';
+const BUILD='2026-11-19a';
 (function(){
   const el=document.getElementById('upd');let pend=null,lastShown='',checked=0;
   const busy=()=>{try{if(['play','crash','pause'].includes(state))return true;if(R&&R.ph!=='res')return true;}catch(e){}return false;};
