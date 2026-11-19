@@ -1838,7 +1838,11 @@ const f1T=id=>F1T.find(t=>t.id===id),f1D=n=>F1D.find(d=>d.n===n);
 // lastikler: v=hız, g=tutuş, r=aşınma hızı (yarış mesafesine göre; en az 3 turluk mesafe baz alınır)
 const TYR={S:{n:'Yumuşak',k:'Y',c:'#e53935',v:1.012,g:1.06,r:1.8},M:{n:'Orta',k:'O',c:'#fdd835',v:1,g:1,r:1.1},H:{n:'Sert',k:'S',c:'#f5f5f5',v:.988,g:.95,r:.7}};
 const tDeg=w=>w<=.75?w*.04:.03+(w-.75)*.6,tF=c=>{const t=TYR[c.tc||'M'],d=tDeg(c.tw||0);return{v:t.v*(1-d*.4),g:t.g*(1-d)};};
-const PIT_V=1.25,PIT_T=2.6;
+const PIT_V=1.4,PIT_T=2.6;
+// gerçek pit yolları: sd=+1 pistin sağı (saat yönündeki pistlerde iç taraf), a=girişin start çizgisine uzaklığı (m), b=çıkışın (m)
+const RPIT={bahreyn:{sd:1,a:280,b:320},istanbul:{sd:-1,a:300,b:280},monako:{sd:1,a:250,b:190},baku:{sd:1,a:260,b:300},silverstone:{sd:1,a:300,b:350},monza:{sd:1,a:300,b:300},abudabi:{sd:1,a:300,b:300}};
+function rPitLat(ds){const P=RW.pit;if(!P)return 0;if(P.k0)return P.PL;const sm=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
+  if(ds<P.sIn+P.R)return .42+(P.PL-.42)*sm((ds-P.sIn)/P.R);if(ds>P.sOut-P.R)return .42+(P.PL-.42)*sm((P.sOut-ds)/P.R);return P.PL;}
 
 let R=null,RW=null;
 function rkGeo(n){
@@ -1972,8 +1976,9 @@ function rNoise(x,z){return Math.sin(x*.37+1.3)*Math.cos(z*.29-.7)+.5*Math.sin(x
 function rThemeBuild(tid,sc,ctx){
   const T=RTH[tid],d=RTRK[tid],{P,ch,cs,tx,tz,n,L,rnd,dec,mx0,mx1,mz0,mz1}=ctx;
   // spatial hash for nearest-track queries
-  const G={},gk=(x,z)=>Math.floor(x/2)+','+Math.floor(z/2);for(let i=0;i<n;i+=2){const k=gk(P[i][0],P[i][1]);(G[k]||(G[k]=[])).push(i);}
-  const nearI=(x,z,r)=>{const cx=Math.floor(x/2),cz=Math.floor(z/2),R=Math.ceil(r/2),o=[];for(let a=-R;a<=R;a++)for(let b=-R;b<=R;b++){const l=G[(cx+a)+','+(cz+b)];if(l)for(const i of l){const dd=Math.hypot(P[i][0]-x,P[i][1]-z);if(dd<r)o.push([dd,i]);}}return o;};
+  const G={},gk=(x,z)=>Math.floor(x/2)+','+Math.floor(z/2);for(let i=0;i<n;i+=2){const k=gk(P[i][0],P[i][1]);(G[k]||(G[k]=[])).push([P[i][0],P[i][1],i]);}
+  if(RW.pitLane)for(const q of RW.pitLane){const k=gk(q[0],q[1]);(G[k]||(G[k]=[])).push([q[0],q[1],q[2]]);}
+  const nearI=(x,z,r)=>{const cx=Math.floor(x/2),cz=Math.floor(z/2),R=Math.ceil(r/2),o=[];for(let a=-R;a<=R;a++)for(let b=-R;b<=R;b++){const l=G[(cx+a)+','+(cz+b)];if(l)for(const e of l){const dd=Math.hypot(e[0]-x,e[1]-z);if(dd<r)o.push([dd,e[2]]);}}return o;};
   const dTrack=(x,z)=>{let m=99,mi=0;for(const[dd,i]of nearI(x,z,6))if(dd<m){m=dd;mi=i;}return[m,mi];};
   const wet=(x,z)=>(d.water&&rPinP(d.water,x,z))||(d.sea&&rPinP(d.sea,x,z));
   const TH=(x,z)=>{const nb=nearI(x,z,5);let m=99,mi=-1,ws=0,hs=0;for(const[dd,i]of nb){if(dd<m){m=dd;mi=i;}const w=1/(dd*dd+.4);ws+=w;hs+=w*ch[i];}
@@ -2129,16 +2134,28 @@ function rInit(tid){
   if(K0){for(let k=0;k<4;k++)dec.push(['pitsGarage',1.55,-12.5-k,-Math.PI/2]);dec.push(['pitsOfficeRoof',1.55,-16.5,-Math.PI/2],['pitsOfficeRoof',1.55,-17.5,-Math.PI/2]);
   for(const z of[-11.5,-19])dec.push(['lightPostLarge',2.2,z,0]);
   dec.push(['tentRoofDouble',1.6,-2.4,Math.PI/2],['tent',1.6,-4.2,Math.PI/2],['tentRoofDouble',1.6,-6.0,Math.PI/2]);}
-  else{const sL=RW.sLine;let best=null;for(const sd of[1,-1]){const sp=[];for(let i=0;i<n;i++){const ds=((cs[i]-sL)%L+L)%L;if(ds<1||ds>7.5)continue;const x=P[i][0]-tz[i]*sd*1.6,z=P[i][1]+tx[i]*sd*1.6;if(sp.length&&Math.hypot(x-sp[sp.length-1][0],z-sp[sp.length-1][1])<.98)continue;if(near(x,z,1.45))continue;sp.push([x,z,Math.atan2(tz[i]*sd,-tx[i]*sd),tr.ch[i]]);}if(!best||sp.length>best.length)best=sp;}
-    best.forEach((p,i)=>{dec.push([i>=best.length-2?'pitsOfficeRoof':'pitsGarage',p[0],p[1],p[2],1,1,p[3]]);pits.push(p);});}
+  else{// gerçek pit yolu: start düzlüğünün yanında ayrı şerit, garajlar dışında
+    const cfg=RPIT[tid]||{sd:1,a:280,b:300},km=(RTRK[tid].km||5)*1000,tpm=L/km,sL=RW.sLine;let li=0,bd=1e9;for(let i=0;i<n;i++){let d=Math.abs(cs[i]-sL);d=Math.min(d,L-d);if(d<bd){bd=d;li=i;}}
+    const at=ds=>{const s0=((sL+ds)%L+L)%L,k=(li+Math.round(ds/(L/n))+n*4)%n;let b=k,bb=1e9;for(let j=-40;j<=40;j++){const q=(k+j+n)%n;let d=Math.abs(cs[q]-s0);d=Math.min(d,L-d);if(d<bb){bb=d;b=q;}}return b;};
+    let sIn=-cfg.a*tpm,sOut=cfg.b*tpm;
+    const ku=ds=>{const a=at(ds-1),b=at(ds+1);return Math.abs(Math.atan2(tx[a]*tz[b]-tz[a]*tx[b],tx[a]*tx[b]+tz[a]*tz[b]))/2;};
+    for(let ds=0;ds>sIn;ds-=.2){if(ku(ds)>.3){sIn=Math.min(-4,ds+.8);break;}}
+    for(let ds=0;ds<sOut;ds+=.2){if(ku(ds)>.3){sOut=Math.max(4.5,ds-.8);break;}}
+    const sd=cfg.sd,PL=1.05,R=Math.min(2.2,(sOut-sIn)/5);RW.pit={sd,sIn,sOut,PL,R,b0:sIn+R+.6,b1:sOut-R-.6};
+    const lane=[];for(let ds=sIn;ds<=sOut;ds+=.2){const i=at(ds),la=rPitLat(ds)*sd;lane.push([P[i][0]-tz[i]*la,P[i][1]+tx[i]*la,i,tr.ch[i],ds]);}RW.pitLane=lane;
+    // garajlar
+    const gs=[];for(let ds=RW.pit.b0;ds<=RW.pit.b1;ds+=.98){const i=at(ds),la=(PL+.78)*sd;gs.push([P[i][0]-tz[i]*la,P[i][1]+tx[i]*la,Math.atan2(tz[i]*sd,-tx[i]*sd),tr.ch[i]]);}
+    gs.forEach((p,i)=>{dec.push([i>=gs.length-2?'pitsOfficeRoof':'pitsGarage',p[0],p[1],p[2],1,1,p[3]]);pits.push(p);});
+    for(const p of lane)pits.push([p[0],p[1]]);
+  }
   {// pit yolu: garajların pist üzerindeki yeri ve tarafı
-    const pg=dec.filter(d=>/^pits/.test(d[0]));RW.pit=null;
+    const pg=K0?dec.filter(d=>/^pits/.test(d[0])):[];if(K0){RW.pit=null;RW.pitLane=null;}
     if(pg.length){let sd=0,s0=1e9,s1=-1e9;const sL=RW.sLine;for(const d of pg){let bi=0,bb=1e9;for(let i=0;i<n;i+=2){const q=Math.hypot(P[i][0]-d[1],P[i][1]-d[2]);if(q<bb){bb=q;bi=i;}}
       sd+=(d[1]-P[bi][0])*-tz[bi]+(d[2]-P[bi][1])*tx[bi];let ds=((cs[bi]-sL)%L+L)%L;if(ds>L/2)ds-=L;s0=Math.min(s0,ds);s1=Math.max(s1,ds);}
-      RW.pit={sd:sd>=0?1:-1,s0:Math.max(-6,s0-.3),s1:Math.min(9,s1+.3)};}
+      s0=Math.max(-6,s0-.3);s1=Math.min(9,s1+.3);RW.pit={k0:1,sd:sd>=0?1:-1,sIn:s0-2,sOut:s1+.6,PL:.62,R:.01,b0:s0+.5,b1:s1-.5};}
   }
   const nearO=(x,z,i0,r)=>{for(let i=0;i<n;i+=2){const d=Math.abs(cs[i]-cs[i0]);if(Math.min(d,L-d)<3)continue;if(Math.hypot(P[i][0]-x,P[i][1]-z)<r)return true;}return false;};
-  {let b=0;for(let i=0;i<n;i+=2){const s=cs[i];if(s<b)continue;b=s+.25;if(tr.cw[i]<.5||tr.tn[i])continue;const k=Math.floor(s/.25)%4<2;for(const sd of[-1,1]){const bx=P[i][0]+(-tz[i])*sd*1.1,bz=P[i][1]+tx[i]*sd*1.1;if(near(bx,bz,1.0)||nearO(bx,bz,i,1.25))continue;dec.push([k?'barrierRed':'barrierWhite',bx,bz,Math.atan2(-tz[i],tx[i]),1,1,tr.ch[i]]);}}}
+  {let b=0;for(let i=0;i<n;i+=2){const s=cs[i];if(s<b)continue;b=s+.25;if(tr.cw[i]<.5||tr.tn[i])continue;const k=Math.floor(s/.25)%4<2;for(const sd of[-1,1]){const bx=P[i][0]+(-tz[i])*sd*1.1,bz=P[i][1]+tx[i]*sd*1.1;if(near(bx,bz,1.0)||nearO(bx,bz,i,1.25))continue;if(RW.pitLane&&RW.pitLane.some(q=>Math.hypot(q[0]-bx,q[1]-bz)<.5))continue;dec.push([k?'barrierRed':'barrierWhite',bx,bz,Math.atan2(-tz[i],tx[i]),1,1,tr.ch[i]]);}}}
   const nearT=(x,z)=>{for(let i=0;i<n;i+=3)if(tr.tn[i]&&Math.hypot(P[i][0]-x,P[i][1]-z)<2.4)return true;return false;};
   {const zone=K0?(x,z)=>(x>.2&&x<3.4&&z<-10.3&&z>-19.2)||(x>.3&&x<2.8&&z<-1&&z>-7)||nearT(x,z):(x,z)=>pits.some(p=>Math.hypot(p[0]-x,p[1]-z)<1.05);
    const last={},cnt={'-1':0,'1':0};for(let i=0;i<n;i++){if(tr.cw[i]<.5)continue;
@@ -2146,6 +2163,16 @@ function rInit(tid){
      dec.push([(cnt[sd]%3===0)?'grandStandCovered':'grandStand',x,z,Math.atan2(-nx,-nz),1.04,1,tr.ch[i]]);RW.st.push([x,z,Math.atan2(-nx,-nz),1.04,tr.ch[i]]);}}}
   const TN=K0?260:0;let tries=0,nt=0;while(nt<TN&&tries<TN*35){tries++;const x=K0?-17+rnd()*45:mx0-8+rnd()*(mx1-mx0+16),z=K0?-32+rnd()*44:mz0-8+rnd()*(mz1-mz0+16);if(near(x,z,2.6))continue;if(K0&&(x<-9.6&&x>-12.4&&z<1&&z>-6||x>.3&&x<3.2&&z<-10.5&&z>-19||x>.5&&x<8.5&&z<-22.5&&z>-28||x>.4&&x<2.2&&z<-1&&z>-7))continue;if(!K0&&pits.some(p=>Math.hypot(p[0]-x,p[1]-z)<1.4))continue;nt++;dec.push([rnd()<.6?'treeLarge':'treeSmall',x,z,rnd()*6,.8+rnd()*.5,1]);}
   if(K0){const trk=rkMerge(tr.parts);trk.receiveShadow=true;sc.add(trk);}else{const[rm,gt]=rRoad(P,tx,tz,cv,sg,cs,n,RW.sLine,L,tr.ch);sc.add(rm,gt);}
+  if(RW.pitLane&&!K0){const ln=RW.pitLane,pos=[],col=[],idx=[],add=(x,y,z,c)=>{pos.push(x,y,z);col.push(c.r,c.g,c.b);return pos.length/3-1;};
+    const cA=new THREE.Color('#4a4e55'),cW=new THREE.Color('#f2f2f2'),cY=new THREE.Color('#ffd600');
+    const strip=(o0,o1,c,y0)=>{let pa=null;for(let k=0;k<ln.length;k++){const q=ln[k],q0=ln[Math.max(0,k-1)],q1=ln[Math.min(ln.length-1,k+1)];let dx=q1[0]-q0[0],dz=q1[1]-q0[1];const dl=Math.hypot(dx,dz)||1;dx/=dl;dz/=dl;const y=q[3]+y0;
+      const a=add(q[0]-dz*o0,y,q[1]+dx*o0,c),b=add(q[0]-dz*o1,y,q[1]+dx*o1,c);if(pa){idx.push(pa[0],pa[1],a,pa[1],b,a);}pa=[a,b];}};
+    strip(-.21,.21,cA,.0045);strip(-.215,-.19,cW,.0055);strip(.19,.215,cW,.0055);
+    {// pit hız sınırı çizgileri (sarı) giriş ve çıkışta
+      for(const ds of[RW.pit.sIn+RW.pit.R,RW.pit.sOut-RW.pit.R]){let k=0,bb=1e9;ln.forEach((q,j)=>{const d=Math.abs(q[4]-ds);if(d<bb){bb=d;k=j;}});const q=ln[k],q1=ln[Math.min(ln.length-1,k+1)],q0=ln[Math.max(0,k-1)];let dx=q1[0]-q0[0],dz=q1[1]-q0[1];const dl=Math.hypot(dx,dz)||1;dx/=dl;dz/=dl;const y=q[3]+.006;
+        const a=add(q[0]-dz*-.21-dx*.03,y,q[1]+dx*-.21-dz*.03,cY),b=add(q[0]-dz*.21-dx*.03,y,q[1]+dx*.21-dz*.03,cY),c=add(q[0]-dz*-.21+dx*.03,y,q[1]+dx*-.21+dz*.03,cY),d=add(q[0]-dz*.21+dx*.03,y,q[1]+dx*.21+dz*.03,cY);idx.push(a,b,c,b,d,c);}}
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setAttribute('color',new THREE.Float32BufferAttribute(col,3));g.setIndex(idx);g.computeVertexNormals();
+    const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({vertexColors:true,roughness:.9,side:THREE.DoubleSide}));m.receiveShadow=true;m.name='PITLANE';sc.add(m);}
   {const cm=new THREE.MeshStandardMaterial({color:0x8d949a,roughness:.9}),dm=new THREE.MeshStandardMaterial({color:0x3b4045,roughness:.9}),lm=new THREE.MeshBasicMaterial({color:0xfff3c4}),ym=new THREE.MeshStandardMaterial({color:0xffc107,roughness:.6});
    const idx=[];tr.tn.forEach((t,i)=>{if(t)idx.push(i);});
    if(K0&&idx.length){const a=tr.cl[idx[0]],b0=tr.cl[idx[idx.length-1]],dx=b0[0]-a[0],dz=b0[1]-a[1],len=Math.hypot(dx,dz)+.1,ux=dx/len,uz=dz/len,mx=(a[0]+b0[0])/2,mz=(a[1]+b0[1])/2,yaw=Math.atan2(dx,dz);
@@ -2186,7 +2213,8 @@ function rInit(tid){
   {const RAD={barrierRed:.13,barrierWhite:.13,grandStand:.55,grandStandCovered:.55,pitsGarage:.5,pitsOfficeRoof:.5,treeLarge:.25,treeSmall:.18,flagRed:.06,bannerTowerRed:.2,tentRoofDouble:.5,tent:.45,lightPostLarge:.2};
    const HG={};for(let i=0;i<n;i++){const k=Math.floor(P[i][0])+','+Math.floor(P[i][1]);(HG[k]||(HG[k]=[])).push(i);}
    const md=(x,z)=>{let m=99;const cx=Math.floor(x),cz=Math.floor(z);for(let a=-2;a<=2;a++)for(let b2=-2;b2<=2;b2++){const l=HG[(cx+a)+','+(cz+b2)];if(l)for(const i of l){const d=Math.hypot(P[i][0]-x,P[i][1]-z);if(d<m)m=d;}}return m;};
-   RW.md=md;for(let q=dec.length-1;q>=0;q--){const r=RAD[dec[q][0]];if(r===undefined)continue;if(md(dec[q][1],dec[q][2])-r<.7)dec.splice(q,1);}}
+   const mdl=(x,z)=>{let m=99;if(RW.pitLane)for(const q of RW.pitLane){const d=Math.hypot(q[0]-x,q[1]-z);if(d<m)m=d;}return m;};
+   RW.md=md;for(let q=dec.length-1;q>=0;q--){const r=RAD[dec[q][0]];if(r===undefined)continue;if(md(dec[q][1],dec[q][2])-r<.7||(!/^pits/.test(dec[q][0])&&mdl(dec[q][1],dec[q][2])-r<.3))dec.splice(q,1);}}
   dec.forEach(d=>{d[4]=d[4]||1;d[5]=1;});RW.dec=dec;const dm=rkMerge(dec);dm.castShadow=true;sc.add(dm);
   {const rows=[[.273,.36],[.331,.297],[.39,.232],[.448,.168],[.506,.104],[.564,.04]],per=8,N=RW.st.length*rows.length*per;
    const bg=new THREE.BoxGeometry(.05,.07,.035);bg.translate(0,.035,0);const hg=new THREE.BoxGeometry(.03,.03,.03);hg.translate(0,.085,0);
@@ -2271,7 +2299,7 @@ function rCar(c,dt,inp){
   const tf=tF(c);c.tf=tf;
   const C=RW.cl,vm0=(c.me?(c.pm?3.25*c.pm:3.25+.1*((S.up&&S.up.e)||0)):R.D.v*c.skill*(c.vb||1))*RK2*tf.v,vm=c.pit?Math.min(vm0,PIT_V*RK2):vm0;
   let gas=inp.g,brk=inp.b,steer=inp.s;
-  const C0=RW.cl,wl=C0.w[c.k],off=wl>.5&&Math.abs(c.lat)>.37;
+  const C0=RW.cl,wl=C0.w[c.k],off=!c.pit&&wl>.5&&Math.abs(c.lat)>.37;
   if(R.ph==='cd'){gas=brk=0;}
   if(gas&&c.v>=0)c.v+=3.6*RK2*(c.me?1:(R.D.ac||1))*(c.am||1)*(1-c.v/vm)*dt;
   else if(brk){if(c.v>.05)c.v-=2.6*RK2*(c.bm||1)*dt;else c.v=Math.max(-.7*RK2,c.v-1.4*RK2*dt);}
@@ -2282,7 +2310,7 @@ function rCar(c,dt,inp){
   else c.yaw-=c.st*rWturn(c.v,vm,(R.D.gr||1)*(c.gm||1)*tf.g)*Math.sign(c.v||1)*dt;
   c.x+=-Math.sin(c.yaw)*c.v*dt;c.z+=-Math.cos(c.yaw)*c.v*dt;
   rNear(c);
-  {const wl2=RW.cl.w[c.k];if(Math.abs(c.lat)>wl2){const k=c.k,e=Math.sign(c.lat)*(Math.abs(c.lat)-wl2);c.x-=-C.tz[k]*e;c.z-=C.tx[k]*e;const fw=Math.sign(-Math.sin(c.yaw)*C.tx[k]-Math.cos(c.yaw)*C.tz[k])||1;let da=ryaw(C.tx[k]*fw,C.tz[k]*fw)-c.yaw;while(da>Math.PI)da-=2*Math.PI;while(da<-Math.PI)da+=2*Math.PI;const sa=Math.abs(Math.sin(da));c.yaw+=da*.4;if(!c.wall){c.v*=.5;if(c.me){shake=8;beep(120,.15,'square',.12);}}c.v*=1-.75*sa;c.v-=Math.sign(c.v)*Math.min(Math.abs(c.v),3*RK2*dt);c.wt=.15;c.lat=Math.sign(c.lat)*wl2;}}
+  {const wl2=c.pit&&RW.pit&&!RW.pit.k0?RW.pit.PL+.3:RW.cl.w[c.k];if(Math.abs(c.lat)>wl2){const k=c.k,e=Math.sign(c.lat)*(Math.abs(c.lat)-wl2);c.x-=-C.tz[k]*e;c.z-=C.tx[k]*e;const fw=Math.sign(-Math.sin(c.yaw)*C.tx[k]-Math.cos(c.yaw)*C.tz[k])||1;let da=ryaw(C.tx[k]*fw,C.tz[k]*fw)-c.yaw;while(da>Math.PI)da-=2*Math.PI;while(da<-Math.PI)da+=2*Math.PI;const sa=Math.abs(Math.sin(da));c.yaw+=da*.4;if(!c.wall){c.v*=.5;if(c.me){shake=8;beep(120,.15,'square',.12);}}c.v*=1-.75*sa;c.v-=Math.sign(c.v)*Math.min(Math.abs(c.v),3*RK2*dt);c.wt=.15;c.lat=Math.sign(c.lat)*wl2;}}
   c.y=RW.cl.h[c.k];c.tun=RW.cl.tn[c.k];{const C1=RW.cl,a1=(c.k+3)%C1.n,b1=(c.k-3+C1.n)%C1.n,sl=(C1.h[a1]-C1.h[b1])/.6;if(sl&&R.ph!=='cd')c.v-=sl*1.6*RK2*dt;}c.wt=Math.max(0,(c.wt||0)-dt);c.wall=c.wt>0;
   // lastik aşınması
   if(R.ph!=='cd'&&!c.fin&&!(R.opt&&R.opt.q))c.tw=Math.min(1.2,(c.tw||0)+Math.abs(c.v)*dt/(C.L*Math.max(3,RLAPS))*TYR[c.tc].r*(1+.15*Math.abs(c.st)));
@@ -2299,13 +2327,12 @@ function rPitStep(c,dt){
   const P=RW.pit;if(!P||c.fin)return;const ds=rPds(c);
   if(!c.pit){
     if(!c.me&&c.plan&&c.stops<c.plan.length-1&&c.tw>=c.pw&&c.lap>=0&&c.lap<RLAPS-1&&(RLAPS-1-c.lap)*RW.cl.L+RW.cl.L-((c.s-RW.sLine+RW.cl.L)%RW.cl.L)>RW.cl.L*Math.max(3,RLAPS)*.12)c.pitReq=1;
-    if(c.pitReq&&c.lap>=0&&c.lap<RLAPS-1&&ds>P.s0-2.6&&ds<P.s0-1.6){c.pit=1;c.pitReq=0;c.off=P.sd*Math.min(RW.cl.w[c.k]-.1,.62);
-      const bx=P.s0+.5+((c.box*.93)%Math.max(.6,P.s1-P.s0-1));c.pbx=Math.min(P.s1-.5,bx);if(c.me){R.msg='🔧 Pite giriyorsun';R.msgT=1.5;}}
+    if(c.pitReq&&c.lap>=0&&c.lap<RLAPS-1&&ds>P.sIn-1.4&&ds<P.sIn+.1){c.pit=1;c.pitReq=0;
+      const sp=(P.b1-P.b0)/11;c.pbx=Math.min(P.b1,P.b0+sp*(c.box%11)+sp*.5);if(c.me){R.msg='🔧 Pit yoluna giriyorsun';R.msgT=1.5;}}
     return;}
-  c.off=P.sd*Math.min(RW.cl.w[c.k]-.1,.62);
-  if(c.pit===1&&ds>=c.pbx-.05){c.pit=2;c.pt=PIT_T*(c.me?1:.9+Math.random()*.35);c.v=0;}
+  if(c.pit===1&&ds>=c.pbx-.04){c.pit=2;c.pt=PIT_T*(c.me?1:.9+Math.random()*.35);c.v=0;}
   if(c.pit===2){c.v=0;c.pt-=dt;if(c.pt<=0){c.stops++;if(c.me){c.tc=c.ntc;R.msg='✅ '+TYR[c.tc].n+' lastik takıldı!';R.msgT=2;beep(880,.2,'sine',.12);}else{c.tc=c.plan[Math.min(c.stops,c.plan.length-1)];}c.tw=0;c.pit=3;}}
-  if(c.pit===3&&ds>P.s1+.6){c.pit=0;c.off=0;}
+  if(c.pit===3&&ds>P.sOut-.15){c.pit=0;c.off=P.k0?0:P.sd*.3;}
 }
 function rAI(c){
   const C=RW.cl,n=C.n,la=.3+.3*Math.abs(c.v);let k=c.k,acc=0;while(acc<la){const j=(k+1)%n;acc+=(C.s[j]-C.s[k]+C.L)%C.L;k=j;}
@@ -2314,7 +2341,7 @@ function rAI(c){
   for(const o of RW.cars){if(o===c||o.pit||c.pit)continue;const d=rProg(o)-myP;if(d>0&&d<.8&&Math.abs(o.lat-c.lat)<.21&&Math.abs((o.y||0)-(c.y||0))<.15){if(!block||d<block.d)block={o,d};}}
   if(block){const fr=[-.22,0,.22].filter(l=>!RW.cars.some(o=>o!==c&&o!==block.o&&Math.abs(o.lat-l)<.17&&Math.abs(rProg(o)-myP)<.55)).sort((p,q)=>Math.abs(q-block.o.lat)-Math.abs(p-block.o.lat))[0];if(fr!==undefined)c.off=Math.max(-RW.cl.w[c.k]+.08,Math.min(RW.cl.w[c.k]-.08,fr));}
   else if(Math.random()<.002)c.off=[-.18,0,.18][Math.floor(Math.random()*3)];
-  if(Math.abs(c.off)>RW.cl.w[k]-.06)c.off=Math.sign(c.off)*(RW.cl.w[k]-.06);if(c.pit&&RW.pit)c.off=RW.pit.sd*Math.min(RW.cl.w[k]-.1,.62);
+  if(Math.abs(c.off)>RW.cl.w[k]-.06)c.off=Math.sign(c.off)*(RW.cl.w[k]-.06);if(c.pit&&RW.pit){let d=((C.s[k]-RW.sLine)%C.L+C.L)%C.L;if(d>C.L/2)d-=C.L;c.off=RW.pit.sd*(RW.pit.k0?Math.min(RW.cl.w[k]-.1,RW.pit.PL):rPitLat(d));}
   const tx=C.x[k]+(-C.tz[k])*c.off,tz=C.z[k]+C.tx[k]*c.off,want=ryaw(tx-c.x,tz-c.z);
   let da=want-c.yaw;while(da>Math.PI)da-=2*Math.PI;while(da<-Math.PI)da+=2*Math.PI;
   const steer=Math.max(-1,Math.min(1,-da*3.2));
@@ -2615,7 +2642,7 @@ addEventListener('keydown',e=>{if(state==='kar'&&e.code==='Escape'&&document.act
 </html>
 
 <div id="upd"><div class="ub"><h3 id="updT"></h3><div class="us" id="updS"></div><ul id="updL"></ul><div class="ubt"><button class="u2" id="updNo">Sonra</button><button class="u1" id="updOk">Tamam</button></div></div></div><script>
-const BUILD='2026-11-19a';
+const BUILD='2026-11-19b';
 (function(){
   const el=document.getElementById('upd');let pend=null,lastShown='',checked=0;
   const busy=()=>{try{if(['play','crash','pause'].includes(state))return true;if(R&&R.ph!=='res')return true;}catch(e){}return false;};
