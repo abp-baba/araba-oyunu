@@ -681,6 +681,10 @@ function hitSound(){
   src.connect(f);f.connect(g);g.connect(OUT());src.start(t,Math.random(),.55);beep(95,.3,'sine',.4);
 }
 function coinSound(){beep(880,.12,'sine',.1);setTimeout(()=>beep(1175,.2,'sine',.1),110);}
+function hitSound(v){// v: 0..1 şiddet
+  if(!AC||!eng||S.sound===false||v<.02)return;const t=AC.currentTime,src=AC.createBufferSource(),f=AC.createBiquadFilter(),g=AC.createGain();
+  src.buffer=eng.nb;f.type='lowpass';f.frequency.setValueAtTime(1500+3000*v,t);f.frequency.exponentialRampToValueAtTime(150,t+.25+.9*v);
+  g.gain.setValueAtTime(.12+.55*v,t);g.gain.exponentialRampToValueAtTime(.001,t+.3+1.1*v);src.connect(f);f.connect(g);g.connect(OUT());src.start(t);src.stop(t+.4+1.2*v);if(v>.3)beep(60+40*(1-v),.25+.4*v,'sine',.2+.4*v);}
 function crashSound(){
   if(!AC||!eng||S.sound===false)return;
   const t=AC.currentTime,src=AC.createBufferSource(),f=AC.createBiquadFilter(),g=AC.createGain();
@@ -1837,7 +1841,7 @@ const F1D=[['mer','George Russell','RUS',63,1],['mer','Kimi Antonelli','ANT',12,
 const f1T=id=>F1T.find(t=>t.id===id),f1D=n=>F1D.find(d=>d.n===n);
 // lastikler: v=hız, g=tutuş, r=aşınma hızı (yarış mesafesine göre; en az 3 turluk mesafe baz alınır)
 const TYR={S:{n:'Yumuşak',k:'Y',c:'#e53935',v:1.012,g:1.06,r:1.8},M:{n:'Orta',k:'O',c:'#fdd835',v:1,g:1,r:1.1},H:{n:'Sert',k:'S',c:'#f5f5f5',v:.988,g:.95,r:.7}};
-const tDeg=w=>w<=.75?w*.04:.03+(w-.75)*.6,tF=c=>{const t=TYR[c.tc||'M'],d=tDeg(c.tw||0);return{v:t.v*(1-d*.4),g:t.g*(1-d)};};
+const tDeg=w=>w<=.75?w*.04:.03+(w-.75)*.6,tF=c=>{const t=TYR[c.tc||'M'],d=tDeg(c.tw||0),h=c.dmg||0;return{v:t.v*(1-d*.4)*(1-h*.1),g:t.g*(1-d)*(1-h*.28)};};
 const PIT_V=1.4,PIT_T=2.6;
 // gerçek pit yolları: sd=+1 pistin sağı (saat yönündeki pistlerde iç taraf), a=girişin start çizgisine uzaklığı (m), b=çıkışın (m)
 const RPIT={bahreyn:{sd:1,a:280,b:320},istanbul:{sd:-1,a:300,b:280},monako:{sd:1,a:250,b:190},baku:{sd:1,a:260,b:300},silverstone:{sd:1,a:300,b:350},monza:{sd:1,a:300,b:300},abudabi:{sd:1,a:300,b:300}};
@@ -2308,6 +2312,7 @@ function raceStart(dif,opt){
     for(let rep=0;rep<3;rep++)for(let i=n-1;i>=0;i--){const j=(i+1)%n;lr[i]=Math.min(lr[i],Math.sqrt(lr[j]*lr[j]+2*2.6*RK2*.9*C.rds[i]));}
     C.lr=lr;
     for(const c of RW.cars)if(!c.me){c.sk=1+((c.skill||1)-1)*.45;c.e=0;c.ov=0;c.rx=Math.random()*(D.rx||.2);}}
+  rFxInit();
   R={dif,D,opt,t:opt&&opt.q?-1.6:-3.6,ph:'cd',res:null,finT:0,pl:RW.cars.find(c=>c.me),lapT:[],lapS:0,msg:'',msgT:0,paused:false};
   document.getElementById('rres').style.display='none';document.getElementById('rpause').style.display='none';document.getElementById('rPz').style.display='';
   rCam(1);
@@ -2317,6 +2322,11 @@ function rCar(c,dt,inp){
   const tf=tF(c);c.tf=tf;
   const C=RW.cl,vm0=(c.me?(c.pm?3.25*c.pm:3.25+.1*((S.up&&S.up.e)||0)):3.25*(R.D.v||1)*(c.sk||1)*(c.vb||1)*(c.slip||1))*RK2*tf.v,vm=c.pit?Math.min(vm0,PIT_V*RK2):vm0;
   let gas=inp.g,brk=inp.b,steer=inp.s;
+  if(c.dnf){gas=0;brk=1;steer=0;if(Math.abs(c.v)<.05&&R.t-c.dnf>1.2){const wl4=RW.cl.w[c.k],tl=Math.sign(c.lat||1)*Math.min(wl4,.75);if(Math.abs(c.lat-tl)>.01){const e=(tl-c.lat)*Math.min(1,dt*1.5);c.x+=-C.tz[c.k]*e;c.z+=C.tx[c.k]*e;c.lat+=e;}c.y=RW.cl.h[c.k];c.ps=c.s;return;}}
+  if(c.spin>0){c.spin-=dt;gas=0;brk=0;steer=0;c.yaw+=c.spinW*dt;c.spinW*=Math.max(0,1-2.4*dt);c.v-=Math.sign(c.v)*Math.min(Math.abs(c.v),2.2*RK2*dt);
+    c.x+=-Math.sin(c.mh)*c.v*dt;c.z+=-Math.cos(c.mh)*c.v*dt;rNear(c);{const wl3=RW.cl.w[c.k];if(Math.abs(c.lat)>wl3){const k=c.k,e=Math.sign(c.lat)*(Math.abs(c.lat)-wl3);c.x-=-C.tz[k]*e;c.z-=C.tx[k]*e;c.v*=.6;}}
+    c.y=RW.cl.h[c.k];if(c.spin<=0){c.spin=0;c.v=Math.min(c.v,.15);}c.ps=c.s;return;}
+  if(c.me&&(c.dmg||0)>.35&&!c.pit)c.yaw+=(c.dmg-.3)*.12*dt*(c.pull||(c.pull=Math.random()<.5?-1:1));
   const C0=RW.cl,wl=C0.w[c.k],off=!c.pit&&wl>.5&&Math.abs(c.lat)>.37;
   if(R.ph==='cd'){gas=brk=0;}
   if(gas&&c.v>=0)c.v+=3.6*RK2*(c.me?1:(R.D.ac||1))*(c.am||1)*(1-c.v/vm)*dt;
@@ -2329,28 +2339,30 @@ function rCar(c,dt,inp){
   else c.yaw-=c.st*rWturn(c.v,vm,1.25*(c.gm||1)*tf.g)*Math.sign(c.v||1)*dt;
   c.x+=-Math.sin(c.yaw)*c.v*dt;c.z+=-Math.cos(c.yaw)*c.v*dt;
   rNear(c);
-  {const wl2=c.pit&&RW.pit&&!RW.pit.k0?RW.pit.PL+.3:RW.cl.w[c.k];if(Math.abs(c.lat)>wl2){const k=c.k,e=Math.sign(c.lat)*(Math.abs(c.lat)-wl2);c.x-=-C.tz[k]*e;c.z-=C.tx[k]*e;const fw=Math.sign(-Math.sin(c.yaw)*C.tx[k]-Math.cos(c.yaw)*C.tz[k])||1;let da=ryaw(C.tx[k]*fw,C.tz[k]*fw)-c.yaw;while(da>Math.PI)da-=2*Math.PI;while(da<-Math.PI)da+=2*Math.PI;const sa=Math.abs(Math.sin(da));c.yaw+=da*.4;if(!c.wall){c.v*=.5;if(c.me){shake=8;beep(120,.15,'square',.12);}}c.v*=1-.75*sa;c.v-=Math.sign(c.v)*Math.min(Math.abs(c.v),3*RK2*dt);c.wt=.15;c.lat=Math.sign(c.lat)*wl2;}}
+  {const wl2=c.pit&&RW.pit&&!RW.pit.k0?RW.pit.PL+.3:RW.cl.w[c.k];if(Math.abs(c.lat)>wl2){const k=c.k,e=Math.sign(c.lat)*(Math.abs(c.lat)-wl2);c.x-=-C.tz[k]*e;c.z-=C.tx[k]*e;const fw=Math.sign(-Math.sin(c.yaw)*C.tx[k]-Math.cos(c.yaw)*C.tz[k])||1;let da=ryaw(C.tx[k]*fw,C.tz[k]*fw)-c.yaw;while(da>Math.PI)da-=2*Math.PI;while(da<-Math.PI)da+=2*Math.PI;const sa=Math.abs(Math.sin(da));c.yaw+=da*.4;if(!c.wall){rHit(c,Math.abs(c.v)*sa*.95+(Math.abs(c.v)>.9*RK2?.05:0),false);c.v*=.5;if(c.me){shake=Math.max(shake||0,8);beep(120,.15,'square',.12);}}c.v*=1-.75*sa;c.v-=Math.sign(c.v)*Math.min(Math.abs(c.v),3*RK2*dt);c.wt=.15;c.lat=Math.sign(c.lat)*wl2;}}
   c.y=RW.cl.h[c.k];c.tun=RW.cl.tn[c.k];{const C1=RW.cl,a1=(c.k+3)%C1.n,b1=(c.k-3+C1.n)%C1.n,sl=(C1.h[a1]-C1.h[b1])/.6;if(sl&&R.ph!=='cd')c.v-=sl*1.6*RK2*dt;}c.wt=Math.max(0,(c.wt||0)-dt);c.wall=c.wt>0;
   // lastik aşınması
   if(R.ph!=='cd'&&!c.fin&&!(R.opt&&R.opt.q))c.tw=Math.min(1.2,(c.tw||0)+Math.abs(c.v)*dt/(C.L*Math.max(3,RLAPS))*TYR[c.tc].r*(1+.15*Math.abs(c.st)));
   rPitStep(c,dt);
   // lap counting
   const a=(c.ps-RW.sLine+C.L)%C.L,b=(c.s-RW.sLine+C.L)%C.L;
-  if(a>C.L*.7&&b<C.L*.3){c.lap++;if(c.lap===0)c.t0=R.t;if(c.lap>=RLAPS&&!c.fin){c.fin=R.t;c.place=RW.cars.filter(o=>o.fin).length;}
+  if(c.dnf){}
+  else if(a>C.L*.7&&b<C.L*.3){c.lap++;if(c.lap===0)c.t0=R.t;if(c.lap>=RLAPS&&!c.fin){c.fin=R.t;c.place=RW.cars.filter(o=>o.fin).length;}
     if(c.me&&c.lap>0){R.lapT.push(R.t-R.lapS);R.lapS=R.t;if(c.lap<RLAPS){R.msg=c.lap===RLAPS-1?'🏁 Son tur!':'Tur '+(c.lap+1)+'/'+RLAPS;R.msgT=2;beep(660,.15,'sine',.1);}}}
   else if(b>C.L*.7&&a<C.L*.3)c.lap--;
   c.ps=c.s;
 }
 function rPds(c){const L=RW.cl.L;let d=((c.s-RW.sLine)%L+L)%L;if(d>L/2)d-=L;return d;}
 function rPitStep(c,dt){
-  const P=RW.pit;if(!P||c.fin)return;const ds=rPds(c);
+  const P=RW.pit;if(!P||c.fin||c.dnf)return;const ds=rPds(c);
   if(!c.pit){
+    if(!c.me&&(c.dmg||0)>.4&&c.lap>=0&&c.lap<RLAPS-1)c.pitReq=1;
     if(!c.me&&c.plan&&c.stops<c.plan.length-1&&c.tw>=c.pw&&c.lap>=0&&c.lap<RLAPS-1&&(RLAPS-1-c.lap)*RW.cl.L+RW.cl.L-((c.s-RW.sLine+RW.cl.L)%RW.cl.L)>RW.cl.L*Math.max(3,RLAPS)*.12)c.pitReq=1;
     if(c.pitReq&&c.lap>=0&&c.lap<RLAPS-1&&ds>P.sIn-1.4&&ds<P.sIn+.1){c.pit=1;c.pitReq=0;
       const sp=(P.b1-P.b0)/11;c.pbx=Math.min(P.b1,P.b0+sp*(c.box%11)+sp*.5);if(c.me){R.msg='🔧 Pit yoluna giriyorsun';R.msgT=1.5;}}
     return;}
-  if(c.pit===1&&ds>=c.pbx-.04){c.pit=2;c.pt=PIT_T*(c.me?1:.9+Math.random()*.35);c.v=0;}
-  if(c.pit===2){c.v=0;c.pt-=dt;if(c.pt<=0){c.stops++;if(c.me){c.tc=c.ntc;R.msg='✅ '+TYR[c.tc].n+' lastik takıldı!';R.msgT=2;beep(880,.2,'sine',.12);}else{c.tc=c.plan[Math.min(c.stops,c.plan.length-1)];}c.tw=0;c.pit=3;}}
+  if(c.pit===1&&ds>=c.pbx-.04){c.pit=2;c.pt=PIT_T*(c.me?1:.9+Math.random()*.35)+(c.dmg||0)*4;c.v=0;}
+  if(c.pit===2){c.v=0;c.pt-=dt;if(c.pt<=0){c.stops++;c.dmg=0;if(c.me){c.tc=c.ntc;R.msg='✅ '+TYR[c.tc].n+' lastik takıldı!';R.msgT=2;beep(880,.2,'sine',.12);}else{c.tc=c.plan[Math.min(c.stops,c.plan.length-1)];}c.tw=0;c.pit=3;}}
   if(c.pit===3&&ds>P.sOut-.15){c.pit=0;c.off=P.k0?0:P.sd*.3;}
 }
 function rAI(c){
@@ -2358,7 +2370,7 @@ function rAI(c){
   const myP=rProg(c),D=R.D;
   // çevredeki arabalar: önümde / arkamda
   let ah=null,bh=null;
-  if(!c.pit)for(const o of RW.cars){if(o===c||o.pit||Math.abs((o.y||0)-(c.y||0))>.15)continue;const d=rProg(o)-myP;
+  if(!c.pit)for(const o of RW.cars){if(o===c||o.pit||o.dnf||Math.abs((o.y||0)-(c.y||0))>.15)continue;const d=rProg(o)-myP;
     if(d>0&&d<1.1&&(!ah||d<ah.d))ah={o,d};if(d<0&&d>-.8&&(!bh||d>bh.d))bh={o,d};}
   // hedef çizgi: yarış çizgisi + atak/savunma kayması
   let tgt=C.rl?C.rl[k]:0;c.slip=1;
@@ -2371,6 +2383,8 @@ function rAI(c){
   if(c.atk){const o=c.atk.o,d=rProg(o)-myP;if(d<-.35||d>.9||o.pit)c.atk=null;else tgt=c.atk.l;}
   // savunma: arkamdaki yakınsa ve virajdan önce iç tarafı kapat (bir kez hamle)
   if(!c.atk&&bh&&bh.d>-.45&&bh.o.v>c.v*.98){const sgn=Math.sign(C.rl?C.rl[(k+12)%n]:0)||0;if(sgn)tgt=tgt+(sgn*.2-tgt)*.5;}
+  // yan yana olan arabalara doğru kayma — yer bırak
+  if(!c.pit)for(const o of RW.cars){if(o===c||o.pit||o.dnf)continue;const d=rProg(o)-myP;if(d>-.32&&d<.32){const gl=o.lat-c.lat;if(Math.abs(gl)<.3){if(gl>=0)tgt=Math.min(tgt,o.lat-.21);else tgt=Math.max(tgt,o.lat+.21);}}}
   if(c.pit&&RW.pit){let d=((C.s[k]-RW.sLine)%C.L+C.L)%C.L;if(d>C.L/2)d-=C.L;tgt=RW.pit.sd*(RW.pit.k0?Math.min(C.w[k]-.1,RW.pit.PL):rPitLat(d));}
   else tgt=Math.max(-C.w[k]+.08,Math.min(C.w[k]-.08,tgt));
   {const base=C.rl&&!c.pit?C.rl[k]:0,dv=tgt-base;c.dv=(c.dv||0)+(dv-(c.dv||0))*(c.pit?1:.1);c.off=c.pit?tgt:Math.max(-C.w[k]+.08,Math.min(C.w[k]-.08,base+c.dv));}
@@ -2384,18 +2398,49 @@ function rAI(c){
   let vt=(C.lr?Math.min(C.lr[c.k],C.lr[i1]):C.lim[c.k]*1.1)*Math.sqrt(tf.g)*(c.sk||1)*(1+c.e)*(1-Math.min(.1,offL*.3));
   vt=Math.min(vt,3.25*(D.v||1)*(c.sk||1)*RK2*tf.v*(c.slip||1)*(c.vb||1));
   if(c.pit){vt=Math.min(vt,PIT_V*RK2*.97);if(c.pit===1){const dl=c.pbx-rPds(c);vt=Math.min(vt,Math.max(.08,Math.sqrt(2*2.2*RK2*Math.max(0,dl-.05))));}if(c.pit===2)vt=0;}
-  if(ah&&ah.d<.36&&Math.abs(ah.o.lat-c.lat)<.17)vt=Math.min(vt,ah.o.v*.98);// çarpmamak için
+  if(ah&&Math.abs(ah.o.lat-c.lat)<.2&&(!c.atk||ah.d<.3)){const gapv=ah.o.v+Math.max(0,ah.d-.27)*2;vt=Math.min(vt,Math.max(ah.o.spin||ah.o.dnf?.05:0,gapv));}// çarpmamak için mesafe koru
+  if(ah&&ah.o.spin&&ah.d<1.2&&!c.atk){const wk=C.w[k]-.1;c.atk={l:ah.o.lat>0?Math.max(-wk,ah.o.lat-.3):Math.min(wk,ah.o.lat+.3),o:ah.o};}
   if(c.fin)vt=Math.min(vt,1.4*RK2);
   if(R.ph==='run'&&R.t<(c.rx||0))return{g:0,b:0,s:steer};// start reaksiyonu
   // lastik/yakınlık lastiği (kolay ve ortada) — zor modda yok
   const gap=myP-rProg(R.pl);c.vb=R.pl.fin||D.rb===2?1:D.rb?(gap<-3?1.05:1):(gap>5?.95:gap<-5?1.04:1);
   return{g:c.v<vt-.01,b:c.v>vt+.02,s:steer};
 }
+// ---- kaza / hasar ----
+function rHit(c,imp,ai2){// imp: çarpma hızı (karo/sn, çarpışma yönünde)
+  if(c.dnf||c.pit||R.ph==='cd'||R.t<3||(c.ht||0)>R.t)return;const th=ai2?.5:.35;if(imp<th)return;c.ht=R.t+(c.spin?1.2:.6);
+  const k=ai2?.3:.7,add=(imp-th)*.55*k;c.dmg=Math.min(1,(c.dmg||0)+add);
+  const sev=Math.min(1,(imp-th)/1.1);rFx(c,sev);
+  if(imp>(ai2?1.1:1.05)&&!c.spin){c.spin=.8+sev*.9;c.spinW=(Math.random()<.5?-1:1)*(6+sev*6);c.mh=c.yaw;c.v*=.55;}
+  if(c.dmg>=1){c.dnf=R.t;c.v*=.4;if(c.me){R.msg='💥 Ağır kaza! Yarış senin için bitti';R.msgT=4;crashSound();}else if(R.pl){R.msg='💥 '+(c.code||c.nm)+' kaza yaptı, yarış dışı!';R.msgT=2.5;}}
+  else if(c.me){R.msg=c.dmg>.5?'⚠️ Ağır hasar %'+Math.round(c.dmg*100)+' — pite gir!':'💥 Hasar %'+Math.round(c.dmg*100);R.msgT=1.8;}
+  const dp=R.pl?Math.hypot(c.x-R.pl.x,c.z-R.pl.z):9;if(c.me||dp<3){hitSound(sev*(c.me?1:Math.max(.15,1-dp/3)));if(c.me)shake=Math.max(shake||0,4+sev*10);}
+}
+function rFxInit(){RW.fx=[];RW.fxT=0;
+  if(!RW.smT){const cv2=document.createElement('canvas');cv2.width=cv2.height=64;const g=cv2.getContext('2d'),gr=g.createRadialGradient(32,32,2,32,32,30);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=gr;g.fillRect(0,0,64,64);RW.smT=new THREE.CanvasTexture(cv2);}
+  if(!RW.dbG)RW.dbG=new THREE.BoxGeometry(.026,.009,.018);}
+function rFxAdd(kind,x,y,z,vx,vy,vz,life,col,sz){if(!RW.fx)rFxInit();if(RW.fx.length>220){const o=RW.fx.shift();RW.sc.remove(o.o);o.o.material.dispose();}
+  let o;if(kind==='d'){o=new THREE.Mesh(RW.dbG,new THREE.MeshStandardMaterial({color:col,roughness:.6}));}
+  else{o=new THREE.Sprite(new THREE.SpriteMaterial({map:RW.smT,color:col,transparent:true,depthWrite:false,opacity:kind==='s'?.55:1,blending:kind==='k'?THREE.AdditiveBlending:THREE.NormalBlending}));o.scale.setScalar(sz||.08);}
+  o.position.set(x,y,z);RW.sc.add(o);RW.fx.push({o,kind,vx,vy,vz,life,max:life,sz:sz||.08,rx:Math.random()*8,ry:Math.random()*8,y0:y-.04});}
+function rFx(c,sev){const y=(c.y||0)+.04;
+  for(let i=0;i<6+sev*18;i++){const a=Math.random()*6.28,sp=.4+Math.random()*1.4*(.4+sev);rFxAdd('k',c.x,y,c.z,Math.cos(a)*sp,.4+Math.random()*.8,Math.sin(a)*sp,.25+Math.random()*.25,0xffb040,.03+Math.random()*.03);}
+  if(sev>.15)for(let i=0;i<2+sev*9;i++){const a=Math.random()*6.28,sp=.3+Math.random()*1.2*sev;rFxAdd('d',c.x,y,c.z,Math.cos(a)*sp+(-Math.sin(c.yaw)*c.v*.5),.5+Math.random()*1.2*sev,Math.sin(a)*sp+(-Math.cos(c.yaw)*c.v*.5),2.5+Math.random()*2,Math.random()<.5?(c.col||'#333'):'#222');}
+  for(let i=0;i<2+sev*6;i++)rFxAdd('s',c.x+(Math.random()-.5)*.1,y,c.z+(Math.random()-.5)*.1,(Math.random()-.5)*.2,.15+Math.random()*.2,(Math.random()-.5)*.2,1+Math.random()*1.2,0xbfbfbf,.1+sev*.1);}
+function rFxTick(dt){if(!RW.fx)return;RW.fxT+=dt;
+  if(RW.fxT>.12){RW.fxT=0;for(const c of RW.cars)if((c.dmg||0)>.45&&!c.pit){const ds=(c.dnf?1:c.dmg);rFxAdd('s',c.x+(Math.random()-.5)*.05,(c.y||0)+.06,c.z+(Math.random()-.5)*.05,(Math.random()-.5)*.1,.25+Math.random()*.15,(Math.random()-.5)*.1,1.2+ds,ds>.8?0x333333:0x9a9a9a,.07+ds*.05);}}
+  for(let i=RW.fx.length-1;i>=0;i--){const f=RW.fx[i];f.life-=dt;if(f.life<=0){RW.sc.remove(f.o);f.o.material.dispose();RW.fx.splice(i,1);continue;}
+    const p=f.o.position,t=f.life/f.max;p.x+=f.vx*dt;p.y+=f.vy*dt;p.z+=f.vz*dt;
+    if(f.kind==='d'){f.vy-=3*dt;if(p.y<f.y0+.012){p.y=f.y0+.012;f.vy*=-.3;f.vx*=.6;f.vz*=.6;if(Math.abs(f.vy)<.05)f.vy=0;}f.o.rotation.x+=f.rx*dt*(f.vy?1:0);f.o.rotation.y+=f.ry*dt;if(t<.3)f.o.material.transparent=true,f.o.material.opacity=t/.3;}
+    else if(f.kind==='k'){f.vy-=2.5*dt;f.o.material.opacity=t;}
+    else{f.vx*=.98;f.vz*=.98;f.o.scale.setScalar(f.sz*(1+(1-t)*3));f.o.material.opacity=.5*t;}}}
 function rCollide(){
-  const cs=RW.cars;for(let i=0;i<cs.length;i++)for(let j=i+1;j<cs.length;j++){const a=cs[i],b=cs[j];if(a.pit||b.pit||Math.abs((a.y||0)-(b.y||0))>.15)continue;
+  const cs=RW.cars;for(let i=0;i<cs.length;i++)for(let j=i+1;j<cs.length;j++){const a=cs[i],b=cs[j];if(a.pit||b.pit||a.dnf||b.dnf||Math.abs((a.y||0)-(b.y||0))>.15)continue;
     for(const sa of[-.083,.083])for(const sb of[-.083,.083]){
       const ax=a.x-Math.sin(a.yaw)*sa,az=a.z-Math.cos(a.yaw)*sa,bx=b.x-Math.sin(b.yaw)*sb,bz=b.z-Math.cos(b.yaw)*sb,dx=bx-ax,dz=bz-az,d=Math.hypot(dx,dz);
       if(d<.165&&d>1e-5){const p=(.165-d)/2,nx=dx/d,nz=dz/d;a.x-=nx*p;a.z-=nz*p;b.x+=nx*p;b.z+=nz*p;
+        {const avx=-Math.sin(a.mh!==undefined&&a.spin?a.mh:a.yaw)*a.v,avz=-Math.cos(a.mh!==undefined&&a.spin?a.mh:a.yaw)*a.v,bvx=-Math.sin(b.mh!==undefined&&b.spin?b.mh:b.yaw)*b.v,bvz=-Math.cos(b.mh!==undefined&&b.spin?b.mh:b.yaw)*b.v,imp=Math.max(0,(avx-bvx)*nx+(avz-bvz)*nz),ai2=!a.me&&!b.me;
+         if(imp>.3){rHit(a,imp,ai2);rHit(b,imp,ai2);if(imp>(ai2?1.05:.7)&&!a.spin&&!b.spin){const vic=rProg(a)>rProg(b)?a:b;if(!vic.dnf&&Math.random()<.5+imp*.3){vic.spin=.6+Math.random()*.6;vic.spinW=(Math.random()<.5?-1:1)*(5+imp*5);vic.mh=vic.yaw;}}}}
         const fa=rProg(a),fb=rProg(b),bh=fa<fb?a:b,fr=bh===a?b:a;if(bh.v>fr.v)bh.v=fr.v*.92;
         if((a.me||b.me)&&R.t-(R.bmp||0)>.35){R.bmp=R.t;beep(140,.12,'square',.13);shake=4;}}}}
 }
@@ -2429,12 +2474,14 @@ function raceTick(dt){
     }
     {const pos=rPlaces().indexOf(R.pl);if(R.lp!==undefined&&pos<R.lp&&R.ph==='run')R.cheer=Math.max(R.cheer||0,.8);R.lp=pos;}
     if(R.ph==='run'&&R.t<.1)R.cheer=1;R.cheer=Math.max(0,(R.cheer||0)-dt*.35);
+    if(R.pl.dnf&&R.ph==='run'){R.ph='fin';R.finT=R.t;}
     if(R.pl.fin&&R.ph==='run'){R.ph='fin';R.cheer=1.6;R.finT=R.t;R.msg=R.opt&&R.opt.q?'⏱️ Tur süren: '+rFmt(R.pl.fin-(R.pl.t0||0)):'🏁 BİTİŞ! '+R.pl.place+'. oldun';R.msgT=3;coinSound();}
     if(R.ph==='fin'&&R.t-R.finT>3)rResults();
     const C=RW.cl,k=R.pl.k,dot=-Math.sin(R.pl.yaw)*C.tx[k]+-Math.cos(R.pl.yaw)*C.tz[k];R.wrong=dot<-.3&&R.pl.v>.2;
   }
   for(const c of RW.cars){c.m.position.set(c.x,(c.y||0)+.012,c.z);c.m.rotation.y=c.yaw+Math.PI;c.m.rotation.z=-c.st*.04*Math.min(1,Math.abs(c.v)/2);}
   if(RW.cT)RW.cT.value=performance.now()/1000;if(RW.yas)RW.yas.material.color.setHSL((performance.now()/9000)%1,.85,.62);
+  if(!R.paused)rFxTick(dt);
   rCam(0);RW.ren.render(RW.sc,RW.cam);rHud();rPitUI();
 }
 let RA=null;
@@ -2459,7 +2506,7 @@ function rAudio(){
     if(a.p)a.p.pan.setTargetAtTime(Math.max(-1,Math.min(1,(dx*rx+dz*rz)/d)),t,.08);});
 }
 function rPlaces(){
-  const cs=RW.cars.slice();cs.sort((a,b)=>(a.fin&&b.fin)?a.fin-b.fin:a.fin?-1:b.fin?1:rProg(b)-rProg(a));return cs;
+  const cs=RW.cars.slice();cs.sort((a,b)=>(!!a.dnf!==!!b.dnf)?(a.dnf?1:-1):a.dnf?rProg(b)-rProg(a):(a.fin&&b.fin)?a.fin-b.fin:a.fin?-1:b.fin?1:rProg(b)-rProg(a));return cs;
 }
 function rHud(){
   const cv=RW.hud,g=RW.hc,dp=cv.width/(RW.w||1),W=RW.w,H=RW.h,u=Math.min(W,H)/100;g.setTransform(dp,0,0,dp,0,0);g.clearRect(0,0,W,H);
@@ -2496,9 +2543,9 @@ function rHud(){
       g.fillStyle=c.ui||c.col;g.fillRect(x0+rh*1.6,y+rh*.18,rh*.2,rh*.64);
       g.textAlign='left';g.fillStyle=c.me?'#ffd54f':'#fff';g.fillText(c.code||(c.nm||'').slice(0,3).toUpperCase(),x0+rh*2.05,y+rh*.74);
       let gp='';if(R.ph==='cd')gp='';else if(i===0)gp=c.fin?'🏁':'Lider';else if(c.fin&&ld.fin)gp='+'+(c.fin-ld.fin).toFixed(1);else if(ld.fin)gp='+'+(R.t-ld.fin+Math.max(0,RLAPS*RW.cl.L-rProg(c))/ref).toFixed(1);else{const d=rProg(ld)-rProg(c);gp=d>RW.cl.L*.98?'+'+Math.floor(d/RW.cl.L)+' tur':'+'+(d/ref).toFixed(1);}
-      if(c.pit&&!c.fin)gp='PİT';
+      if(c.pit&&!c.fin)gp='PİT';if(c.dnf)gp='DNF';else if((c.dmg||0)>.3&&!c.fin&&!c.pit&&gp!=='Lider')gp='⚠ '+gp;
       {const t=TYR[c.tc||'M'];g.beginPath();g.arc(x0+rh*4.55,y+rh*.5,rh*.2,0,7);g.lineWidth=rh*.11;g.strokeStyle=t.c;g.stroke();}
-      g.font='600 '+(rh*.52)+'px system-ui,sans-serif';g.textAlign='right';g.fillStyle=gp==='PİT'?'#ff8a80':c.me?'#ffd54f':'#b0bec5';g.fillText(gp,x0+tw-rh*.35,y+rh*.72);
+      g.font='600 '+(rh*.52)+'px system-ui,sans-serif';g.textAlign='right';g.fillStyle=gp==='PİT'||gp==='DNF'?'#ff8a80':c.me?'#ffd54f':'#b0bec5';g.fillText(gp,x0+tw-rh*.35,y+rh*.72);
       y+=rh;}
   }
   // countdown
@@ -2508,6 +2555,7 @@ function rHud(){
   else if(R.t<1.2)txt('BAŞLA!',W/2,H*.32,12*u,'#69f0ae','center');
   if(R.msgT>0)txt(R.msg,W/2,H*.22,Math.min(6.5*u,W*.94/(R.msg.length*.56)),'#ffd54f','center');
   if(R.wrong)txt('⚠️ Ters yöndesin!',W/2,H*.42,6*u,'#ff5252','center');
+  if((pl.dmg||0)>.05&&!pl.fin&&!pl.dnf){const d=pl.dmg;txt((d>.5?'⚠️ ':'🔧 ')+'Hasar %'+Math.round(d*100)+(d>.4&&!pl.pit?' — pite gir':''),W/2,H-15*u,3*u,d>.5?'#ff8a80':'#ffe082','center');}
   if(Math.abs(pl.lat)>.37&&R.ph==='run'&&!pl.fin&&!pl.pit)txt('Pistten çıktın, yavaşladın',W/2,H*.5,4*u,'#fff','center');
 }
 function rStdBtns(){const box=document.querySelector('#rres .payb');box.innerHTML='<button id="rAgain">🔁 Tekrar yarış</button><button id="rDif">🎚️ Zorluk seç</button><button id="rHome">🏠 Ana menü</button>';
@@ -2516,11 +2564,11 @@ function rResults(){
   if(R.ph==='res')return;R.ph='res';document.getElementById('rPz').style.display='none';
   if(R.opt){document.getElementById('rres').style.display='flex';if(R.opt.q)kQualiDone();else kRaceDone();return;}
   rStdBtns();
-  const pl=rPlaces(),me=pl.indexOf(R.pl)+1,pr=me<=3?rPr(R.D,me-1):0;
+  const pl=rPlaces(),me=pl.indexOf(R.pl)+1,pr=me<=3&&!R.pl.dnf?rPr(R.D,me-1):0;
   S.coins+=pr;S.rbest=S.rbest||{};const tm=R.pl.fin;const bk=rKey(R.dif);if(tm&&(!S.rbest[bk]||tm<S.rbest[bk])){S.rbest[bk]=tm;R.nb=1;}save();
   const bl=R.lapT.length?Math.min(...R.lapT):0;
-  document.getElementById('rresT').textContent=(me===1?'🏆 Kazandın!':me<=3?(me===2?'🥈 ':'🥉 ')+me+'. oldun!':'🏁 '+me+'. oldun')+' — '+R.D.e+' '+R.D.n+', '+RLAPS+' tur';
-  document.getElementById('rresL').innerHTML=pl.map((c,i)=>(i<8||c.me)?(i>=8?'<li class="dots">…</li>':'')+'<li class="'+(c.me?'me':'')+'"><i>'+(i+1)+'.</i><span style="background:'+(c.ui||c.col)+'"></span>'+c.nm+'<b>'+(c.fin?rFmt(c.fin):'—')+'</b></li>':'').join('');
+  document.getElementById('rresT').textContent=R.pl.dnf?'💥 Kaza — yarış dışı kaldın (DNF)':(me===1?'🏆 Kazandın!':me<=3?(me===2?'🥈 ':'🥉 ')+me+'. oldun!':'🏁 '+me+'. oldun')+' — '+R.D.e+' '+R.D.n+', '+RLAPS+' tur';
+  document.getElementById('rresL').innerHTML=pl.map((c,i)=>(i<8||c.me)?(i>=8?'<li class="dots">…</li>':'')+'<li class="'+(c.me?'me':'')+'"><i>'+(i+1)+'.</i><span style="background:'+(c.ui||c.col)+'"></span>'+c.nm+'<b>'+(c.dnf?'DNF':c.fin?rFmt(c.fin):'—')+'</b></li>':'').join('');
   document.getElementById('rresP').innerHTML=(pr?'+'+pr+' 💰 ödül':'Ödül yok, ilk 3\'e girmen lazım')+(bl?'<br>En hızlı turun: '+rFmt(bl):'')+(R.nb?'<br>⭐ Yeni en iyi süren!':'');
   document.getElementById('rres').style.display='flex';
   if(pr)coinSound();
@@ -2647,7 +2695,7 @@ const KPRESS={good:[['Bugünkü sonucun hakkında ne söylersin?',[['Takımıma 
   bad:[['Bugün neler yanlış gitti?',[['Benim hatamdı, bir sonraki yarışta düzelteceğim.',4],['Araba çok yavaştı.',-2],['Yorum yok.',-3]]],['Takımınla aran nasıl?',[['Çok iyi, birlikte çalışıyoruz.',3],['Daha iyi bir araba istiyorum.',-1],['Yakında göreceksiniz.',2]]]]};
 function kRaceDone(){
   const K=S.kar,pl=rPlaces(),me=pl.indexOf(R.pl)+1,gp=KGP[K.round],t=kTeam(K.team);
-  let got=0;pl.forEach((c,i)=>{const p=KPTS[i]||0;K.pts[c.nm]=(K.pts[c.nm]||0)+p;K.tpts[c.team]=(K.tpts[c.team]||0)+p;if(c.me)got=p;});
+  let got=0;pl.forEach((c,i)=>{const p=c.dnf?0:(KPTS[i]||0);K.pts[c.nm]=(K.pts[c.nm]||0)+p;K.tpts[c.team]=(K.tpts[c.team]||0)+p;if(c.me)got=p;});
   const money=t.sal+got*15+(me===1?300:me<=3?150:0)+K.pop*2;S.coins+=money;
   if(me===1)K.wins++;if(me<=3)K.pods++;K.last={gp,pos:me,pts:got,money};K.round++;kSave();
   document.getElementById('rresT').textContent=(me===1?'🏆 '+gp+' kazananı!':me<=3?(me===2?'🥈 ':'🥉 ')+'Podyum! '+me+'. oldun':'🏁 '+gp+': '+me+'. oldun');
@@ -2678,7 +2726,7 @@ addEventListener('keydown',e=>{if(state==='kar'&&e.code==='Escape'&&document.act
 </html>
 
 <div id="upd"><div class="ub"><h3 id="updT"></h3><div class="us" id="updS"></div><ul id="updL"></ul><div class="ubt"><button class="u2" id="updNo">Sonra</button><button class="u1" id="updOk">Tamam</button></div></div></div><script>
-const BUILD='2026-11-22a';
+const BUILD='2026-11-22b';
 (function(){
   const el=document.getElementById('upd');let pend=null,lastShown='',checked=0;
   const busy=()=>{try{if(['play','crash','pause'].includes(state))return true;if(R&&R.ph!=='res')return true;}catch(e){}return false;};
