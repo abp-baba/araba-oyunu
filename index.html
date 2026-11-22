@@ -111,6 +111,10 @@
 #rTyr i{display:inline-block;width:1.9cqh;height:1.9cqh;border-radius:50%;border:.5cqh solid;vertical-align:-.3cqh;margin-right:.6cqw;box-sizing:border-box}
 .wrap.v #rPitW{top:auto;bottom:30cqw}.wrap.v #rPitW button{font-size:3.4cqw;padding:1.4cqw 2.4cqw}
 #rtyre button{flex-direction:row}#rtyre button.on{background:#1e88e5}
+#saka{display:none;position:fixed;inset:0;z-index:120;align-items:center;justify-content:center;flex-direction:column;background:#c00000;animation:sakaF .18s steps(2) infinite;cursor:pointer;touch-action:manipulation}
+#saka.on{display:flex}#saka b{font:900 clamp(40px,13vw,180px)/1 system-ui,sans-serif;color:#fff;text-align:center;text-shadow:0 0 30px #000,0 6px 0 #000;animation:sakaS .09s infinite;letter-spacing:.02em}
+#saka i{font:700 clamp(14px,2.4vw,24px) system-ui,sans-serif;color:#ffe;margin-top:3vh;font-style:normal;opacity:.85}
+@keyframes sakaF{0%{background:#c00000}50%{background:#000}}@keyframes sakaS{0%{transform:translate(-6px,3px) rotate(-2deg) scale(1.05)}50%{transform:translate(6px,-4px) rotate(2deg) scale(.97)}}
 </style></head><body>
 <!DOCTYPE html>
 <html lang="tr">
@@ -2756,5 +2760,20 @@ const BUILD='2026-11-22c';
     show();}catch(e){}}
   setTimeout(check,1500);setInterval(check,60000);setInterval(show,1000);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)check();});
+})();
+</script><div id="saka"><b>🚨 PEYSER MUSTAFA 🚨</b><i>(kapatmak için dokun)</i></div><script>
+// gizli şaka: linkin sonuna #saka eklenince oyun açıldıktan 20-45 sn sonra kendiliğinden patlar; Shift+M ile hemen tetiklenir
+(function(){
+  const el=document.getElementById('saka');let src=[],tm=null;
+  function siren(){try{if(!AC)audioInit();if(!AC)return;if(AC.state==='suspended')AC.resume();const t=AC.currentTime,g=AC.createGain();g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.9,t+.05);g.connect(AC.destination);
+    for(const [type,base,ofs] of [['sawtooth',650,0],['square',660,.5]]){const o=AC.createOscillator();o.type=type;o.frequency.setValueAtTime(base,t);for(let k=0;k<12;k++){o.frequency.linearRampToValueAtTime(base*1.9,t+k*.5+.25);o.frequency.linearRampToValueAtTime(base,t+k*.5+.5);}
+      const og=AC.createGain();og.gain.value=.35;o.connect(og);og.connect(g);o.start(t);o.stop(t+6);src.push(o);}
+    g.gain.setValueAtTime(.9,t+5.6);g.gain.exponentialRampToValueAtTime(.0001,t+6);}catch(e){}}
+  function boom(){if(el.classList.contains('on'))return;el.classList.add('on');siren();if(navigator.vibrate)navigator.vibrate([400,150,400,150,800]);tm=setTimeout(stop,6000);}
+  function stop(){el.classList.remove('on');src.forEach(o=>{try{o.stop()}catch(e){}});src=[];clearTimeout(tm);}
+  el.addEventListener('click',stop);
+  addEventListener('keydown',e=>{if(e.shiftKey&&e.code==='KeyM'){e.preventDefault();boom();}},true);
+  if(/saka/i.test(location.hash+location.search)){const d=20000+Math.random()*25000;let armed=false;const go=()=>{if(armed)return;armed=true;setTimeout(boom,d);};addEventListener('pointerdown',go,{once:true});addEventListener('keydown',go,{once:true});}
+  window.sakaBoom=boom;
 })();
 </script></body></html>
